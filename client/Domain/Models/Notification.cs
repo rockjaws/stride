@@ -8,5 +8,5 @@ public class Notification : INotification
   public string Text { get; }
   public bool IsRead { get; }
   public DateTime SentAt { get; }
-  // public User user { get; }
+  public IUser User { get; }
 }
