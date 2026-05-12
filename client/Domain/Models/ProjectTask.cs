@@ -1,0 +1,34 @@
+﻿using client.Application.Interfaces;
+using client.Domain.Enum;
+
+namespace client.Domain.Models;
+
+public class ProjectTask : ITask
+{
+    public int Id { get; }
+    public string Title { get; }
+    public string Description { get; }
+    public DateTime StartDate { get; }
+    public DateTime Deadline { get; }
+    public TaskProgress Progress { get; }
+    public TaskPriority Priority { get; }
+
+    public ProjectTask(
+        int id,
+        string title,
+        string description,
+        DateTime startDate,
+        DateTime deadline,
+        TaskProgress progress,
+        TaskPriority priority
+    )
+    {
+        Id = id;
+        Title = title;
+        Description = description;
+        StartDate = startDate;
+        Deadline = deadline;
+        Progress = progress;
+        Priority = priority;
+    }
+}
