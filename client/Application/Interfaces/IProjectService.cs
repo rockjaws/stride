@@ -1,8 +1,10 @@
-﻿namespace client.Application.Interfaces;
+﻿using client.Domain.Models;
+
+namespace client.Application.Interfaces;
 
 public interface IProjectService
 {
-    void CreateProject();
-    void DeleteProject();
-    void AddMember();
+  Task<List<Project>> GetProjectsAsync();
+  Task CreateProjectAsync(Project project);
+  Task DeleteProjectAsync(int id);
 }

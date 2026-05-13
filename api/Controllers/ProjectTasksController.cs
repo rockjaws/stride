@@ -23,7 +23,7 @@ public class ProjectTasksController : ControllerBase
   }
 
   [HttpGet("{id}")]
-  public async Task<ActionResult<Task?>> GetProjectTask(int id)
+  public async Task<ActionResult<ProjectTask?>> GetProjectTask(int id)
   {
     var projectTask = await _repository.GetTaskByIdAsync(id);
     if (projectTask == null)
@@ -46,13 +46,13 @@ public class ProjectTasksController : ControllerBase
   [HttpDelete("{id}")]
   public async Task<IActionResult> DeleteTask(int id)
   {
-    var project = await _repository.GetTaskByIdAsync(id);
-    if (project == null)
+    var projectTask = await _repository.GetTaskByIdAsync(id);
+    if (projectTask == null)
     {
       return NotFound();
     }
 
-    await _repository.DeleteTaskAsync(project);
+    await _repository.DeleteTaskAsync(projectTask);
     await _repository.SaveChangesAsync();
 
     return NoContent();
