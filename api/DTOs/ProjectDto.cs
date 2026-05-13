@@ -1,6 +1,8 @@
-﻿namespace api.Models;
+﻿using api.Models;
 
-public class Project
+namespace api.DTOs;
+
+public class ProjectDto
 {
   public int Id { get; set; }
   public string Title { get; set; } = string.Empty;
@@ -9,6 +11,6 @@ public class Project
   public DateTime Deadline { get; set; }
 
   public List<ChatChannel> ChatChannels { get; set; } = new();
-  public List<ProjectTask> Tasks { get; set; } = new();
-  public List<User> Users { get; set; } = new();
+  public List<ProjectTaskDto> Tasks { get; set; } = new();
+  public List<UserDto> Users { get; set; } = new();
 }

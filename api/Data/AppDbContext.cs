@@ -12,4 +12,7 @@ public class AppDbContext : DbContext
   public DbSet<Project> Projects { get; set; }
   public DbSet<ProjectTask> ProjectTasks { get; set; }
   public DbSet<User> Users { get; set; }
+  public DbSet<ChatChannel> ChatChannels { get; set; }
+  public DbSet<Message> Messages { get; set; }
+  public DbSet<Notification> Notifications { get; set; }
 }
