@@ -8,7 +8,7 @@ namespace client.Presentation.Views;
 /// </summary>
 public partial class MainWindow : Window
 {
-    public MainWindow(ProjectViewModel viewModel)
+    public MainWindow(MainViewModel viewModel)
     {
         InitializeComponent();
         DataContext = viewModel;

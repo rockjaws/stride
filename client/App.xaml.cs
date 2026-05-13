@@ -19,7 +19,7 @@ public partial class App : System.Windows.Application
         ILogger logger = new Logger();
         logger.Log(LogLevel.INFO, "Application Starting..");
 
-        var viewModel = new ProjectViewModel();
+        var viewModel = new MainViewModel(logger);
         var mainWindow = new MainWindow(viewModel);
 
         MainWindow = mainWindow;

@@ -3,10 +3,55 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:client.Presentation.Views"
+		xmlns:local="clr-namespace:client.Presentation.Views"
+		xmlns:userControls="clr-namespace:client.Presentation.UserControls"
+		xmlns:viewModels="clr-namespace:client.Presentation.ViewModels"
+		xmlns:commands="clr-namespace:client.Presentation.Commands"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="MainWindow" Height="1300" Width="2000" WindowState="Maximized" WindowStyle="None">
 
-    </Grid>
-</Window>
+
+		<Window.Resources>
+			<commands:QuitCommand x:Key="QuitCommand" />
+			<DataTemplate DataType="{x:Type viewModels:ProjectViewModel}">
+				<userControls:ProjectUserControl/>	
+			</DataTemplate>
+		</Window.Resources>
+			
+		<Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+		<Grid Grid.Column="0">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="*" />
+				<RowDefinition Height="Auto" />
+			</Grid.RowDefinitions>
+
+			<StackPanel Grid.Row="0">
+                <RadioButton x:Name="DashboardButton"
+							 Content="Dashboard"
+							 GroupName="SideMenu"
+							 Height="50"
+							 FontSize="22"/>
+                <RadioButton x:Name="ProjectButton"
+							 Content="Projects"
+							 GroupName="SideMenu"
+							 Command="{Binding ChangeViewCommand}"
+							 CommandParameter="{Binding ProjectViewModel}"
+							 IsChecked="True"
+							 Height="50"
+							 FontSize="22"/>
+            </StackPanel>
+
+			<Button x:Name="QuitButton"
+					Grid.Row="1"
+					Content="Quit"
+					Command="{StaticResource QuitCommand}"
+					Height="50"
+					FontSize="22"/>
+		</Grid>
+		<ContentControl Grid.Column="1" Content="{Binding CurrentView}" />
+		</Grid>
+		</Window>
