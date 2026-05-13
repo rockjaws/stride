@@ -1,35 +1,43 @@
-﻿using client.Application.Interfaces;
-using client.Domain.Enum;
+﻿using System.Net.Http;
+using System.Net.Http.Json;
+using client.Application.Interfaces;
 using client.Domain.Models;
 
 namespace client.Application.Services;
 
 public class TaskService : ITaskService
 {
-    public ProjectTask CreateTask(
-        string title,
-        string description,
-        DateTime startDate,
-        DateTime deadline,
-        TaskProgress status,
-        TaskPriority priority
-    )
+  private readonly HttpClient _httpclient;
+
+  public TaskService()
+  {
+    _httpclient = new HttpClient
     {
-        ProjectTask task = new ProjectTask(
-            1,
-            title,
-            description,
-            startDate,
-            deadline,
-            status,
-            priority
-        );
-        return task;
-    }
+      BaseAddress = new Uri("http://localhost:5189")
+    };
+  }
 
-    public void UpdateTask() { }
+  public async Task<List<ProjectTask>> GetTasksAsync()
+  {
+    return await _httpclient.GetFromJsonAsync<List<ProjectTask>>("api/tasks") ?? new List<ProjectTask>();
+  }
 
-    public void AssignTask() { }
+  public async Task CreateTaskAsync(ProjectTask task)
+  {
+    var response = await _httpclient.PostAsJsonAsync("api/tasks", task);
+    response.EnsureSuccessStatusCode();
+  }
 
-    public void SortTasks() { }
+  public async Task UpdateTaskAsync(ProjectTask)
+  {
+
+  }
+
+  public async Task DeleteTaskAsync(int id)
+  {
+    var response = await _httpclient.DeleteAsync($"api/tasks/{id}");
+    response.EnsureSuccessStatusCode();
+  }
+
+  public void SortTasks() { }
 }
