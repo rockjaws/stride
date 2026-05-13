@@ -1,15 +1,11 @@
-﻿namespace api.Models;
+﻿namespace api.DTOs;
 
-public class ProjectTask
+public class ProjectTaskUpdateDto
 {
-  public int Id { get; set; }
   public string Title { get; set; } = string.Empty;
   public string Description { get; set; } = string.Empty;
   public DateTime StartDate { get; set; }
   public DateTime Deadline { get; set; }
   public string Progress { get; set; } = "Todo";
   public string Priority { get; set; } = "Medium";
-
-  public Project? Project { get; set; }
-  public List<User> Users { get; set; } = new();
 }
