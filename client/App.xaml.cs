@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using client.Application.Interfaces;
+using client.Application.Services;
 using client.Domain.Enum;
 using client.Infrastructure.Logging;
 using client.Presentation.ViewModels;
@@ -17,9 +18,10 @@ public partial class App : System.Windows.Application
         base.OnStartup(e);
 
         ILogger logger = new Logger();
+        IProjectService projectService = new ProjectService();
         logger.Log(LogLevel.INFO, "Application Starting..");
 
-        var viewModel = new MainViewModel(logger);
+        var viewModel = new MainViewModel(logger, projectService);
         var mainWindow = new MainWindow(viewModel);
 
         MainWindow = mainWindow;
