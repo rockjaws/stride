@@ -1,6 +1,8 @@
-﻿namespace client.Application.Interfaces;
+﻿using client.Domain.Enum;
+
+namespace client.Application.Interfaces;
 
 public interface ILogger
 {
-    void Log(string msg) { }
+    void Log(LogLevel level, string msg) { }
 }
