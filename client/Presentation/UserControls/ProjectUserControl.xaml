@@ -14,7 +14,12 @@
         <TextBox Background="Purple"/>
         
          <StackPanel Orientation="Horizontal">
-            <ComboBox Width="150" Height="30" VerticalAlignment="Center" ItemsSource="{Binding ListOfProjects}"/>
+            <ComboBox Width="150"
+                      Height="30"
+                      VerticalAlignment="Center"
+                      ItemsSource="{Binding ListOfProjects}"
+                      SelectedItem="{Binding SelectedProject}"
+                      DisplayMemberPath="Title"/>
          </StackPanel>
         
 

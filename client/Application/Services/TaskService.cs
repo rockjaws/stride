@@ -28,9 +28,10 @@ public class TaskService : ITaskService
     response.EnsureSuccessStatusCode();
   }
 
-  public async Task UpdateTaskAsync(ProjectTask)
+  public async Task UpdateTaskAsync(ProjectTask task)
   {
-
+    var response = await _httpclient.PutAsJsonAsync($"api/tasks/{task.Id}", task);
+    response.EnsureSuccessStatusCode();
   }
 
   public async Task DeleteTaskAsync(int id)
