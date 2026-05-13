@@ -12,12 +12,14 @@ public class MainViewModel : ObservableObject
     public MainViewModel(ILogger logger)
     {
         _logger = logger;
+        DashboardViewModel = new DashboardViewModel();
         ProjectViewModel = new ProjectViewModel();
-        _currentView = ProjectViewModel;
+        _currentView = DashboardViewModel;
         ChangeViewCommand = new ChangeViewCommand(this);
     }
 
     public ProjectViewModel ProjectViewModel { get; }
+    public DashboardViewModel DashboardViewModel { get; }
 
     public object CurrentView
     {
