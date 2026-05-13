@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using client.Application.Interfaces;
 using client.Domain.Enum;
+using client.Domain.Exceptions;
 using client.Domain.Models;
 using client.Presentation.Common;
 
@@ -11,6 +12,34 @@ public class ProjectViewModel : ObservableObject
     private readonly ILogger _logger;
     private readonly IProjectService _projectService;
     private Project _selectedProject;
+    private ObservableCollection<ProjectTask> _backlogTasks;
+    private ObservableCollection<ProjectTask> _inProgressTasks;
+    private ObservableCollection<ProjectTask> _inReviewTasks;
+    private ObservableCollection<ProjectTask> _finishedTasks;
+
+    public ObservableCollection<ProjectTask> BacklogTasks
+    {
+        get => _backlogTasks;
+        set => SetProperty(ref _backlogTasks, value);
+    }
+
+    public ObservableCollection<ProjectTask> InProgressTasks
+    {
+        get => _inProgressTasks;
+        set => SetProperty(ref _inProgressTasks, value);
+    }
+
+    public ObservableCollection<ProjectTask> InReviewTasks
+    {
+        get => _inReviewTasks;
+        set => SetProperty(ref _inReviewTasks, value);
+    }
+
+    public ObservableCollection<ProjectTask> FinishedTasks
+    {
+        get => _finishedTasks;
+        set => SetProperty(ref _finishedTasks, value);
+    }
 
     public Project SelectedProject
     {
@@ -19,6 +48,7 @@ public class ProjectViewModel : ObservableObject
         {
             SetProperty(ref _selectedProject, value);
             _logger.Log(LogLevel.INFO, $"New Project Selected: {_selectedProject.Title}");
+            LoadTasks(_selectedProject);
         }
     }
 
@@ -28,8 +58,29 @@ public class ProjectViewModel : ObservableObject
     {
         _logger = logger;
         _projectService = projectService;
-        ListOfProjects = new ObservableCollection<Project>();
+        ListOfProjects = [];
+        BacklogTasks = [];
+        InProgressTasks = [];
+        InReviewTasks = [];
+        FinishedTasks = [];
         _ = GetProjectsAsync();
+    }
+
+    private void LoadTasks(IProject currentProject)
+    {
+        foreach (ProjectTask task in currentProject.Tasks)
+        {
+            var collection = task.Progress switch
+            {
+                TaskProgress.BackLog => BacklogTasks,
+                TaskProgress.InProgress => InProgressTasks,
+                TaskProgress.Review => InReviewTasks,
+                TaskProgress.Done => FinishedTasks,
+                _ => throw new UnknownTaskProgressException(task.Progress),
+            };
+
+            collection.Add(task);
+        }
     }
 
     public async Task GetProjectsAsync()

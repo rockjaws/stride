@@ -12,16 +12,92 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <TextBox Background="Purple"/>
-        
-         <StackPanel Orientation="Horizontal">
-            <ComboBox Width="150"
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal"
+                        Grid.Column="0">
+                <ComboBox Width="150"
                       Height="30"
                       VerticalAlignment="Center"
                       ItemsSource="{Binding ListOfProjects}"
                       SelectedItem="{Binding SelectedProject}"
                       DisplayMemberPath="Title"/>
-         </StackPanel>
-        
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"
+                        Grid.Column="1"
+                        HorizontalAlignment="Right">
+                <Button Width="75" Content="New Task+"/>
+            </StackPanel>
+        </Grid>
 
+        <!-- Kanban Columns -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Backlog -->
+            <StackPanel Grid.Column="0" Margin="8">
+                <TextBlock Text="Backlog" FontWeight="Bold" FontSize="16" Margin="0 0 0 8"/>
+                <ItemsControl ItemsSource="{Binding BacklogTasks}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="#F0F0F0" CornerRadius="4" Margin="0 4" Padding="8">
+                                <TextBlock Text="{Binding Title}" />
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+
+            <!-- In Progress -->
+            <StackPanel Grid.Column="1" Margin="8">
+                <TextBlock Text="In Progress" FontWeight="Bold" FontSize="16" Margin="0 0 0 8"/>
+                <ItemsControl ItemsSource="{Binding InProgressTasks}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="#FFF9C4" CornerRadius="4" Margin="0 4" Padding="8">
+                                <TextBlock Text="{Binding Title}" />
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+
+            <!-- In Review -->
+            <StackPanel Grid.Column="2" Margin="8">
+                <TextBlock Text="In Review" FontWeight="Bold" FontSize="16" Margin="0 0 0 8"/>
+                <ItemsControl ItemsSource="{Binding InReviewTasks}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="#E1BEE7" CornerRadius="4" Margin="0 4" Padding="8">
+                                <TextBlock Text="{Binding Title}" />
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+
+            <!-- Done -->
+            <StackPanel Grid.Column="3" Margin="8">
+                <TextBlock Text="Done" FontWeight="Bold" FontSize="16" Margin="0 0 0 8"/>
+                <ItemsControl ItemsSource="{Binding FinishedTasks}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="#C8E6C9" CornerRadius="4" Margin="0 4" Padding="8">
+                                <TextBlock Text="{Binding Title}" />
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+
+        </Grid>
     </Grid>
 </UserControl>
