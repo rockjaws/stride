@@ -13,6 +13,9 @@
 
 		<Window.Resources>
 			<commands:QuitCommand x:Key="QuitCommand" />
+			<DataTemplate DataType="{x:Type viewModels:DashboardViewModel}">
+				<userControls:DashboardUserControl/>
+			</DataTemplate>
 			<DataTemplate DataType="{x:Type viewModels:ProjectViewModel}">
 				<userControls:ProjectUserControl/>	
 			</DataTemplate>
@@ -33,6 +36,9 @@
                 <RadioButton x:Name="DashboardButton"
 							 Content="Dashboard"
 							 GroupName="SideMenu"
+							 Command="{Binding ChangeViewCommand}"
+							 CommandParameter="{Binding DashboardViewModel}"
+							 IsChecked="True"
 							 Height="50"
 							 FontSize="22"/>
                 <RadioButton x:Name="ProjectButton"
@@ -40,7 +46,6 @@
 							 GroupName="SideMenu"
 							 Command="{Binding ChangeViewCommand}"
 							 CommandParameter="{Binding ProjectViewModel}"
-							 IsChecked="True"
 							 Height="50"
 							 FontSize="22"/>
             </StackPanel>
