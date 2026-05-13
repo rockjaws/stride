@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace stride.Presentation.Common;
+namespace client.Presentation.Common;
 
 // =====================================
 //           ObservableObject
@@ -11,12 +11,12 @@ namespace stride.Presentation.Common;
 // Implements INotifyPropertyChanged, allowing property change notifications to update the UI.
 public abstract class ObservableObject : INotifyPropertyChanged
 {
-    public event PropertyChangedEventHandler PropertyChanged; // PropertyChangedEventHandler
+    public event PropertyChangedEventHandler? PropertyChanged; // PropertyChangedEventHandler
 
     // is the event responsible for
     // updating the properties and UI
 
-    protected void OnPropertyChanged([CallerMemberName] string propertyName = null) // get's the object/sender
+    protected void OnPropertyChanged([CallerMemberName] string? propertyName = null) // get's the object/sender
     // that called the OnPropertyChanged
     {
         // If there are any subscribers, raise the PropertyChanged event, passing the property name.
@@ -26,7 +26,7 @@ public abstract class ObservableObject : INotifyPropertyChanged
     protected bool SetProperty<T>(
         ref T field,
         T value,
-        [CallerMemberName] string propertyName = null
+        [CallerMemberName] string? propertyName = null
     )
     {
         // Check if the current value (field) is equal to the new value.
