@@ -16,6 +16,7 @@ public class ProjectRepository : IProjectRepository
   public async Task<IEnumerable<Project>> GetAllProjectsAsync()
   {
     return await _context.Projects
+      .AsSplitQuery()
       .Include(p => p.Tasks)
       .Include(p => p.Users)
       .Include(p => p.ChatChannels)
@@ -24,7 +25,12 @@ public class ProjectRepository : IProjectRepository
 
   public async Task<Project?> GetProjectByIdAsync(int id)
   {
-    return await _context.Projects.FindAsync(id);
+    return await _context.Projects
+      .AsSplitQuery()
+      .Include(p => p.Tasks)
+      .Include(p => p.Users)
+      .Include(p => p.ChatChannels)
+      .FirstOrDefaultAsync(p => p.Id == id);
   }
 
   public async Task AddProjectAsync(Project project)
