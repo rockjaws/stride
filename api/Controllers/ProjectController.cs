@@ -10,10 +10,12 @@ namespace api.Controllers;
 public class ProjectController : ControllerBase
 {
   private readonly IProjectRepository _repository;
+  private readonly IChannelRepository _channelRepository;
 
-  public ProjectController(IProjectRepository repository)
+  public ProjectController(IProjectRepository repository, IChannelRepository channelRepository)
   {
     _repository = repository;
+    _channelRepository = channelRepository;
   }
 
   [HttpGet]
@@ -119,7 +121,7 @@ public class ProjectController : ControllerBase
   }
 
   [HttpPut("{id}")]
-  public async Task<IActionResult> UpdateProject(int id, ProjectUpdateDto dto)
+  public async Task<ActionResult> UpdateProject(int id, ProjectUpdateDto dto)
   {
     var project = await _repository.GetProjectByIdAsync(id);
     if (project == null)
@@ -138,7 +140,7 @@ public class ProjectController : ControllerBase
   }
 
   [HttpDelete("{id}")]
-  public async Task<IActionResult> DeleteProject(int id)
+  public async Task<ActionResult> DeleteProject(int id)
   {
     var project = await _repository.GetProjectByIdAsync(id);
     if (project == null)
@@ -150,5 +152,45 @@ public class ProjectController : ControllerBase
     await _repository.SaveChangesAsync();
 
     return NoContent();
+  }
+
+  [HttpGet("{id}/channels/{channelId}")]
+  public async Task<ActionResult<ChannelDto>> GetChannel(int id, int channelId)
+  {
+    var channel = await _channelRepository.GetChannelByIdAsync(channelId);
+    if (channel == null)
+    {
+      return NotFound();
+    }
+    return Ok(new ChannelDto { Id = channel.Id, Name = channel.Name, ProjectId = channel.ProjectId });
+  }
+
+  [HttpPost("{id}/channels")]
+  public async Task<ActionResult> CreateNewChannel(int id, ChannelCreateDto dto)
+  {
+    var project = await _repository.GetProjectByIdAsync(id);
+    if (project == null)
+    {
+      return NotFound();
+    }
+
+    var chatChannel = new ChatChannel
+    {
+      Name = dto.Name,
+      ProjectId = id
+    };
+
+
+    await _channelRepository.CreateChannelAsync(chatChannel);
+    await _channelRepository.SaveChangesAsync();
+
+    var chatChannelDto = new ChannelDto
+    {
+      Id = chatChannel.Id,
+      Name = chatChannel.Name,
+      ProjectId = chatChannel.ProjectId
+    };
+
+    return CreatedAtAction(nameof(GetChannel), new { id, channelId = chatChannel.Id }, chatChannelDto);
   }
 }
