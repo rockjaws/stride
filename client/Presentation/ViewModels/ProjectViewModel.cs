@@ -3,6 +3,7 @@ using client.Application.Interfaces;
 using client.Domain.Enum;
 using client.Domain.Exceptions;
 using client.Domain.Models;
+using client.Presentation.Commands;
 using client.Presentation.Common;
 
 namespace client.Presentation.ViewModels;
@@ -47,12 +48,15 @@ public class ProjectViewModel : ObservableObject
         set
         {
             SetProperty(ref _selectedProject, value);
+            CreateNewTaskCommand.RaiseCanExecuteChanged();
             _logger.Log(LogLevel.INFO, $"New Project Selected: {_selectedProject.Title}");
             LoadTasks(_selectedProject);
         }
     }
 
     public ObservableCollection<Project> ListOfProjects { get; }
+
+    public CreateNewTaskCommand CreateNewTaskCommand { get; }
 
     public ProjectViewModel(ILogger logger, IProjectService projectService)
     {
@@ -63,6 +67,11 @@ public class ProjectViewModel : ObservableObject
         InProgressTasks = [];
         InReviewTasks = [];
         FinishedTasks = [];
+        CreateNewTaskCommand = new CreateNewTaskCommand(
+            _logger,
+            AddCreatedTask,
+            () => _selectedProject != null
+        );
         _ = GetProjectsAsync();
     }
 
@@ -80,7 +89,26 @@ public class ProjectViewModel : ObservableObject
             };
 
             collection.Add(task);
+            _logger.Log(LogLevel.INFO, $"Loaded {task.Id}");
         }
+    }
+
+    private void AddCreatedTask(ProjectTask task)
+    {
+        if (task == null)
+            return;
+
+        var collection = task.Progress switch
+        {
+            TaskProgress.BackLog => BacklogTasks,
+            TaskProgress.InProgress => InProgressTasks,
+            TaskProgress.Review => InReviewTasks,
+            TaskProgress.Done => FinishedTasks,
+            _ => throw new UnknownTaskProgressException(task.Progress),
+        };
+
+        collection.Add(task);
+        SelectedProject.Tasks.Add(task);
     }
 
     public async Task GetProjectsAsync()

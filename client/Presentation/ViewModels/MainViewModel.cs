@@ -1,4 +1,5 @@
-﻿using client.Application.Interfaces;
+﻿using System.Windows.Input;
+using client.Application.Interfaces;
 using client.Presentation.Commands;
 using client.Presentation.Common;
 
@@ -18,6 +19,8 @@ public class MainViewModel : ObservableObject
         ChangeViewCommand = new ChangeViewCommand(this);
     }
 
+    public ICommand ChangeViewCommand { get; }
+
     public ProjectViewModel ProjectViewModel { get; }
     public DashboardViewModel DashboardViewModel { get; }
 
@@ -26,8 +29,6 @@ public class MainViewModel : ObservableObject
         get => _currentView;
         private set => SetProperty(ref _currentView, value);
     }
-
-    public IUndoableCommand ChangeViewCommand { get; }
 
     public void SetCurrentView(object viewModel)
     {
