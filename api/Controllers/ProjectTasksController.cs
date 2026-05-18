@@ -1,4 +1,5 @@
-﻿using api.Models;
+﻿using api.DTOs;
+using api.Models;
 using api.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,32 +17,113 @@ public class ProjectTasksController : ControllerBase
   }
 
   [HttpGet]
-  public async Task<ActionResult<IEnumerable<ProjectTask>>> GetProjectTasks()
+  public async Task<ActionResult<IEnumerable<ProjectTaskDto>>> GetProjectTasks()
   {
     var projectTasks = await _repository.GetAllTasksAsync();
-    return Ok(projectTasks);
+    var dtos = projectTasks.Select(t => new ProjectTaskDto
+    {
+      Id = t.Id,
+      Title = t.Title,
+      Description = t.Description,
+      StartDate = t.StartDate,
+      Deadline = t.Deadline,
+      Progress = t.Progress,
+      Priority = t.Priority,
+      ProjectId = t.ProjectId,
+      Users = [.. t.Users.Select(u => new UserDto {
+           Id = u.Id,
+           FirstName = u.FirstName,
+           LastName = u.LastName,
+           WorkMail = u.WorkMail,
+           Role = u.Role
+           })]
+    });
+    return Ok(dtos);
   }
 
   [HttpGet("{id}")]
-  public async Task<ActionResult<ProjectTask?>> GetProjectTask(int id)
+  public async Task<ActionResult<ProjectTaskDto?>> GetProjectTask(int id)
   {
     var projectTask = await _repository.GetTaskByIdAsync(id);
     if (projectTask == null)
     {
       return NotFound();
     }
-    return Ok(projectTask);
+
+    var dtos = new ProjectTaskDto
+    {
+      Id = projectTask.Id,
+      Title = projectTask.Title,
+      Description = projectTask.Description,
+      StartDate = projectTask.StartDate,
+      Deadline = projectTask.Deadline,
+      Progress = projectTask.Progress,
+      Priority = projectTask.Priority,
+      ProjectId = projectTask.ProjectId,
+      Users = [.. projectTask.Users.Select(u => new UserDto {
+           Id = u.Id,
+           FirstName = u.FirstName,
+           LastName = u.LastName,
+           WorkMail = u.WorkMail,
+           Role = u.Role
+           })]
+    };
+
+    return Ok(dtos);
   }
 
   [HttpPost]
-  public async Task<ActionResult> CreateTask(ProjectTask projectTask)
+  public async Task<ActionResult> CreateTask(ProjectTaskCreateDto dto)
   {
+    var projectTask = new ProjectTask
+    {
+      Title = dto.Title,
+      Description = dto.Description,
+      StartDate = dto.StartDate,
+      Deadline = dto.Deadline,
+      Priority = dto.Priority,
+      ProjectId = dto.ProjectId
+    };
     await _repository.AddTaskAsync(projectTask);
     await _repository.SaveChangesAsync();
 
-    return CreatedAtAction(nameof(GetProjectTask), new { id = projectTask.Id }, projectTask);
+    var projectTaskDto = new ProjectTaskDto
+    {
+      Id = projectTask.Id,
+      Title = projectTask.Title,
+      Description = projectTask.Description,
+      StartDate = projectTask.StartDate,
+      Deadline = projectTask.Deadline,
+      Progress = projectTask.Progress,
+      Priority = projectTask.Priority,
+      ProjectId = projectTask.ProjectId,
+      Users = []
+    };
+
+    return CreatedAtAction(nameof(GetProjectTask), new { id = projectTaskDto.Id }, projectTaskDto);
   }
 
+  [HttpPut("{id}")]
+  public async Task<IActionResult> UpdateTask(int id, ProjectTaskUpdateDto dto)
+  {
+    var projectTask = await _repository.GetTaskByIdAsync(id);
+    if (projectTask == null)
+    {
+      return NotFound();
+    }
+
+    projectTask.Title = dto.Title;
+    projectTask.Description = dto.Description;
+    projectTask.StartDate = dto.StartDate;
+    projectTask.Deadline = dto.Deadline;
+    projectTask.Progress = dto.Progress;
+    projectTask.Priority = dto.Priority;
+
+    await _repository.UpdateTaskAsync(projectTask);
+    await _repository.SaveChangesAsync();
+
+    return NoContent();
+  }
 
   [HttpDelete("{id}")]
   public async Task<IActionResult> DeleteTask(int id)

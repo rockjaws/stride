@@ -10,6 +10,7 @@ public class ProjectTask
   public string Progress { get; set; } = "Todo";
   public string Priority { get; set; } = "Medium";
 
+  public int? ProjectId { get; set; }
   public Project? Project { get; set; }
   public List<User> Users { get; set; } = new();
 }

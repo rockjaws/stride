@@ -11,6 +11,6 @@ public class ProjectTaskDto
   public string Progress { get; set; } = string.Empty;
   public string Priority { get; set; } = string.Empty;
 
-  public int ProjectId { get; set; }
+  public int? ProjectId { get; set; }
   public List<UserDto> Users { get; set; } = new();
 }
