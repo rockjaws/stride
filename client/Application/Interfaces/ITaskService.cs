@@ -5,7 +5,7 @@ namespace client.Application.Interfaces;
 public interface ITaskService
 {
   Task<List<ProjectTask>> GetTasksAsync();
-  Task CreateTaskAsync(ProjectTask task);
+  Task<ProjectTask> CreateTaskAsync(ProjectTask task);
   Task UpdateTaskAsync(ProjectTask task);
   Task DeleteTaskAsync(int id);
   void SortTasks();

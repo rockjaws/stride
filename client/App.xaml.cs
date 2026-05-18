@@ -19,9 +19,10 @@ public partial class App : System.Windows.Application
 
         ILogger logger = new Logger();
         IProjectService projectService = new ProjectService();
+        ITaskService taskService = new TaskService();
         logger.Log(LogLevel.INFO, "Application Starting..");
 
-        var viewModel = new MainViewModel(logger, projectService);
+        var viewModel = new MainViewModel(logger, projectService, taskService);
         var mainWindow = new MainWindow(viewModel);
 
         MainWindow = mainWindow;
