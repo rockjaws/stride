@@ -22,7 +22,9 @@ public class TaskRepository : ITaskRepository
 
   public async Task<ProjectTask?> GetTaskByIdAsync(int id)
   {
-    return await _context.ProjectTasks.FindAsync(id);
+    return await _context.ProjectTasks
+      .Include(t => t.Users)
+      .FirstOrDefaultAsync(t => t.Id == id);
   }
 
   public async Task AddTaskAsync(ProjectTask task)

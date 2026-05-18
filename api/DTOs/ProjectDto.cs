@@ -10,7 +10,7 @@ public class ProjectDto
   public DateTime StartDate { get; set; }
   public DateTime Deadline { get; set; }
 
-  public List<ChatChannel> ChatChannels { get; set; } = new();
+  public List<ChannelDto> ChatChannels { get; set; } = new();
   public List<ProjectTaskDto> Tasks { get; set; } = new();
   public List<UserDto> Users { get; set; } = new();
 }

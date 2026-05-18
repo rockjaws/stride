@@ -1,4 +1,6 @@
-﻿namespace api.Models;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace api.Models;
 
 public class Notification
 {
@@ -11,5 +13,6 @@ public class Notification
   public User? User { get; set; }
 
   public int? TaskId { get; set; }
+  [ForeignKey("TaskId")]
   public ProjectTask? ProjectTask { get; set; }
 }
