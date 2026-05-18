@@ -8,7 +8,7 @@
 		xmlns:viewModels="clr-namespace:client.Presentation.ViewModels"
 		xmlns:commands="clr-namespace:client.Presentation.Commands"
         mc:Ignorable="d"
-        Title="MainWindow" Height="1300" Width="2000" WindowState="Maximized" WindowStyle="None">
+        Title="Stride" Height="1300" Width="2000" WindowState="Maximized" WindowStyle="None">
 
 
 		<Window.Resources>
@@ -23,7 +23,7 @@
 			
 		<Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="220"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 		<Grid Grid.Column="0">
@@ -50,12 +50,18 @@
 							 FontSize="22"/>
             </StackPanel>
 
-			<Button x:Name="QuitButton"
-					Grid.Row="1"
-					Content="Quit"
-					Command="{StaticResource QuitCommand}"
-					Height="50"
-					FontSize="22"/>
+			<StackPanel Grid.Row="1">
+				<Button x:Name="NewProjectButton"
+						Content="New Project+"
+						Margin="0 0 0 10"
+						Height="50"
+						FontSize="22"/>
+				<Button x:Name="QuitButton"
+						Content="Quit"
+						Command="{StaticResource QuitCommand}"
+						Height="50"
+						FontSize="22"/>
+			</StackPanel>
 		</Grid>
 		<ContentControl Grid.Column="1" Content="{Binding CurrentView}" />
 		</Grid>
