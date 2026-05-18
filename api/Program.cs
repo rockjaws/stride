@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite("Data Source=stride.db"));
+    options.UseSqlite($"Data Source={Path.GetFullPath(Path.Combine(builder.Environment.ContentRootPath, "..", "db", "stride.db"))}"));
 
 // This tells the API: "Whenever a Controller asks for an IRepository, give them a Repository."
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
