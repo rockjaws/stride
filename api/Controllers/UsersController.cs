@@ -10,10 +10,12 @@ namespace api.Controllers;
 public class UsersController : ControllerBase
 {
   private readonly IUserRepository _repository;
+  private readonly INotificationRepository _notificationRepository;
 
-  public UsersController(IUserRepository repository)
+  public UsersController(IUserRepository repository, INotificationRepository notificationRepository)
   {
     _repository = repository;
+    _notificationRepository = notificationRepository;
   }
 
   [HttpGet]
@@ -77,7 +79,7 @@ public class UsersController : ControllerBase
   }
 
   [HttpPut("{id}")]
-  public async Task<IActionResult> UpdateUser(int id, UserUpdateDto dto)
+  public async Task<ActionResult> UpdateUser(int id, UserUpdateDto dto)
   {
     var user = await _repository.GetUserByIdAsync(id);
     if (user == null)
@@ -95,9 +97,56 @@ public class UsersController : ControllerBase
     return NoContent();
   }
 
+  [HttpGet("{id}/notifications")]
+  public async Task<ActionResult<IEnumerable<NotificationDto>>> GetNotifications(int id)
+  {
+    var user = await _repository.GetUserByIdAsync(id);
+    if (user == null)
+    {
+      return NotFound();
+    }
+
+    var notifications = await _notificationRepository.GetNotificationsByIdAsync(id);
+    if (notifications == null)
+    {
+      return NotFound();
+    }
+
+    var dtos = notifications.Select(n => new NotificationDto
+    {
+      Id = n.Id,
+      Text = n.Text,
+      IsRead = n.IsRead,
+      Time = n.Time,
+      TaskId = n.TaskId
+    });
+    return Ok(dtos);
+  }
+
+  [HttpPut("{id}/notifications/{notificationId}")]
+  public async Task<ActionResult> UpdateNotification(int id, int notificationId, NotificationUpdateDto dto)
+  {
+    var user = await _repository.GetUserByIdAsync(id);
+    if (user == null)
+    {
+      return NotFound();
+    }
+
+    var notification = await _notificationRepository.GetNotificationByIdAsync(notificationId);
+    if (notification == null)
+    {
+      return NotFound();
+    }
+
+    notification.IsRead = dto.IsRead;
+    await _notificationRepository.UpdateNotification(notification);
+    await _notificationRepository.SaveChangesAsync();
+
+    return NoContent();
+  }
 
   [HttpDelete("{id}")]
-  public async Task<IActionResult> DeleteUser(int id)
+  public async Task<ActionResult> DeleteUser(int id)
   {
     var user = await _repository.GetUserByIdAsync(id);
     if (user == null)
