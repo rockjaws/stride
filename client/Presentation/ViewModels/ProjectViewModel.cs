@@ -12,6 +12,7 @@ public class ProjectViewModel : ObservableObject
 {
     private readonly ILogger _logger;
     private readonly IProjectService _projectService;
+    private readonly ITaskService _taskService;
     private Project? _selectedProject;
     private ObservableCollection<ProjectTask> _backlogTasks = [];
     private ObservableCollection<ProjectTask> _inProgressTasks = [];
@@ -63,10 +64,15 @@ public class ProjectViewModel : ObservableObject
 
     public CreateNewTaskCommand CreateNewTaskCommand { get; }
 
-    public ProjectViewModel(ILogger logger, IProjectService projectService)
+    public ProjectViewModel(
+        ILogger logger,
+        IProjectService projectService,
+        ITaskService taskService
+    )
     {
         _logger = logger;
         _projectService = projectService;
+        _taskService = taskService;
         ListOfProjects = [];
         BacklogTasks = [];
         InProgressTasks = [];
@@ -74,8 +80,10 @@ public class ProjectViewModel : ObservableObject
         FinishedTasks = [];
         CreateNewTaskCommand = new CreateNewTaskCommand(
             _logger,
+            _taskService,
             AddCreatedTask,
-            () => _selectedProject != null
+            () => _selectedProject != null,
+            () => _selectedProject?.Id
         );
         _ = GetProjectsAsync();
     }

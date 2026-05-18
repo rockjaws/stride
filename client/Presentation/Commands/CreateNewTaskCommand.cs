@@ -8,21 +8,27 @@ namespace client.Presentation.Commands;
 public class CreateNewTaskCommand : IUndoableCommand
 {
     private readonly ILogger _logger;
+    private readonly ITaskService _taskService;
     private readonly Action<ProjectTask> _onTaskCreated;
     private readonly Func<bool> _canCreateTask;
+    private readonly Func<int?> _getProjectId;
 
     public CreateNewTaskCommand(
         ILogger logger,
+        ITaskService taskService,
         Action<ProjectTask> onTaskCreated,
-        Func<bool> canCreateTask
+        Func<bool> canCreateTask,
+        Func<int?> getProjectId
     )
     {
         _logger = logger;
+        _taskService = taskService;
         _onTaskCreated = onTaskCreated;
         _canCreateTask = canCreateTask;
+        _getProjectId = getProjectId;
     }
 
-    public void Execute(object? param)
+    public async void Execute(object? param)
     {
         if (!CanExecute(param))
             return;
@@ -32,8 +38,18 @@ public class CreateNewTaskCommand : IUndoableCommand
 
         if (window.ShowDialog() == true)
         {
-            ProjectTask task = vm.CreateProjectTask();
-            _onTaskCreated(task);
+            try
+            {
+                int projectId = _getProjectId()
+                    ?? throw new InvalidOperationException("Cannot create a task without a selected project.");
+                ProjectTask task = vm.CreateProjectTask(projectId);
+                ProjectTask savedTask = await _taskService.CreateTaskAsync(task);
+                _onTaskCreated(savedTask);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(Domain.Enum.LogLevel.ERROR, $"Failed To Create Task: {ex.Message}");
+            }
         }
     }
 

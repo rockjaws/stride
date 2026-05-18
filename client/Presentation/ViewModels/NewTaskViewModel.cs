@@ -18,83 +18,59 @@ namespace client.Presentation.ViewModels
         public string Title
         {
             get => _title;
-            set
-            {
-                SetProperty(ref _title, value);
-                _logger.Log(LogLevel.INFO, $"Title is now: {_title}");
-            }
+            set => SetProperty(ref _title, value);
         }
 
         public string Description
         {
             get => _description;
-            set
-            {
-                SetProperty(ref _description, value);
-                _logger.Log(LogLevel.INFO, $"Description is now: {_description}");
-            }
+            set => SetProperty(ref _description, value);
         }
 
         public DateTime Deadline
         {
             get => _deadline;
-            set
-            {
-                SetProperty(ref _deadline, value);
-                _logger.Log(LogLevel.INFO, $"Deadline is now: {_deadline}");
-            }
+            set => SetProperty(ref _deadline, value);
         }
 
         public DateTime StartDate
         {
             get => _startDate;
-            set
-            {
-                SetProperty(ref _startDate, value);
-                _logger.Log(LogLevel.INFO, $"Start date is now: {_startDate}");
-            }
+            set => SetProperty(ref _startDate, value);
         }
 
         public TaskProgress Progress
         {
             get => _progress;
-            set
-            {
-                SetProperty(ref _progress, value);
-                _logger.Log(LogLevel.INFO, $"Task progress is now: {_progress}");
-            }
+            set => SetProperty(ref _progress, value);
         }
 
         public TaskPriority Priority
         {
             get => _priority;
-            set
-            {
-                SetProperty(ref _priority, value);
-                _logger.Log(LogLevel.INFO, $"Task priority is now: {_priority}");
-            }
-        }
-
-        public NewTaskViewModel(ILogger logger)
-        {
-            _logger = logger;
+            set => SetProperty(ref _priority, value);
         }
 
         public TaskProgress[] ProgressOptions { get; } = Enum.GetValues<TaskProgress>();
 
         public TaskPriority[] PriorityOptions { get; } = Enum.GetValues<TaskPriority>();
 
-        public ProjectTask CreateProjectTask()
+        public NewTaskViewModel(ILogger logger)
         {
-            // add some null check logic
+            _logger = logger;
+        }
+
+        public ProjectTask CreateProjectTask(int projectId)
+        {
             ProjectTask task = new ProjectTask(
-                0,
+                null,
                 _title,
                 _description,
                 _startDate,
                 _deadline,
                 _progress,
-                _priority
+                _priority,
+                projectId
             );
 
             return task;

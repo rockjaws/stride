@@ -36,7 +36,8 @@ public class ProjectService : IProjectService
         t.StartDate,
         t.Deadline,
         ParseProgress(t.Progress),
-        ParsePriority(t.Priority)
+        ParsePriority(t.Priority),
+        t.ProjectId
       ))]
     ))];
   }
@@ -88,5 +89,6 @@ public class ProjectService : IProjectService
     public DateTime Deadline { get; set; }
     public string Progress { get; set; } = string.Empty;
     public string Priority { get; set; } = string.Empty;
+    public int? ProjectId { get; set; }
   }
 }

@@ -4,7 +4,7 @@ namespace client.Application.Interfaces;
 
 public interface ITask
 {
-  int Id { get; }
+  int? Id { get; }
   string Title { get; }
   string Description { get; }
   DateTime StartDate { get; }

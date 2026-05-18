@@ -10,11 +10,11 @@ public class MainViewModel : ObservableObject
     private readonly ILogger _logger;
     private object _currentView;
 
-    public MainViewModel(ILogger logger, IProjectService projectService)
+    public MainViewModel(ILogger logger, IProjectService projectService, ITaskService taskService)
     {
         _logger = logger;
         DashboardViewModel = new DashboardViewModel();
-        ProjectViewModel = new ProjectViewModel(_logger, projectService);
+        ProjectViewModel = new ProjectViewModel(_logger, projectService, taskService);
         _currentView = DashboardViewModel;
         ChangeViewCommand = new ChangeViewCommand(this);
     }
