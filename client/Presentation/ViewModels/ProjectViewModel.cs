@@ -12,11 +12,11 @@ public class ProjectViewModel : ObservableObject
 {
     private readonly ILogger _logger;
     private readonly IProjectService _projectService;
-    private Project _selectedProject;
-    private ObservableCollection<ProjectTask> _backlogTasks;
-    private ObservableCollection<ProjectTask> _inProgressTasks;
-    private ObservableCollection<ProjectTask> _inReviewTasks;
-    private ObservableCollection<ProjectTask> _finishedTasks;
+    private Project? _selectedProject;
+    private ObservableCollection<ProjectTask> _backlogTasks = [];
+    private ObservableCollection<ProjectTask> _inProgressTasks = [];
+    private ObservableCollection<ProjectTask> _inReviewTasks = [];
+    private ObservableCollection<ProjectTask> _finishedTasks = [];
 
     public ObservableCollection<ProjectTask> BacklogTasks
     {
@@ -42,13 +42,18 @@ public class ProjectViewModel : ObservableObject
         set => SetProperty(ref _finishedTasks, value);
     }
 
-    public Project SelectedProject
+    public Project? SelectedProject
     {
         get => _selectedProject;
         set
         {
             SetProperty(ref _selectedProject, value);
             CreateNewTaskCommand.RaiseCanExecuteChanged();
+            ClearTaskColumns();
+
+            if (_selectedProject == null)
+                return;
+
             _logger.Log(LogLevel.INFO, $"New Project Selected: {_selectedProject.Title}");
             LoadTasks(_selectedProject);
         }
@@ -75,7 +80,7 @@ public class ProjectViewModel : ObservableObject
         _ = GetProjectsAsync();
     }
 
-    private void LoadTasks(IProject currentProject)
+    private void LoadTasks(Project currentProject)
     {
         foreach (ProjectTask task in currentProject.Tasks)
         {
@@ -93,6 +98,14 @@ public class ProjectViewModel : ObservableObject
         }
     }
 
+    private void ClearTaskColumns()
+    {
+        BacklogTasks.Clear();
+        InProgressTasks.Clear();
+        InReviewTasks.Clear();
+        FinishedTasks.Clear();
+    }
+
     private void AddCreatedTask(ProjectTask task)
     {
         if (task == null)
@@ -108,7 +121,7 @@ public class ProjectViewModel : ObservableObject
         };
 
         collection.Add(task);
-        SelectedProject.Tasks.Add(task);
+        SelectedProject?.Tasks.Add(task);
     }
 
     public async Task GetProjectsAsync()

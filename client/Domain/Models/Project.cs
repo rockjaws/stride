@@ -18,7 +18,8 @@ public class Project : IProject
       string description,
       DateTime startDate,
       DateTime deadline,
-      List<IChatChannel> chatChannels
+      List<IChatChannel>? chatChannels,
+      List<ITask>? tasks = null
   )
   {
     Id = id;
@@ -26,6 +27,7 @@ public class Project : IProject
     Description = description;
     StartDate = startDate;
     Deadline = deadline;
-    ChatChannels = chatChannels;
+    ChatChannels = chatChannels ?? [];
+    Tasks = tasks ?? [];
   }
 }
