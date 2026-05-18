@@ -29,7 +29,12 @@ public class ProjectController : ControllerBase
       Description = p.Description,
       StartDate = p.StartDate,
       Deadline = p.Deadline,
-      ChatChannels = p.ChatChannels,
+      ChatChannels = [.. p.ChatChannels.Select(c => new ChannelDto
+      {
+        Id = c.Id,
+        Name = c.Name,
+        ProjectId = p.Id
+      })],
       Tasks = [.. p.Tasks.Select(t => new ProjectTaskDto
       {
         Id = t.Id,
@@ -68,7 +73,11 @@ public class ProjectController : ControllerBase
       Description = project.Description,
       StartDate = project.StartDate,
       Deadline = project.Deadline,
-      ChatChannels = project.ChatChannels,
+      ChatChannels = [.. project.ChatChannels.Select(c => new ChannelDto {
+          Id = c.Id,
+          Name = c.Name,
+          ProjectId = project.Id
+          })],
       Tasks = [.. project.Tasks.Select(t => new ProjectTaskDto
       {
         Id = t.Id,
@@ -112,7 +121,7 @@ public class ProjectController : ControllerBase
       Description = project.Description,
       StartDate = project.StartDate,
       Deadline = project.Deadline,
-      ChatChannels = project.ChatChannels,
+      ChatChannels = [],
       Tasks = [],
       Users = []
     };
