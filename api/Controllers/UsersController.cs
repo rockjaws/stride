@@ -1,4 +1,5 @@
-﻿using api.Models;
+﻿using api.DTOs;
+using api.Models;
 using api.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,43 +17,95 @@ public class UsersController : ControllerBase
   }
 
   [HttpGet]
-  public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+  public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
   {
     var users = await _repository.GetAllUsersAsync();
-    return Ok(users);
+    var dtos = users.Select(u => new UserDto
+    {
+      Id = u.Id,
+      FirstName = u.FirstName,
+      LastName = u.LastName,
+      WorkMail = u.WorkMail,
+      Role = u.Role
+    });
+    return Ok(dtos);
   }
 
   [HttpGet("{id}")]
-  public async Task<ActionResult<User?>> GetUser(int id)
+  public async Task<ActionResult<UserDto?>> GetUser(int id)
   {
     var user = await _repository.GetUserByIdAsync(id);
     if (user == null)
     {
       return NotFound();
     }
-    return Ok(user);
+
+    var dto = new UserDto
+    {
+      Id = user.Id,
+      FirstName = user.FirstName,
+      LastName = user.LastName,
+      WorkMail = user.WorkMail,
+      Role = user.Role
+    };
+    return Ok(dto);
   }
 
   [HttpPost]
-  public async Task<ActionResult> CreateUser(User user)
+  public async Task<ActionResult> CreateUser(UserCreateDto dto)
   {
+    var user = new User
+    {
+      FirstName = dto.FirstName,
+      LastName = dto.LastName,
+      WorkMail = dto.WorkMail,
+    };
+
     await _repository.AddUserAsync(user);
     await _repository.SaveChangesAsync();
 
-    return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
+    var userDto = new UserDto
+    {
+      Id = user.Id,
+      FirstName = user.FirstName,
+      LastName = user.LastName,
+      WorkMail = user.WorkMail,
+      Role = user.Role,
+    };
+
+    return CreatedAtAction(nameof(GetUser), new { id = userDto.Id }, userDto);
+  }
+
+  [HttpPut("{id}")]
+  public async Task<IActionResult> UpdateUser(int id, UserUpdateDto dto)
+  {
+    var user = await _repository.GetUserByIdAsync(id);
+    if (user == null)
+    {
+      return NotFound();
+    }
+
+    user.FirstName = dto.FirstName;
+    user.LastName = dto.LastName;
+    user.WorkMail = dto.WorkMail;
+
+    await _repository.UpdateUserAsync(user);
+    await _repository.SaveChangesAsync();
+
+    return NoContent();
   }
 
 
   [HttpDelete("{id}")]
   public async Task<IActionResult> DeleteUser(int id)
   {
-    var project = await _repository.GetUserByIdAsync(id);
-    if (project == null)
+    var user = await _repository.GetUserByIdAsync(id);
+    if (user == null)
     {
       return NotFound();
     }
 
-    await _repository.DeleteUserAsync(project);
+    await _repository.DeleteUserAsync(user);
     await _repository.SaveChangesAsync();
 
     return NoContent();

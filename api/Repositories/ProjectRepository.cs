@@ -17,6 +17,8 @@ public class ProjectRepository : IProjectRepository
   {
     return await _context.Projects
       .Include(p => p.Tasks)
+      .Include(p => p.Users)
+      .Include(p => p.ChatChannels)
       .ToListAsync();
   }
 
@@ -28,6 +30,12 @@ public class ProjectRepository : IProjectRepository
   public async Task AddProjectAsync(Project project)
   {
     await _context.Projects.AddAsync(project);
+  }
+
+  public async Task UpdateProjectAsync(Project project)
+  {
+    _context.Projects.Update(project);
+    await Task.CompletedTask;
   }
 
   public async Task DeleteProjectAsync(Project project)

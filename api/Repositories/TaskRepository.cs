@@ -15,7 +15,9 @@ public class TaskRepository : ITaskRepository
 
   public async Task<IEnumerable<ProjectTask>> GetAllTasksAsync()
   {
-    return await _context.ProjectTasks.ToListAsync();
+    return await _context.ProjectTasks
+      .Include(t => t.Users)
+      .ToListAsync();
   }
 
   public async Task<ProjectTask?> GetTaskByIdAsync(int id)
@@ -26,6 +28,12 @@ public class TaskRepository : ITaskRepository
   public async Task AddTaskAsync(ProjectTask task)
   {
     await _context.ProjectTasks.AddAsync(task);
+  }
+
+  public async Task UpdateTaskAsync(ProjectTask task)
+  {
+    _context.ProjectTasks.Update(task);
+    await Task.CompletedTask;
   }
 
   public async Task DeleteTaskAsync(ProjectTask task)
