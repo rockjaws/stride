@@ -1,8 +1,8 @@
-﻿namespace client.Domain.Enum;
+namespace client.Domain.Enum;
 
 public enum TaskProgress
 {
-  BackLog,
+  Backlog,
   InProgress,
   Review,
   Done
