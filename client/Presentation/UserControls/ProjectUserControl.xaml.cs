@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -69,6 +69,13 @@ namespace client.Presentation.UserControls
 
             await viewModel.MoveTaskAsync(task, progress);
             e.Handled = true;
+        }
+        private void ChangePriority_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button { Tag: ProjectTask task })
+            {
+                // cycle through priorities or open a picker
+            }
         }
     }
 }

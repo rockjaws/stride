@@ -50,8 +50,12 @@
                 <ItemsControl ItemsSource="{Binding BacklogTasks}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border Background="#F0F0F0" CornerRadius="4" Margin="0 4" Padding="8" Cursor="Hand" PreviewMouseMove="TaskCard_PreviewMouseMove" MouseLeftButtonDown="TaskCard_MouseLeftButtonDown">
-                                <TextBlock Text="{Binding Title}" />
+                            <Border Background="#F3F4F6" BorderBrush="#6B7280" BorderThickness="2" CornerRadius="4" Margin="0 4" Padding="8" Cursor="Hand" PreviewMouseMove="TaskCard_PreviewMouseMove" MouseLeftButtonDown="TaskCard_MouseLeftButtonDown">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Title}" Margin="0 0 8 0"/>
+                                    <TextBlock Text="{Binding Priority, StringFormat='|   Priority: {0}'}" Margin="0 0 8 0"/>
+                                    <Button Content="↑" Click="ChangePriority_Click" Tag="{Binding}"/>
+                                </StackPanel>
                             </Border>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
@@ -64,8 +68,12 @@
                 <ItemsControl ItemsSource="{Binding InProgressTasks}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border Background="#FFF9C4" CornerRadius="4" Margin="0 4" Padding="8" Cursor="Hand" PreviewMouseMove="TaskCard_PreviewMouseMove" MouseLeftButtonDown="TaskCard_MouseLeftButtonDown">
-                                <TextBlock Text="{Binding Title}" />
+                            <Border Background="#FEF3C7" BorderBrush="#D97706" BorderThickness="2" CornerRadius="4" Margin="0 4" Padding="8" Cursor="Hand" PreviewMouseMove="TaskCard_PreviewMouseMove" MouseLeftButtonDown="TaskCard_MouseLeftButtonDown">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Title}" Margin="0 0 8 0"/>
+                                    <TextBlock Text="{Binding Priority, StringFormat='|   Priority: {0}'}" Margin="0 0 8 0"/>
+                                    <Button Content="↑" Click="ChangePriority_Click" Tag="{Binding}"/>
+                                </StackPanel>
                             </Border>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
@@ -78,8 +86,12 @@
                 <ItemsControl ItemsSource="{Binding InReviewTasks}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border Background="#E1BEE7" CornerRadius="4" Margin="0 4" Padding="8" Cursor="Hand" PreviewMouseMove="TaskCard_PreviewMouseMove" MouseLeftButtonDown="TaskCard_MouseLeftButtonDown">
-                                <TextBlock Text="{Binding Title}" />
+                            <Border Background="#EDE9FE" BorderBrush="#7C3AED" BorderThickness="2" CornerRadius="4" Margin="0 4" Padding="8" Cursor="Hand" PreviewMouseMove="TaskCard_PreviewMouseMove" MouseLeftButtonDown="TaskCard_MouseLeftButtonDown">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Title}" Margin="0 0 8 0"/>
+                                    <TextBlock Text="{Binding Priority, StringFormat='|   Priority: {0}'}" Margin="0 0 8 0"/>
+                                    <Button Content="↑" Click="ChangePriority_Click" Tag="{Binding}"/>
+                                </StackPanel>
                             </Border>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
@@ -92,8 +104,12 @@
                 <ItemsControl ItemsSource="{Binding FinishedTasks}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border Background="#C8E6C9" CornerRadius="4" Margin="0 4" Padding="8" Cursor="Hand" PreviewMouseMove="TaskCard_PreviewMouseMove" MouseLeftButtonDown="TaskCard_MouseLeftButtonDown">
-                                <TextBlock Text="{Binding Title}" />
+                            <Border Background="#DCFCE7" BorderBrush="#16A34A" BorderThickness="2" CornerRadius="4" Margin="0 4" Padding="8" Cursor="Hand" PreviewMouseMove="TaskCard_PreviewMouseMove" MouseLeftButtonDown="TaskCard_MouseLeftButtonDown">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Title}" Margin="0 0 8 0"/>
+                                    <TextBlock Text="{Binding Priority, StringFormat='|   Priority: {0}'}" Margin="0 0 8 0"/>
+                                    <Button Content="↑" Click="ChangePriority_Click" Tag="{Binding}"/>
+                                </StackPanel>
                             </Border>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
