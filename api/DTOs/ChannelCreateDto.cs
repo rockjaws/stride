@@ -1,6 +1,6 @@
-﻿namespace api.DTOs;
+namespace api.DTOs;
 
 public class ChannelCreateDto
 {
-  public string Name { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
 }
