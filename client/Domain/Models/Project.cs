@@ -4,7 +4,7 @@ namespace client.Domain.Models;
 
 public class Project : IProject
 {
-  public int Id { get; }
+  public int? Id { get; }
   public string Title { get; }
   public string Description { get; }
   public DateTime StartDate { get; private set; }
@@ -13,7 +13,7 @@ public class Project : IProject
   public List<ITask> Tasks { get; private set; }
 
   public Project(
-      int id,
+      int? id,
       string title,
       string description,
       DateTime startDate,

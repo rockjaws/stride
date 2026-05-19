@@ -132,6 +132,15 @@ public class ProjectViewModel : ObservableObject
         SelectedProject?.Tasks.Add(task);
     }
 
+    public void AddCreatedProject(Project project)
+    {
+        if (project == null)
+            return;
+
+        ListOfProjects.Add(project);
+        SelectedProject = project;
+    }
+
     public async Task GetProjectsAsync()
     {
         try

@@ -53,6 +53,7 @@
 			<StackPanel Grid.Row="1">
 				<Button x:Name="NewProjectButton"
 						Content="New Project+"
+						Command="{Binding CreateNewProjectCommand}"
 						Margin="0 0 0 10"
 						Height="50"
 						FontSize="22"/>

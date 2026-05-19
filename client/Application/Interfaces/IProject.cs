@@ -2,7 +2,7 @@
 
 public interface IProject
 {
-  int Id { get; }
+  int? Id { get; }
   string Title { get; }
   string Description { get; }
   DateTime StartDate { get; }

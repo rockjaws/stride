@@ -1,5 +1,6 @@
 ﻿using System.Windows.Input;
 using client.Application.Interfaces;
+using client.Domain.Models;
 using client.Presentation.Commands;
 using client.Presentation.Common;
 
@@ -17,9 +18,16 @@ public class MainViewModel : ObservableObject
         ProjectViewModel = new ProjectViewModel(_logger, projectService, taskService);
         _currentView = DashboardViewModel;
         ChangeViewCommand = new ChangeViewCommand(this);
+        CreateNewProjectCommand = new CreateNewProjectCommand(
+            _logger,
+            projectService,
+            AddCreatedProject
+        );
     }
 
     public ICommand ChangeViewCommand { get; }
+
+    public CreateNewProjectCommand CreateNewProjectCommand { get; }
 
     public ProjectViewModel ProjectViewModel { get; }
     public DashboardViewModel DashboardViewModel { get; }
@@ -33,5 +41,14 @@ public class MainViewModel : ObservableObject
     public void SetCurrentView(object viewModel)
     {
         CurrentView = viewModel;
+    }
+
+    private void AddCreatedProject(Project project)
+    {
+        if (project == null)
+            return;
+
+        ProjectViewModel.AddCreatedProject(project);
+        CurrentView = ProjectViewModel;
     }
 }
