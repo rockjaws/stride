@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using api.Models;
+using api.Models.Enums;
 
 namespace api.Data;
 
@@ -15,4 +16,18 @@ public class AppDbContext : DbContext
   public DbSet<ChatChannel> ChatChannels { get; set; }
   public DbSet<Message> Messages { get; set; }
   public DbSet<Notification> Notifications { get; set; }
+
+  protected override void OnModelCreating(ModelBuilder modelBuilder)
+  {
+    base.OnModelCreating(modelBuilder);
+
+    // Convert enums to strings in db
+    modelBuilder.Entity<ProjectTask>()
+      .Property(t => t.Progress)
+      .HasConversion<string>();
+
+    modelBuilder.Entity<ProjectTask>()
+      .Property(t => t.Priority)
+      .HasConversion<string>();
+  }
 }
