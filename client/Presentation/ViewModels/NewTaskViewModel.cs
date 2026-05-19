@@ -1,4 +1,4 @@
-﻿using client.Application.Interfaces;
+using client.Application.Interfaces;
 using client.Domain.Enum;
 using client.Domain.Models;
 using client.Presentation.Common;

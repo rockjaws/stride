@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using client.Application.Interfaces;
 using client.Domain.Enum;
 using client.Domain.Exceptions;
@@ -14,6 +14,7 @@ public class ProjectViewModel : ObservableObject
     private readonly IProjectService _projectService;
     private readonly ITaskService _taskService;
     private Project? _selectedProject;
+    private ProjectTask? _selectedTask;
     private ObservableCollection<ProjectTask> _backlogTasks = [];
     private ObservableCollection<ProjectTask> _inProgressTasks = [];
     private ObservableCollection<ProjectTask> _inReviewTasks = [];
@@ -60,9 +61,17 @@ public class ProjectViewModel : ObservableObject
         }
     }
 
+    public ProjectTask? SelectedTask
+    {
+        get => _selectedTask;
+        set { SetProperty(ref _selectedTask, value); }
+    }
+
     public ObservableCollection<Project> ListOfProjects { get; }
 
     public CreateNewTaskCommand CreateNewTaskCommand { get; }
+
+    public ShowSelectedTaskCommand ShowSelectedTaskCommand { get; }
 
     public ProjectViewModel(
         ILogger logger,
@@ -85,6 +94,7 @@ public class ProjectViewModel : ObservableObject
             () => _selectedProject != null,
             () => _selectedProject?.Id
         );
+        ShowSelectedTaskCommand = new ShowSelectedTaskCommand(_logger, _taskService, UpdateTask);
         _ = GetProjectsAsync();
     }
 
@@ -112,6 +122,19 @@ public class ProjectViewModel : ObservableObject
 
         GetTaskCollection(task.Progress).Add(task);
         SelectedProject?.Tasks.Add(task);
+    }
+
+    private void UpdateTask(ProjectTask task)
+    {
+        if (task == null)
+            return;
+
+        if (SelectedProject?.Tasks.FirstOrDefault(p => p.Id == task.Id) is not ProjectTask existingTask)
+            return;
+
+        GetTaskCollection(existingTask.Progress).Remove(existingTask);
+        GetTaskCollection(task.Progress).Add(task);
+        ReplaceSelectedProjectTask(existingTask, task);
     }
 
     public async Task MoveTaskAsync(ProjectTask task, TaskProgress progress)
