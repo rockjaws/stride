@@ -12,7 +12,7 @@ namespace client.Presentation.ViewModels
         private string _description = string.Empty;
         private DateTime _startDate = DateTime.Today;
         private DateTime _deadline = DateTime.Today.AddDays(7);
-        private TaskProgress _progress = TaskProgress.BackLog;
+        private TaskProgress _progress = TaskProgress.Backlog;
         private TaskPriority _priority = TaskPriority.Normal;
 
         public string Title

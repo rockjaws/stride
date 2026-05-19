@@ -13,7 +13,7 @@ public class SelectedTaskViewModel : ObservableObject
     private string _description = string.Empty;
     private DateTime _startDate = DateTime.Today;
     private DateTime _deadline = DateTime.Today;
-    private TaskProgress _progress = TaskProgress.BackLog;
+    private TaskProgress _progress = TaskProgress.Backlog;
     private TaskPriority _priority = TaskPriority.Normal;
 
     public string Title

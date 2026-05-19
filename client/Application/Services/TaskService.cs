@@ -119,7 +119,7 @@ public class TaskService : ITaskService
     if (Enum.TryParse<TaskProgress>(progress, ignoreCase: true, out var parsed))
       return parsed;
 
-    return TaskProgress.BackLog;
+    return TaskProgress.Backlog;
   }
 
   private static TaskPriority ParsePriority(string priority)
@@ -146,7 +146,7 @@ public class TaskService : ITaskService
     public string Description { get; set; } = string.Empty;
     public DateTime StartDate { get; set; }
     public DateTime Deadline { get; set; }
-    public string Progress { get; set; } = "BackLog";
+    public string Progress { get; set; } = "Backlog";
     public string Priority { get; set; } = "Normal";
   }
 

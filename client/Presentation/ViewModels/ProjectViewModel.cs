@@ -137,6 +137,23 @@ public class ProjectViewModel : ObservableObject
         ReplaceSelectedProjectTask(existingTask, task);
     }
 
+    public async Task UpdateTaskAsync(ProjectTask task)
+    {
+        if (task == null)
+            return;
+
+        try
+        {
+            await _taskService.UpdateTaskAsync(task);
+            UpdateTask(task);
+            _logger.Log(LogLevel.INFO, $"Updated Task {task.Id}");
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(LogLevel.ERROR, $"Failed To Update Task {task.Id}: {ex.Message}");
+        }
+    }
+
     public async Task MoveTaskAsync(ProjectTask task, TaskProgress progress)
     {
         if (task.Progress == progress)
@@ -162,7 +179,7 @@ public class ProjectViewModel : ObservableObject
     {
         return progress switch
         {
-            TaskProgress.BackLog => BacklogTasks,
+            TaskProgress.Backlog => BacklogTasks,
             TaskProgress.InProgress => InProgressTasks,
             TaskProgress.Review => InReviewTasks,
             TaskProgress.Done => FinishedTasks,

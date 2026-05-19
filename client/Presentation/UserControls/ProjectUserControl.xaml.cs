@@ -1,6 +1,7 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using client.Domain.Enum;
 using client.Domain.Models;
@@ -48,6 +49,57 @@ namespace client.Presentation.UserControls
             }
         }
 
+        private void ChangePriority_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is not Button button || button.ContextMenu == null)
+                return;
+
+            button.ContextMenu.PlacementTarget = button;
+            button.ContextMenu.Placement = PlacementMode.Bottom;
+            button.ContextMenu.IsOpen = true;
+            e.Handled = true;
+        }
+
+        private async void Priority_Low_Click(object sender, RoutedEventArgs e)
+        {
+            await UpdateTaskPriorityAsync(sender, TaskPriority.Low);
+        }
+
+        private async void Priority_Medium_Click(object sender, RoutedEventArgs e)
+        {
+            await UpdateTaskPriorityAsync(sender, TaskPriority.Normal);
+        }
+
+        private async void Priority_High_Click(object sender, RoutedEventArgs e)
+        {
+            await UpdateTaskPriorityAsync(sender, TaskPriority.High);
+        }
+
+        private async Task UpdateTaskPriorityAsync(object sender, TaskPriority priority)
+        {
+            if (sender is not FrameworkElement { Tag: ProjectTask task })
+                return;
+
+            if (DataContext is not ProjectViewModel viewModel)
+                return;
+
+            if (task.Priority == priority)
+                return;
+
+            var updatedTask = new ProjectTask(
+                task.Id,
+                task.Title,
+                task.Description,
+                task.StartDate,
+                task.Deadline,
+                task.Progress,
+                priority,
+                task.ProjectId
+            );
+
+            await viewModel.UpdateTaskAsync(updatedTask);
+        }
+
         private void Column_DragOver(object sender, DragEventArgs e)
         {
             e.Effects = e.Data.GetDataPresent(typeof(ProjectTask))
@@ -69,13 +121,6 @@ namespace client.Presentation.UserControls
 
             await viewModel.MoveTaskAsync(task, progress);
             e.Handled = true;
-        }
-        private void ChangePriority_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is Button { Tag: ProjectTask task })
-            {
-                // cycle through priorities or open a picker
-            }
         }
     }
 }

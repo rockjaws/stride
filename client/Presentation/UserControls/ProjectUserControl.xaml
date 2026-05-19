@@ -45,7 +45,7 @@
             </Grid.ColumnDefinitions>
 
             <!-- Backlog -->
-            <StackPanel Grid.Column="0" Margin="8" Background="Transparent" AllowDrop="True" DragOver="Column_DragOver" Drop="Column_Drop" Tag="{x:Static domain:TaskProgress.BackLog}">
+            <StackPanel Grid.Column="0" Margin="8" Background="Transparent" AllowDrop="True" DragOver="Column_DragOver" Drop="Column_Drop" Tag="{x:Static domain:TaskProgress.Backlog}">
                 <TextBlock Text="Backlog" FontWeight="Bold" FontSize="16" Margin="0 0 0 8"/>
                 <ItemsControl ItemsSource="{Binding BacklogTasks}">
                     <ItemsControl.ItemTemplate>
@@ -54,7 +54,15 @@
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="{Binding Title}" Margin="0 0 8 0"/>
                                     <TextBlock Text="{Binding Priority, StringFormat='|   Priority: {0}'}" Margin="0 0 8 0"/>
-                                    <Button Content="↑" Click="ChangePriority_Click" Tag="{Binding}"/>
+                                    <Button Content="↑" Tag="{Binding}" PreviewMouseLeftButtonDown="ChangePriority_Click">
+                                        <Button.ContextMenu>
+                                            <ContextMenu DataContext="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+                                                <MenuItem Header="Low" Click="Priority_Low_Click" Tag="{Binding}"/>
+                                                <MenuItem Header="Medium" Click="Priority_Medium_Click" Tag="{Binding}"/>
+                                                <MenuItem Header="High" Click="Priority_High_Click" Tag="{Binding}"/>
+                                            </ContextMenu>
+                                        </Button.ContextMenu>
+                                    </Button>
                                 </StackPanel>
                             </Border>
                         </DataTemplate>
@@ -72,7 +80,15 @@
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="{Binding Title}" Margin="0 0 8 0"/>
                                     <TextBlock Text="{Binding Priority, StringFormat='|   Priority: {0}'}" Margin="0 0 8 0"/>
-                                    <Button Content="↑" Click="ChangePriority_Click" Tag="{Binding}"/>
+                                    <Button Content="↑" Tag="{Binding}" PreviewMouseLeftButtonDown="ChangePriority_Click">
+                                        <Button.ContextMenu>
+                                            <ContextMenu DataContext="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+                                                <MenuItem Header="Low" Click="Priority_Low_Click" Tag="{Binding}"/>
+                                                <MenuItem Header="Medium" Click="Priority_Medium_Click" Tag="{Binding}"/>
+                                                <MenuItem Header="High" Click="Priority_High_Click" Tag="{Binding}"/>
+                                            </ContextMenu>
+                                        </Button.ContextMenu>
+                                    </Button>
                                 </StackPanel>
                             </Border>
                         </DataTemplate>
@@ -90,7 +106,15 @@
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="{Binding Title}" Margin="0 0 8 0"/>
                                     <TextBlock Text="{Binding Priority, StringFormat='|   Priority: {0}'}" Margin="0 0 8 0"/>
-                                    <Button Content="↑" Click="ChangePriority_Click" Tag="{Binding}"/>
+                                    <Button Content="↑" Tag="{Binding}" PreviewMouseLeftButtonDown="ChangePriority_Click">
+                                        <Button.ContextMenu>
+                                            <ContextMenu DataContext="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+                                                <MenuItem Header="Low" Click="Priority_Low_Click" Tag="{Binding}"/>
+                                                <MenuItem Header="Medium" Click="Priority_Medium_Click" Tag="{Binding}"/>
+                                                <MenuItem Header="High" Click="Priority_High_Click" Tag="{Binding}"/>
+                                            </ContextMenu>
+                                        </Button.ContextMenu>
+                                    </Button>
                                 </StackPanel>
                             </Border>
                         </DataTemplate>
@@ -108,7 +132,15 @@
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="{Binding Title}" Margin="0 0 8 0"/>
                                     <TextBlock Text="{Binding Priority, StringFormat='|   Priority: {0}'}" Margin="0 0 8 0"/>
-                                    <Button Content="↑" Click="ChangePriority_Click" Tag="{Binding}"/>
+                                    <Button Content="↑" Tag="{Binding}" PreviewMouseLeftButtonDown="ChangePriority_Click">
+                                        <Button.ContextMenu>
+                                            <ContextMenu DataContext="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+                                                <MenuItem Header="Low" Click="Priority_Low_Click" Tag="{Binding}"/>
+                                                <MenuItem Header="Medium" Click="Priority_Medium_Click" Tag="{Binding}"/>
+                                                <MenuItem Header="High" Click="Priority_High_Click" Tag="{Binding}"/>
+                                            </ContextMenu>
+                                        </Button.ContextMenu>
+                                    </Button>
                                 </StackPanel>
                             </Border>
                         </DataTemplate>
