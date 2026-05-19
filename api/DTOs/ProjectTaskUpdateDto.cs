@@ -1,4 +1,6 @@
-﻿namespace api.DTOs;
+﻿using api.Models.Enums;
+
+namespace api.DTOs;
 
 public class ProjectTaskUpdateDto
 {
@@ -6,6 +8,6 @@ public class ProjectTaskUpdateDto
   public string Description { get; set; } = string.Empty;
   public DateTime StartDate { get; set; }
   public DateTime Deadline { get; set; }
-  public string Progress { get; set; } = "Todo";
-  public string Priority { get; set; } = "Medium";
+  public TaskProgress Progress { get; set; } = TaskProgress.Backlog;
+  public TaskPriority Priority { get; set; } = TaskPriority.Normal;
 }
