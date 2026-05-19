@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
-      // Ensures Enums are sent/received as strings (e.g., "BackLog") instead of integers
+      // Ensures Enums are sent/received as strings (e.g., "Backlog") instead of integers
       options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
 
