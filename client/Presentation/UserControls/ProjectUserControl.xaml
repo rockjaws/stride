@@ -50,7 +50,7 @@
                 <ItemsControl ItemsSource="{Binding BacklogTasks}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border Background="#F0F0F0" CornerRadius="4" Margin="0 4" Padding="8" Cursor="Hand" PreviewMouseMove="TaskCard_PreviewMouseMove">
+                            <Border Background="#F0F0F0" CornerRadius="4" Margin="0 4" Padding="8" Cursor="Hand" PreviewMouseMove="TaskCard_PreviewMouseMove" MouseLeftButtonDown="TaskCard_MouseLeftButtonDown">
                                 <TextBlock Text="{Binding Title}" />
                             </Border>
                         </DataTemplate>
@@ -64,7 +64,7 @@
                 <ItemsControl ItemsSource="{Binding InProgressTasks}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border Background="#FFF9C4" CornerRadius="4" Margin="0 4" Padding="8" Cursor="Hand" PreviewMouseMove="TaskCard_PreviewMouseMove">
+                            <Border Background="#FFF9C4" CornerRadius="4" Margin="0 4" Padding="8" Cursor="Hand" PreviewMouseMove="TaskCard_PreviewMouseMove" MouseLeftButtonDown="TaskCard_MouseLeftButtonDown">
                                 <TextBlock Text="{Binding Title}" />
                             </Border>
                         </DataTemplate>
@@ -78,7 +78,7 @@
                 <ItemsControl ItemsSource="{Binding InReviewTasks}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border Background="#E1BEE7" CornerRadius="4" Margin="0 4" Padding="8" Cursor="Hand" PreviewMouseMove="TaskCard_PreviewMouseMove">
+                            <Border Background="#E1BEE7" CornerRadius="4" Margin="0 4" Padding="8" Cursor="Hand" PreviewMouseMove="TaskCard_PreviewMouseMove" MouseLeftButtonDown="TaskCard_MouseLeftButtonDown">
                                 <TextBlock Text="{Binding Title}" />
                             </Border>
                         </DataTemplate>
@@ -92,7 +92,7 @@
                 <ItemsControl ItemsSource="{Binding FinishedTasks}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border Background="#C8E6C9" CornerRadius="4" Margin="0 4" Padding="8" Cursor="Hand" PreviewMouseMove="TaskCard_PreviewMouseMove">
+                            <Border Background="#C8E6C9" CornerRadius="4" Margin="0 4" Padding="8" Cursor="Hand" PreviewMouseMove="TaskCard_PreviewMouseMove" MouseLeftButtonDown="TaskCard_MouseLeftButtonDown">
                                 <TextBlock Text="{Binding Title}" />
                             </Border>
                         </DataTemplate>

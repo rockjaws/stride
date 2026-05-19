@@ -29,6 +29,25 @@ namespace client.Presentation.UserControls
             DragDrop.DoDragDrop(taskCard, task, DragDropEffects.Move);
         }
 
+        private void TaskCard_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ClickCount != 2)
+                return;
+
+            if (sender is not FrameworkElement { DataContext: ProjectTask task })
+                return;
+
+            if (DataContext is not ProjectViewModel viewModel)
+                return;
+
+            viewModel.SelectedTask = task;
+            if (viewModel.ShowSelectedTaskCommand.CanExecute(task))
+            {
+                viewModel.ShowSelectedTaskCommand.Execute(task);
+                e.Handled = true;
+            }
+        }
+
         private void Column_DragOver(object sender, DragEventArgs e)
         {
             e.Effects = e.Data.GetDataPresent(typeof(ProjectTask))
