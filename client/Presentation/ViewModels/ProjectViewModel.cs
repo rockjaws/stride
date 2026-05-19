@@ -92,16 +92,7 @@ public class ProjectViewModel : ObservableObject
     {
         foreach (ProjectTask task in currentProject.Tasks)
         {
-            var collection = task.Progress switch
-            {
-                TaskProgress.BackLog => BacklogTasks,
-                TaskProgress.InProgress => InProgressTasks,
-                TaskProgress.Review => InReviewTasks,
-                TaskProgress.Done => FinishedTasks,
-                _ => throw new UnknownTaskProgressException(task.Progress),
-            };
-
-            collection.Add(task);
+            GetTaskCollection(task.Progress).Add(task);
             _logger.Log(LogLevel.INFO, $"Loaded {task.Id}");
         }
     }
@@ -119,17 +110,56 @@ public class ProjectViewModel : ObservableObject
         if (task == null)
             return;
 
-        var collection = task.Progress switch
+        GetTaskCollection(task.Progress).Add(task);
+        SelectedProject?.Tasks.Add(task);
+    }
+
+    public async Task MoveTaskAsync(ProjectTask task, TaskProgress progress)
+    {
+        if (task.Progress == progress)
+            return;
+
+        try
+        {
+            ProjectTask movedTask = await _taskService.MoveTaskAsync(task, progress);
+
+            GetTaskCollection(task.Progress).Remove(task);
+            GetTaskCollection(movedTask.Progress).Add(movedTask);
+            ReplaceSelectedProjectTask(task, movedTask);
+
+            _logger.Log(LogLevel.INFO, $"Moved Task {task.Id} To {progress}");
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(LogLevel.ERROR, $"Failed To Move Task {task.Id}: {ex.Message}");
+        }
+    }
+
+    private ObservableCollection<ProjectTask> GetTaskCollection(TaskProgress progress)
+    {
+        return progress switch
         {
             TaskProgress.BackLog => BacklogTasks,
             TaskProgress.InProgress => InProgressTasks,
             TaskProgress.Review => InReviewTasks,
             TaskProgress.Done => FinishedTasks,
-            _ => throw new UnknownTaskProgressException(task.Progress),
+            _ => throw new UnknownTaskProgressException(progress),
         };
+    }
 
-        collection.Add(task);
-        SelectedProject?.Tasks.Add(task);
+    private void ReplaceSelectedProjectTask(ProjectTask originalTask, ProjectTask movedTask)
+    {
+        if (SelectedProject == null)
+            return;
+
+        int taskIndex = SelectedProject.Tasks.FindIndex(task => task.Id == originalTask.Id);
+        if (taskIndex >= 0)
+        {
+            SelectedProject.Tasks[taskIndex] = movedTask;
+            return;
+        }
+
+        SelectedProject.Tasks.Add(movedTask);
     }
 
     public void AddCreatedProject(Project project)
