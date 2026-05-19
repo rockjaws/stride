@@ -1,3 +1,11 @@
-﻿namespace client.Presentation.Strategies;
+using client.Application.Interfaces;
 
-public class SortByDeadline { }
+namespace client.Presentation.Strategies;
+
+public class SortByDeadline : ITaskSortStrategy
+{
+    public void SortTasks(List<ITask> tasks)
+    {
+        tasks.Sort((task1, task2) => task1.Deadline.CompareTo(task2.Deadline));
+    }
+}
