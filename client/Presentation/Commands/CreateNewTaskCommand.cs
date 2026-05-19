@@ -40,8 +40,11 @@ public class CreateNewTaskCommand : IUndoableCommand
         {
             try
             {
-                int projectId = _getProjectId()
-                    ?? throw new InvalidOperationException("Cannot create a task without a selected project.");
+                int projectId =
+                    _getProjectId()
+                    ?? throw new InvalidOperationException(
+                        "Cannot create a task without a selected project."
+                    );
                 ProjectTask task = vm.CreateProjectTask(projectId);
                 ProjectTask savedTask = await _taskService.CreateTaskAsync(task);
                 _onTaskCreated(savedTask);
