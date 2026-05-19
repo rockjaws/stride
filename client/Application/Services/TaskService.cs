@@ -75,6 +75,23 @@ public class TaskService : ITaskService
     response.EnsureSuccessStatusCode();
   }
 
+  public async Task<ProjectTask> MoveTaskAsync(ProjectTask task, TaskProgress progress)
+  {
+    var movedTask = new ProjectTask(
+      task.Id,
+      task.Title,
+      task.Description,
+      task.StartDate,
+      task.Deadline,
+      progress,
+      task.Priority,
+      task.ProjectId
+    );
+
+    await UpdateTaskAsync(movedTask);
+    return movedTask;
+  }
+
   public async Task DeleteTaskAsync(int id)
   {
     var response = await _httpclient.DeleteAsync($"api/tasks/{id}");
