@@ -94,7 +94,12 @@ public class ProjectViewModel : ObservableObject
             () => _selectedProject != null,
             () => _selectedProject?.Id
         );
-        ShowSelectedTaskCommand = new ShowSelectedTaskCommand(_logger, _taskService, UpdateTask);
+        ShowSelectedTaskCommand = new ShowSelectedTaskCommand(
+            _logger,
+            _taskService,
+            UpdateTask,
+            RemoveDeletedTask
+        );
         _ = GetProjectsAsync();
     }
 
@@ -152,9 +157,26 @@ public class ProjectViewModel : ObservableObject
         catch (Exception ex)
         {
             _logger.Log(LogLevel.ERROR, $"Failed To Delete Task {id}: {ex.Message}");
+            return;
         }
 
+        RemoveDeletedTask(task);
+        _logger.Log(LogLevel.INFO, $"Deleted Task {id}");
+    }
+
+    private void RemoveDeletedTask(ProjectTask task)
+    {
         GetTaskCollection(task.Progress).Remove(task);
+
+        if (SelectedProject != null)
+        {
+            ITask? projectTask = SelectedProject.Tasks.FirstOrDefault(t => t.Id == task.Id);
+            if (projectTask != null)
+                SelectedProject.Tasks.Remove(projectTask);
+        }
+
+        if (SelectedTask?.Id == task.Id)
+            SelectedTask = null;
     }
 
     public async Task UpdateTaskAsync(ProjectTask task)
