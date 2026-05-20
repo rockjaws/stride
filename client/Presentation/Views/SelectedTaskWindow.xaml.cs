@@ -8,6 +8,8 @@ namespace client.Presentation.Views
     /// </summary>
     public partial class SelectedTaskWindow : Window
     {
+        public bool DeleteRequested { get; private set; }
+
         public SelectedTaskWindow()
         {
             InitializeComponent();
@@ -21,6 +23,21 @@ namespace client.Presentation.Views
         private void onCancel(object sender, RoutedEventArgs e)
         {
             DialogResult = false;
+        }
+
+        private void onDeleteTask(object sender, RoutedEventArgs e)
+        {
+            var msgBox = MessageBox.Show(
+                "Do you want to delete this task?",
+                "Are you sure?",
+                MessageBoxButton.OKCancel
+            );
+
+            if (msgBox != MessageBoxResult.OK)
+                return;
+
+            DeleteRequested = true;
+            DialogResult = true;
         }
     }
 }

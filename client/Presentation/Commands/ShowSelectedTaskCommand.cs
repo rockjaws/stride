@@ -11,16 +11,19 @@ public class ShowSelectedTaskCommand : IUndoableCommand
     private readonly ILogger _logger;
     private readonly ITaskService _taskService;
     private readonly Action<ProjectTask> _onTaskUpdated;
+    private readonly Action<ProjectTask> _onTaskDelete;
 
     public ShowSelectedTaskCommand(
         ILogger logger,
         ITaskService taskService,
-        Action<ProjectTask> onTaskUpdated
+        Action<ProjectTask> onTaskUpdated,
+        Action<ProjectTask> onTaskDelete
     )
     {
         _logger = logger;
         _taskService = taskService;
         _onTaskUpdated = onTaskUpdated;
+        _onTaskDelete = onTaskDelete;
     }
 
     public async void Execute(object? param)
@@ -36,6 +39,16 @@ public class ShowSelectedTaskCommand : IUndoableCommand
         {
             try
             {
+                if (window.DeleteRequested)
+                {
+                    if (task.Id is not int id)
+                        return;
+
+                    await _taskService.DeleteTaskAsync(id);
+                    _onTaskDelete(task);
+                    return;
+                }
+
                 ProjectTask? updatedTask = vm.UpdateTask();
                 if (updatedTask == null)
                     return;
@@ -45,7 +58,7 @@ public class ShowSelectedTaskCommand : IUndoableCommand
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.ERROR, $"Failed To Update Task: {ex.Message}");
+                _logger.Log(LogLevel.ERROR, $"Failed To Save Task Changes: {ex.Message}");
             }
         }
     }
