@@ -25,7 +25,7 @@ public class MainViewModel : ObservableObject
         _projectService = projectService;
         DashboardViewModel = new DashboardViewModel();
         ProjectViewModel = new ProjectViewModel(_logger, projectService, taskService);
-        TaskViewModel = new TaskViewModel();
+        TaskViewModel = new TaskViewModel(_logger);
         ChatViewModel = new ChatViewModel();
         _currentView = DashboardViewModel;
         ChangeViewCommand = new ChangeViewCommand(_logger, this);
