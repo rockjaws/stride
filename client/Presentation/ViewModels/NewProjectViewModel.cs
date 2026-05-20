@@ -1,4 +1,5 @@
 using client.Application.Interfaces;
+using client.Domain.Enum;
 using client.Domain.Models;
 using client.Presentation.Common;
 
@@ -43,6 +44,8 @@ public class NewProjectViewModel : ObservableObject
 
     public Project CreateProject()
     {
+        _logger.Log(LogLevel.INFO, $"Prepared New Project: {_title}");
+
         return new Project(
             null,
             _title,

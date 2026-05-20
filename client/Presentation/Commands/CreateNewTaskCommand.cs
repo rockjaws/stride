@@ -8,22 +8,19 @@ namespace client.Presentation.Commands;
 public class CreateNewTaskCommand : IUndoableCommand
 {
     private readonly ILogger _logger;
-    private readonly ITaskService _taskService;
-    private readonly Action<ProjectTask> _onTaskCreated;
+    private readonly Func<ProjectTask, Task> _createTaskAsync;
     private readonly Func<bool> _canCreateTask;
     private readonly Func<int?> _getProjectId;
 
     public CreateNewTaskCommand(
         ILogger logger,
-        ITaskService taskService,
-        Action<ProjectTask> onTaskCreated,
+        Func<ProjectTask, Task> createTaskAsync,
         Func<bool> canCreateTask,
         Func<int?> getProjectId
     )
     {
         _logger = logger;
-        _taskService = taskService;
-        _onTaskCreated = onTaskCreated;
+        _createTaskAsync = createTaskAsync;
         _canCreateTask = canCreateTask;
         _getProjectId = getProjectId;
     }
@@ -46,12 +43,11 @@ public class CreateNewTaskCommand : IUndoableCommand
                         "Cannot create a task without a selected project."
                     );
                 ProjectTask task = vm.CreateProjectTask(projectId);
-                ProjectTask savedTask = await _taskService.CreateTaskAsync(task);
-                _onTaskCreated(savedTask);
+                await _createTaskAsync(task);
             }
             catch (Exception ex)
             {
-                _logger.Log(Domain.Enum.LogLevel.ERROR, $"Failed To Create Task: {ex.Message}");
+                _logger.Log(client.Domain.Enum.LogLevel.ERROR, $"Failed To Create Task: {ex.Message}");
             }
         }
     }

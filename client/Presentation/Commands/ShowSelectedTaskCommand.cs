@@ -1,5 +1,4 @@
 using client.Application.Interfaces;
-using client.Domain.Enum;
 using client.Domain.Models;
 using client.Presentation.ViewModels;
 using client.Presentation.Views;
@@ -9,21 +8,18 @@ namespace client.Presentation.Commands;
 public class ShowSelectedTaskCommand : IUndoableCommand
 {
     private readonly ILogger _logger;
-    private readonly ITaskService _taskService;
-    private readonly Action<ProjectTask> _onTaskUpdated;
-    private readonly Action<ProjectTask> _onTaskDelete;
+    private readonly Func<ProjectTask, Task> _updateTaskAsync;
+    private readonly Func<ProjectTask, Task> _deleteTaskAsync;
 
     public ShowSelectedTaskCommand(
         ILogger logger,
-        ITaskService taskService,
-        Action<ProjectTask> onTaskUpdated,
-        Action<ProjectTask> onTaskDelete
+        Func<ProjectTask, Task> updateTaskAsync,
+        Func<ProjectTask, Task> deleteTaskAsync
     )
     {
         _logger = logger;
-        _taskService = taskService;
-        _onTaskUpdated = onTaskUpdated;
-        _onTaskDelete = onTaskDelete;
+        _updateTaskAsync = updateTaskAsync;
+        _deleteTaskAsync = deleteTaskAsync;
     }
 
     public async void Execute(object? param)
@@ -41,11 +37,7 @@ public class ShowSelectedTaskCommand : IUndoableCommand
             {
                 if (window.DeleteRequested)
                 {
-                    if (task.Id is not int id)
-                        return;
-
-                    await _taskService.DeleteTaskAsync(id);
-                    _onTaskDelete(task);
+                    await _deleteTaskAsync(task);
                     return;
                 }
 
@@ -53,12 +45,11 @@ public class ShowSelectedTaskCommand : IUndoableCommand
                 if (updatedTask == null)
                     return;
 
-                await _taskService.UpdateTaskAsync(updatedTask);
-                _onTaskUpdated(updatedTask);
+                await _updateTaskAsync(updatedTask);
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.ERROR, $"Failed To Save Task Changes: {ex.Message}");
+                _logger.Log(client.Domain.Enum.LogLevel.ERROR, $"Failed To Save Task Changes: {ex.Message}");
             }
         }
     }
