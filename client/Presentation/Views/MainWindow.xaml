@@ -17,10 +17,16 @@
 				<userControls:DashboardUserControl/>
 			</DataTemplate>
 			<DataTemplate DataType="{x:Type viewModels:ProjectViewModel}">
-				<userControls:ProjectUserControl/>	
+				<userControls:ProjectUserControl/>
 			</DataTemplate>
-		</Window.Resources>
-			
+        <DataTemplate DataType="{x:Type viewModels:TaskViewModel}">
+            <userControls:TaskUserControl/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:ChatViewModel}">
+            <userControls:ChatUserControl/>
+        </DataTemplate>
+    </Window.Resources>
+
 		<Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="220"/>
@@ -46,6 +52,20 @@
 							 GroupName="SideMenu"
 							 Command="{Binding ChangeViewCommand}"
 							 CommandParameter="{Binding ProjectViewModel}"
+							 Height="50"
+							 FontSize="22"/>
+                <RadioButton x:Name="TaskButton"
+							 Content="Tasks"
+							 GroupName="SideMenu"
+							 Command="{Binding ChangeViewCommand}"
+							 CommandParameter="{Binding TaskViewModel}"
+							 Height="50"
+							 FontSize="22"/>
+                <RadioButton x:Name="ChatButton"
+							 Content="Chats"
+							 GroupName="SideMenu"
+							 Command="{Binding ChangeViewCommand}"
+							 CommandParameter="{Binding ChatViewModel}"
 							 Height="50"
 							 FontSize="22"/>
             </StackPanel>
