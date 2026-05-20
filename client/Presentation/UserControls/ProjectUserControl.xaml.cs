@@ -30,6 +30,29 @@ namespace client.Presentation.UserControls
             DragDrop.DoDragDrop(taskCard, task, DragDropEffects.Move);
         }
 
+        private async void DeleteTask_Click(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton != MouseButtonState.Pressed)
+                return;
+
+            if (sender is not FrameworkElement { DataContext: ProjectTask task })
+                return;
+
+            if (DataContext is not ProjectViewModel viewModel)
+                return;
+
+            var msgBox = MessageBox.Show(
+                "Do you want to delete this task?",
+                "Are you sure?",
+                MessageBoxButton.OKCancel
+            );
+
+            if (msgBox != MessageBoxResult.OK)
+                return;
+
+            await viewModel.DeleteTaskAsync(task);
+        }
+
         private void TaskCard_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ClickCount != 2)

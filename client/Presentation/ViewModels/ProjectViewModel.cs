@@ -129,12 +129,32 @@ public class ProjectViewModel : ObservableObject
         if (task == null)
             return;
 
-        if (SelectedProject?.Tasks.FirstOrDefault(p => p.Id == task.Id) is not ProjectTask existingTask)
+        if (
+            SelectedProject?.Tasks.FirstOrDefault(p => p.Id == task.Id)
+            is not ProjectTask existingTask
+        )
             return;
 
         GetTaskCollection(existingTask.Progress).Remove(existingTask);
         GetTaskCollection(task.Progress).Add(task);
         ReplaceSelectedProjectTask(existingTask, task);
+    }
+
+    public async Task DeleteTaskAsync(ProjectTask task)
+    {
+        if (task.Id is not int id)
+            return;
+
+        try
+        {
+            await _taskService.DeleteTaskAsync(id);
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(LogLevel.ERROR, $"Failed To Delete Task {id}: {ex.Message}");
+        }
+
+        GetTaskCollection(task.Progress).Remove(task);
     }
 
     public async Task UpdateTaskAsync(ProjectTask task)
