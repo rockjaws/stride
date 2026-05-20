@@ -124,11 +124,46 @@
             <Setter Property="Foreground" Value="#DC2626"/>
             <Setter Property="BorderBrush" Value="#FCA5A5"/>
         </Style>
+
+        <Style x:Key="PriorityPickerButtonStyle" TargetType="Button">
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Padding" Value="10 0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#0F172A"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="PickerButtonBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="4">
+                            <ContentPresenter Margin="{TemplateBinding Padding}"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="PickerButtonBorder" Property="Background" Value="#EFF6FF"/>
+                                <Setter TargetName="PickerButtonBorder" Property="BorderBrush" Value="#BFDBFE"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="PickerButtonBorder" Property="Background" Value="#DBEAFE"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
 
     <Grid x:Name="ProjectRoot"
           Background="#F1F5F9"
-          Focusable="True">
+          Focusable="True"
+          PreviewMouseDown="ProjectRoot_PreviewMouseDown">
         <Grid.RowDefinitions>
             <RowDefinition Height="52"/>
             <RowDefinition Height="*"/>
@@ -192,15 +227,7 @@
                                             </Grid.ColumnDefinitions>
                                             <TextBlock Grid.Column="0" Text="{Binding Title}" Style="{StaticResource TaskCardTitleStyle}"/>
                                             <TextBlock Grid.Column="1" Text="{Binding Priority, StringFormat='Priority: {0}'}" Style="{StaticResource TaskCardMetaStyle}"/>
-                                            <Button Grid.Column="2" Content="↑" Style="{StaticResource TaskIconButtonStyle}" Tag="{Binding}" PreviewMouseLeftButtonDown="ChangePriority_Click" Margin="0 0 6 0">
-                                                <Button.ContextMenu>
-                                                    <ContextMenu Focusable="False" DataContext="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
-                                                        <MenuItem Focusable="False" Header="Low" Click="Priority_Low_Click" Tag="{Binding}"/>
-                                                        <MenuItem Focusable="False" Header="Medium" Click="Priority_Medium_Click" Tag="{Binding}"/>
-                                                        <MenuItem Focusable="False" Header="High" Click="Priority_High_Click" Tag="{Binding}"/>
-                                                    </ContextMenu>
-                                                </Button.ContextMenu>
-                                            </Button>
+                                            <Button Grid.Column="2" Content="↑" Style="{StaticResource TaskIconButtonStyle}" Tag="{Binding}" PreviewMouseLeftButtonDown="ChangePriority_Click" Margin="0 0 6 0"/>
                                             <Button Grid.Column="3" Content="🗑️" Style="{StaticResource TaskDangerButtonStyle}" Tag="{Binding}" PreviewMouseLeftButtonDown="DeleteTask_Click"/>
                                         </Grid>
                                     </Border>
@@ -233,15 +260,7 @@
                                             </Grid.ColumnDefinitions>
                                             <TextBlock Grid.Column="0" Text="{Binding Title}" Style="{StaticResource TaskCardTitleStyle}"/>
                                             <TextBlock Grid.Column="1" Text="{Binding Priority, StringFormat='Priority: {0}'}" Style="{StaticResource TaskCardMetaStyle}"/>
-                                            <Button Grid.Column="2" Content="↑" Style="{StaticResource TaskIconButtonStyle}" Tag="{Binding}" PreviewMouseLeftButtonDown="ChangePriority_Click" Margin="0 0 6 0">
-                                                <Button.ContextMenu>
-                                                    <ContextMenu Focusable="False" DataContext="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
-                                                        <MenuItem Focusable="False" Header="Low" Click="Priority_Low_Click" Tag="{Binding}"/>
-                                                        <MenuItem Focusable="False" Header="Medium" Click="Priority_Medium_Click" Tag="{Binding}"/>
-                                                        <MenuItem Focusable="False" Header="High" Click="Priority_High_Click" Tag="{Binding}"/>
-                                                    </ContextMenu>
-                                                </Button.ContextMenu>
-                                            </Button>
+                                            <Button Grid.Column="2" Content="↑" Style="{StaticResource TaskIconButtonStyle}" Tag="{Binding}" PreviewMouseLeftButtonDown="ChangePriority_Click" Margin="0 0 6 0"/>
                                             <Button Grid.Column="3" Content="🗑️" Style="{StaticResource TaskDangerButtonStyle}" Tag="{Binding}" PreviewMouseLeftButtonDown="DeleteTask_Click"/>
                                         </Grid>
                                     </Border>
@@ -274,15 +293,7 @@
                                             </Grid.ColumnDefinitions>
                                             <TextBlock Grid.Column="0" Text="{Binding Title}" Style="{StaticResource TaskCardTitleStyle}"/>
                                             <TextBlock Grid.Column="1" Text="{Binding Priority, StringFormat='Priority: {0}'}" Style="{StaticResource TaskCardMetaStyle}"/>
-                                            <Button Grid.Column="2" Content="↑" Style="{StaticResource TaskIconButtonStyle}" Tag="{Binding}" PreviewMouseLeftButtonDown="ChangePriority_Click" Margin="0 0 6 0">
-                                                <Button.ContextMenu>
-                                                    <ContextMenu Focusable="False" DataContext="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
-                                                        <MenuItem Focusable="False" Header="Low" Click="Priority_Low_Click" Tag="{Binding}"/>
-                                                        <MenuItem Focusable="False" Header="Medium" Click="Priority_Medium_Click" Tag="{Binding}"/>
-                                                        <MenuItem Focusable="False" Header="High" Click="Priority_High_Click" Tag="{Binding}"/>
-                                                    </ContextMenu>
-                                                </Button.ContextMenu>
-                                            </Button>
+                                            <Button Grid.Column="2" Content="↑" Style="{StaticResource TaskIconButtonStyle}" Tag="{Binding}" PreviewMouseLeftButtonDown="ChangePriority_Click" Margin="0 0 6 0"/>
                                             <Button Grid.Column="3" Content="🗑️" Style="{StaticResource TaskDangerButtonStyle}" Tag="{Binding}" PreviewMouseLeftButtonDown="DeleteTask_Click"/>
                                         </Grid>
                                     </Border>
@@ -315,15 +326,7 @@
                                             </Grid.ColumnDefinitions>
                                             <TextBlock Grid.Column="0" Text="{Binding Title}" Style="{StaticResource TaskCardTitleStyle}"/>
                                             <TextBlock Grid.Column="1" Text="{Binding Priority, StringFormat='Priority: {0}'}" Style="{StaticResource TaskCardMetaStyle}"/>
-                                            <Button Grid.Column="2" Content="↑" Style="{StaticResource TaskIconButtonStyle}" Tag="{Binding}" PreviewMouseLeftButtonDown="ChangePriority_Click" Margin="0 0 6 0">
-                                                <Button.ContextMenu>
-                                                    <ContextMenu Focusable="False" DataContext="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
-                                                        <MenuItem Focusable="False" Header="Low" Click="Priority_Low_Click" Tag="{Binding}"/>
-                                                        <MenuItem Focusable="False" Header="Medium" Click="Priority_Medium_Click" Tag="{Binding}"/>
-                                                        <MenuItem Focusable="False" Header="High" Click="Priority_High_Click" Tag="{Binding}"/>
-                                                    </ContextMenu>
-                                                </Button.ContextMenu>
-                                            </Button>
+                                            <Button Grid.Column="2" Content="↑" Style="{StaticResource TaskIconButtonStyle}" Tag="{Binding}" PreviewMouseLeftButtonDown="ChangePriority_Click" Margin="0 0 6 0"/>
                                             <Button Grid.Column="3" Content="🗑️" Style="{StaticResource TaskDangerButtonStyle}" Tag="{Binding}" PreviewMouseLeftButtonDown="DeleteTask_Click"/>
                                         </Grid>
                                     </Border>
@@ -440,6 +443,38 @@
                     </StackPanel>
                 </ScrollViewer>
             </Grid>
+        </Border>
+
+        <Border x:Name="PriorityPicker"
+                Grid.RowSpan="3"
+                Panel.ZIndex="50"
+                Width="116"
+                Padding="4"
+                Background="#FFFFFF"
+                BorderBrush="#CBD5E1"
+                BorderThickness="1"
+                CornerRadius="6"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Visibility="Collapsed"
+                Focusable="False">
+            <Border.Effect>
+                <DropShadowEffect Color="#64748B"
+                                  BlurRadius="12"
+                                  ShadowDepth="2"
+                                  Opacity="0.18"/>
+            </Border.Effect>
+            <StackPanel>
+                <Button Content="Low"
+                        Style="{StaticResource PriorityPickerButtonStyle}"
+                        Click="Priority_Low_Click"/>
+                <Button Content="Medium"
+                        Style="{StaticResource PriorityPickerButtonStyle}"
+                        Click="Priority_Medium_Click"/>
+                <Button Content="High"
+                        Style="{StaticResource PriorityPickerButtonStyle}"
+                        Click="Priority_High_Click"/>
+            </StackPanel>
         </Border>
     </Grid>
 </UserControl>
