@@ -1,8 +1,8 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
 using client.Domain.Enum;
 using client.Domain.Models;
@@ -15,7 +15,7 @@ namespace client.Presentation.UserControls
     /// </summary>
     public partial class ProjectUserControl : UserControl
     {
-        private FrameworkElement? _lastPriorityFocusTarget;
+        private ProjectTask? _selectedPriorityTask;
 
         public ProjectUserControl()
         {
@@ -77,50 +77,61 @@ namespace client.Presentation.UserControls
 
         private void ChangePriority_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is not Button button || button.ContextMenu == null)
+            if (sender is not Button { Tag: ProjectTask task } button)
                 return;
 
-            _lastPriorityFocusTarget = button;
-            button.ContextMenu.PlacementTarget = button;
-            button.ContextMenu.Placement = PlacementMode.Bottom;
-            button.ContextMenu.IsOpen = true;
+            _selectedPriorityTask = task;
+
+            var position = button.TransformToAncestor(ProjectRoot)
+                .Transform(new Point(0, button.ActualHeight + 4));
+
+            var maxLeft = Math.Max(8, ProjectRoot.ActualWidth - PriorityPicker.Width - 8);
+            var left = Math.Min(position.X, maxLeft);
+            PriorityPicker.Margin = new Thickness(left, position.Y, 0, 0);
+            PriorityPicker.Visibility = Visibility.Visible;
+
+            RestoreApplicationFocus();
             e.Handled = true;
         }
 
         private async void Priority_Low_Click(object sender, RoutedEventArgs e)
         {
-            await UpdateTaskPriorityAsync(sender, TaskPriority.Low);
+            await UpdateTaskPriorityAsync(TaskPriority.Low);
+            e.Handled = true;
         }
 
         private async void Priority_Medium_Click(object sender, RoutedEventArgs e)
         {
-            await UpdateTaskPriorityAsync(sender, TaskPriority.Normal);
+            await UpdateTaskPriorityAsync(TaskPriority.Normal);
+            e.Handled = true;
         }
 
         private async void Priority_High_Click(object sender, RoutedEventArgs e)
         {
-            await UpdateTaskPriorityAsync(sender, TaskPriority.High);
+            await UpdateTaskPriorityAsync(TaskPriority.High);
+            e.Handled = true;
         }
 
-        private async Task UpdateTaskPriorityAsync(object sender, TaskPriority priority)
+        private async Task UpdateTaskPriorityAsync(TaskPriority priority)
         {
-            var focusTarget = ClosePriorityContextMenu(sender);
+            var task = _selectedPriorityTask;
+            HidePriorityPicker();
 
-            if (sender is not FrameworkElement { Tag: ProjectTask task })
+            if (task == null)
             {
-                RestoreApplicationFocus(focusTarget);
+                RestoreApplicationFocus();
                 return;
             }
 
             if (DataContext is not ProjectViewModel viewModel)
             {
-                RestoreApplicationFocus(focusTarget);
+                RestoreApplicationFocus();
                 return;
             }
 
             if (task.Priority == priority)
             {
-                RestoreApplicationFocus(focusTarget);
+                RestoreApplicationFocus();
                 return;
             }
 
@@ -141,24 +152,29 @@ namespace client.Presentation.UserControls
             }
             finally
             {
-                RestoreApplicationFocus(focusTarget);
+                RestoreApplicationFocus();
             }
         }
 
-        private FrameworkElement? ClosePriorityContextMenu(object sender)
+        private void ProjectRoot_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (sender is MenuItem menuItem &&
-                ItemsControl.ItemsControlFromItemContainer(menuItem) is ContextMenu contextMenu)
-            {
-                var focusTarget = contextMenu.PlacementTarget as FrameworkElement;
-                contextMenu.IsOpen = false;
-                return focusTarget ?? _lastPriorityFocusTarget;
-            }
+            if (PriorityPicker.Visibility != Visibility.Visible)
+                return;
 
-            return _lastPriorityFocusTarget;
+            if (e.OriginalSource is DependencyObject source &&
+                IsElementInside(source, PriorityPicker))
+                return;
+
+            HidePriorityPicker();
+            RestoreApplicationFocus();
         }
 
-        private void RestoreApplicationFocus(FrameworkElement? focusTarget)
+        private void HidePriorityPicker()
+        {
+            PriorityPicker.Visibility = Visibility.Collapsed;
+        }
+
+        private void RestoreApplicationFocus()
         {
             Dispatcher.BeginInvoke(() =>
             {
@@ -173,6 +189,21 @@ namespace client.Presentation.UserControls
                 Keyboard.Focus(ProjectRoot);
                 ProjectRoot.Focus();
             }, DispatcherPriority.ApplicationIdle);
+        }
+
+        private static bool IsElementInside(DependencyObject child, DependencyObject parent)
+        {
+            var current = child;
+
+            while (current != null)
+            {
+                if (ReferenceEquals(current, parent))
+                    return true;
+
+                current = VisualTreeHelper.GetParent(current);
+            }
+
+            return false;
         }
 
         private void Column_DragOver(object sender, DragEventArgs e)
