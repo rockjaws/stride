@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+
 using client.Application.Interfaces;
 using client.Domain.Enum;
 using client.Domain.Exceptions;
@@ -289,6 +290,20 @@ public class ProjectViewModel : ObservableObject
         catch (Exception ex)
         {
             _logger.Log(LogLevel.ERROR, $"Failed To Load Projects: {ex.Message}");
+        }
+    }
+
+    public async Task CreateProjectAsync(Project project)
+    {
+        try
+        {
+            Project savedProject = await _projectService.CreateProjectAsync(project);
+            AddCreatedProject(savedProject);
+            _logger.Log(LogLevel.INFO, $"Created Project {savedProject.Id}: {savedProject.Title}");
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(LogLevel.ERROR, $"Failed To Create Project: {ex.Message}");
         }
     }
 }
