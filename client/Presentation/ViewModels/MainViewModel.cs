@@ -1,4 +1,4 @@
-﻿using System.Windows.Input;
+using System.Windows.Input;
 using client.Application.Interfaces;
 using client.Domain.Models;
 using client.Presentation.Commands;
@@ -12,12 +12,21 @@ public class MainViewModel : ObservableObject
     private readonly IProjectService _projectService;
     private object _currentView;
 
+    public ICommand ChangeViewCommand { get; }
+    public CreateNewProjectCommand CreateNewProjectCommand { get; }
+    public ProjectViewModel ProjectViewModel { get; }
+    public DashboardViewModel DashboardViewModel { get; }
+    public TaskViewModel TaskViewModel { get; }
+    public ChatViewModel ChatViewModel { get; }
+
     public MainViewModel(ILogger logger, IProjectService projectService, ITaskService taskService)
     {
         _logger = logger;
         _projectService = projectService;
         DashboardViewModel = new DashboardViewModel();
         ProjectViewModel = new ProjectViewModel(_logger, projectService, taskService);
+        TaskViewModel = new TaskViewModel();
+        ChatViewModel = new ChatViewModel();
         _currentView = DashboardViewModel;
         ChangeViewCommand = new ChangeViewCommand(_logger, this);
         CreateNewProjectCommand = new CreateNewProjectCommand(
@@ -25,13 +34,6 @@ public class MainViewModel : ObservableObject
             CreateProjectAsync
         );
     }
-
-    public ICommand ChangeViewCommand { get; }
-
-    public CreateNewProjectCommand CreateNewProjectCommand { get; }
-
-    public ProjectViewModel ProjectViewModel { get; }
-    public DashboardViewModel DashboardViewModel { get; }
 
     public object CurrentView
     {
