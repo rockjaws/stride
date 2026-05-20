@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Threading;
 using client.Domain.Enum;
 using client.Domain.Models;
 using client.Presentation.ViewModels;
@@ -14,6 +15,8 @@ namespace client.Presentation.UserControls
     /// </summary>
     public partial class ProjectUserControl : UserControl
     {
+        private FrameworkElement? _lastPriorityFocusTarget;
+
         public ProjectUserControl()
         {
             InitializeComponent();
@@ -77,6 +80,7 @@ namespace client.Presentation.UserControls
             if (sender is not Button button || button.ContextMenu == null)
                 return;
 
+            _lastPriorityFocusTarget = button;
             button.ContextMenu.PlacementTarget = button;
             button.ContextMenu.Placement = PlacementMode.Bottom;
             button.ContextMenu.IsOpen = true;
@@ -100,14 +104,25 @@ namespace client.Presentation.UserControls
 
         private async Task UpdateTaskPriorityAsync(object sender, TaskPriority priority)
         {
+            var focusTarget = ClosePriorityContextMenu(sender);
+
             if (sender is not FrameworkElement { Tag: ProjectTask task })
+            {
+                RestoreApplicationFocus(focusTarget);
                 return;
+            }
 
             if (DataContext is not ProjectViewModel viewModel)
+            {
+                RestoreApplicationFocus(focusTarget);
                 return;
+            }
 
             if (task.Priority == priority)
+            {
+                RestoreApplicationFocus(focusTarget);
                 return;
+            }
 
             var updatedTask = new ProjectTask(
                 task.Id,
@@ -120,7 +135,44 @@ namespace client.Presentation.UserControls
                 task.ProjectId
             );
 
-            await viewModel.UpdateTaskAsync(updatedTask);
+            try
+            {
+                await viewModel.UpdateTaskAsync(updatedTask);
+            }
+            finally
+            {
+                RestoreApplicationFocus(focusTarget);
+            }
+        }
+
+        private FrameworkElement? ClosePriorityContextMenu(object sender)
+        {
+            if (sender is MenuItem menuItem &&
+                ItemsControl.ItemsControlFromItemContainer(menuItem) is ContextMenu contextMenu)
+            {
+                var focusTarget = contextMenu.PlacementTarget as FrameworkElement;
+                contextMenu.IsOpen = false;
+                return focusTarget ?? _lastPriorityFocusTarget;
+            }
+
+            return _lastPriorityFocusTarget;
+        }
+
+        private void RestoreApplicationFocus(FrameworkElement? focusTarget)
+        {
+            Dispatcher.BeginInvoke(() =>
+            {
+                Mouse.Capture(null);
+                Keyboard.ClearFocus();
+
+                var window = Window.GetWindow(ProjectRoot);
+                window?.Activate();
+                window?.Focus();
+
+                FocusManager.SetFocusedElement(window, ProjectRoot);
+                Keyboard.Focus(ProjectRoot);
+                ProjectRoot.Focus();
+            }, DispatcherPriority.ApplicationIdle);
         }
 
         private void Column_DragOver(object sender, DragEventArgs e)
