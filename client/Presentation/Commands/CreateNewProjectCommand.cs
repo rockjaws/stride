@@ -1,5 +1,4 @@
 using client.Application.Interfaces;
-using client.Domain.Enum;
 using client.Domain.Models;
 using client.Presentation.ViewModels;
 using client.Presentation.Views;
@@ -9,18 +8,15 @@ namespace client.Presentation.Commands;
 public class CreateNewProjectCommand : IUndoableCommand
 {
     private readonly ILogger _logger;
-    private readonly IProjectService _projectService;
-    private readonly Action<Project> _onProjectCreated;
+    private readonly Func<Project, Task> _createProjectAsync;
 
     public CreateNewProjectCommand(
         ILogger logger,
-        IProjectService projectService,
-        Action<Project> onProjectCreated
+        Func<Project, Task> createProjectAsync
     )
     {
         _logger = logger;
-        _projectService = projectService;
-        _onProjectCreated = onProjectCreated;
+        _createProjectAsync = createProjectAsync;
     }
 
     public async void Execute(object? param)
@@ -36,12 +32,11 @@ public class CreateNewProjectCommand : IUndoableCommand
             try
             {
                 Project project = vm.CreateProject();
-                Project savedProject = await _projectService.CreateProjectAsync(project);
-                _onProjectCreated(savedProject);
+                await _createProjectAsync(project);
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.ERROR, $"Failed To Create Project: {ex.Message}");
+                _logger.Log(client.Domain.Enum.LogLevel.ERROR, $"Failed To Create Project: {ex.Message}");
             }
         }
     }

@@ -76,6 +76,8 @@ public class SelectedTaskViewModel : ObservableObject
             return null;
         }
 
+        _logger.Log(LogLevel.INFO, $"Prepared Task Update: {_originalTask.Id}");
+
         return new ProjectTask(
             _originalTask.Id,
             _title,

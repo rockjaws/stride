@@ -89,16 +89,14 @@ public class ProjectViewModel : ObservableObject
         FinishedTasks = [];
         CreateNewTaskCommand = new CreateNewTaskCommand(
             _logger,
-            _taskService,
-            AddCreatedTask,
+            CreateTaskAsync,
             () => _selectedProject != null,
             () => _selectedProject?.Id
         );
         ShowSelectedTaskCommand = new ShowSelectedTaskCommand(
             _logger,
-            _taskService,
-            UpdateTask,
-            RemoveDeletedTask
+            UpdateTaskAsync,
+            DeleteTaskAsync
         );
         _ = GetProjectsAsync();
     }
@@ -127,6 +125,24 @@ public class ProjectViewModel : ObservableObject
 
         GetTaskCollection(task.Progress).Add(task);
         SelectedProject?.Tasks.Add(task);
+        _logger.Log(LogLevel.INFO, $"Added Created Task To Board: {task.Id}");
+    }
+
+    public async Task CreateTaskAsync(ProjectTask task)
+    {
+        if (task == null)
+            return;
+
+        try
+        {
+            ProjectTask savedTask = await _taskService.CreateTaskAsync(task);
+            AddCreatedTask(savedTask);
+            _logger.Log(LogLevel.INFO, $"Created Task {savedTask.Id}: {savedTask.Title}");
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(LogLevel.ERROR, $"Failed To Create Task: {ex.Message}");
+        }
     }
 
     private void UpdateTask(ProjectTask task)
@@ -143,6 +159,7 @@ public class ProjectViewModel : ObservableObject
         GetTaskCollection(existingTask.Progress).Remove(existingTask);
         GetTaskCollection(task.Progress).Add(task);
         ReplaceSelectedProjectTask(existingTask, task);
+        _logger.Log(LogLevel.INFO, $"Updated Task On Board: {task.Id}");
     }
 
     public async Task DeleteTaskAsync(ProjectTask task)
@@ -177,6 +194,8 @@ public class ProjectViewModel : ObservableObject
 
         if (SelectedTask?.Id == task.Id)
             SelectedTask = null;
+
+        _logger.Log(LogLevel.INFO, $"Removed Task From Board: {task.Id}");
     }
 
     public async Task UpdateTaskAsync(ProjectTask task)
@@ -251,6 +270,7 @@ public class ProjectViewModel : ObservableObject
 
         ListOfProjects.Add(project);
         SelectedProject = project;
+        _logger.Log(LogLevel.INFO, $"Added Created Project To Project List: {project.Id}");
     }
 
     public async Task GetProjectsAsync()

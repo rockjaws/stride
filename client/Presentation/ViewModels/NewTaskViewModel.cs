@@ -62,6 +62,8 @@ namespace client.Presentation.ViewModels
 
         public ProjectTask CreateProjectTask(int projectId)
         {
+            _logger.Log(LogLevel.INFO, $"Prepared New Task For Project {projectId}: {_title}");
+
             ProjectTask task = new ProjectTask(
                 null,
                 _title,

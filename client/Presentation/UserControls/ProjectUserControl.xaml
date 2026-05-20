@@ -11,6 +11,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="190"/>
         </Grid.RowDefinitions>
         <TextBox Background="LightSlateGray"/>
         <Grid Grid.Row="0">
@@ -45,113 +46,237 @@
             </Grid.ColumnDefinitions>
 
             <!-- Backlog -->
-            <StackPanel Grid.Column="0" Margin="8" Background="Transparent" AllowDrop="True" DragOver="Column_DragOver" Drop="Column_Drop" Tag="{x:Static domain:TaskProgress.Backlog}">
-                <TextBlock Text="Backlog" FontWeight="Bold" FontSize="16" Margin="0 0 0 8"/>
-                <ItemsControl ItemsSource="{Binding BacklogTasks}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border Background="#F3F4F6" BorderBrush="#6B7280" BorderThickness="2" CornerRadius="4" Margin="0 4" Padding="8" Cursor="Hand" PreviewMouseMove="TaskCard_PreviewMouseMove" MouseLeftButtonDown="TaskCard_MouseLeftButtonDown">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding Title}" Margin="0 0 8 0"/>
-                                    <TextBlock Text="{Binding Priority, StringFormat='|   Priority: {0}'}" Margin="0 0 8 0"/>
-                                    <Button Content="↑" Tag="{Binding}" PreviewMouseLeftButtonDown="ChangePriority_Click" Margin="0 0 8 0">
-                                        <Button.ContextMenu>
-                                            <ContextMenu DataContext="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
-                                                <MenuItem Header="Low" Click="Priority_Low_Click" Tag="{Binding}"/>
-                                                <MenuItem Header="Medium" Click="Priority_Medium_Click" Tag="{Binding}"/>
-                                                <MenuItem Header="High" Click="Priority_High_Click" Tag="{Binding}"/>
-                                            </ContextMenu>
-                                        </Button.ContextMenu>
-                                    </Button>
-                                    <Button Content="🗑️" Tag="{Binding}" PreviewMouseLeftButtonDown="DeleteTask_Click"/>
-                                </StackPanel>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </StackPanel>
+            <Grid Grid.Column="0" Margin="8" Background="Transparent" AllowDrop="True" DragOver="Column_DragOver" Drop="Column_Drop" Tag="{x:Static domain:TaskProgress.Backlog}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Backlog" FontWeight="Bold" FontSize="16" Margin="0 0 0 8"/>
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <ItemsControl ItemsSource="{Binding BacklogTasks}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="#F3F4F6" BorderBrush="#6B7280" BorderThickness="2" CornerRadius="4" Margin="0 4" Padding="8" Cursor="Hand" PreviewMouseMove="TaskCard_PreviewMouseMove" MouseLeftButtonDown="TaskCard_MouseLeftButtonDown">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Title}" Margin="0 0 8 0"/>
+                                        <TextBlock Text="{Binding Priority, StringFormat='|   Priority: {0}'}" Margin="0 0 8 0"/>
+                                        <Button Content="↑" Tag="{Binding}" PreviewMouseLeftButtonDown="ChangePriority_Click" Margin="0 0 8 0">
+                                            <Button.ContextMenu>
+                                                <ContextMenu DataContext="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+                                                    <MenuItem Header="Low" Click="Priority_Low_Click" Tag="{Binding}"/>
+                                                    <MenuItem Header="Medium" Click="Priority_Medium_Click" Tag="{Binding}"/>
+                                                    <MenuItem Header="High" Click="Priority_High_Click" Tag="{Binding}"/>
+                                                </ContextMenu>
+                                            </Button.ContextMenu>
+                                        </Button>
+                                        <Button Content="🗑️" Tag="{Binding}" PreviewMouseLeftButtonDown="DeleteTask_Click"/>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
 
             <!-- In Progress -->
-            <StackPanel Grid.Column="1" Margin="8" Background="Transparent" AllowDrop="True" DragOver="Column_DragOver" Drop="Column_Drop" Tag="{x:Static domain:TaskProgress.InProgress}">
-                <TextBlock Text="In Progress" FontWeight="Bold" FontSize="16" Margin="0 0 0 8"/>
-                <ItemsControl ItemsSource="{Binding InProgressTasks}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border Background="#FEF3C7" BorderBrush="#D97706" BorderThickness="2" CornerRadius="4" Margin="0 4" Padding="8" Cursor="Hand" PreviewMouseMove="TaskCard_PreviewMouseMove" MouseLeftButtonDown="TaskCard_MouseLeftButtonDown">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding Title}" Margin="0 0 8 0"/>
-                                    <TextBlock Text="{Binding Priority, StringFormat='|   Priority: {0}'}" Margin="0 0 8 0"/>
-                                    <Button Content="↑" Tag="{Binding}" PreviewMouseLeftButtonDown="ChangePriority_Click" Margin="0 0 8 0">
-                                        <Button.ContextMenu>
-                                            <ContextMenu DataContext="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
-                                                <MenuItem Header="Low" Click="Priority_Low_Click" Tag="{Binding}"/>
-                                                <MenuItem Header="Medium" Click="Priority_Medium_Click" Tag="{Binding}"/>
-                                                <MenuItem Header="High" Click="Priority_High_Click" Tag="{Binding}"/>
-                                            </ContextMenu>
-                                        </Button.ContextMenu>
-                                    </Button>
-                                    <Button Content="🗑️" Tag="{Binding}" PreviewMouseLeftButtonDown="DeleteTask_Click"/>
-                                </StackPanel>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </StackPanel>
+            <Grid Grid.Column="1" Margin="8" Background="Transparent" AllowDrop="True" DragOver="Column_DragOver" Drop="Column_Drop" Tag="{x:Static domain:TaskProgress.InProgress}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="In Progress" FontWeight="Bold" FontSize="16" Margin="0 0 0 8"/>
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <ItemsControl ItemsSource="{Binding InProgressTasks}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="#FEF3C7" BorderBrush="#D97706" BorderThickness="2" CornerRadius="4" Margin="0 4" Padding="8" Cursor="Hand" PreviewMouseMove="TaskCard_PreviewMouseMove" MouseLeftButtonDown="TaskCard_MouseLeftButtonDown">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Title}" Margin="0 0 8 0"/>
+                                        <TextBlock Text="{Binding Priority, StringFormat='|   Priority: {0}'}" Margin="0 0 8 0"/>
+                                        <Button Content="↑" Tag="{Binding}" PreviewMouseLeftButtonDown="ChangePriority_Click" Margin="0 0 8 0">
+                                            <Button.ContextMenu>
+                                                <ContextMenu DataContext="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+                                                    <MenuItem Header="Low" Click="Priority_Low_Click" Tag="{Binding}"/>
+                                                    <MenuItem Header="Medium" Click="Priority_Medium_Click" Tag="{Binding}"/>
+                                                    <MenuItem Header="High" Click="Priority_High_Click" Tag="{Binding}"/>
+                                                </ContextMenu>
+                                            </Button.ContextMenu>
+                                        </Button>
+                                        <Button Content="🗑️" Tag="{Binding}" PreviewMouseLeftButtonDown="DeleteTask_Click"/>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
 
             <!-- In Review -->
-            <StackPanel Grid.Column="2" Margin="8" Background="Transparent" AllowDrop="True" DragOver="Column_DragOver" Drop="Column_Drop" Tag="{x:Static domain:TaskProgress.Review}">
-                <TextBlock Text="In Review" FontWeight="Bold" FontSize="16" Margin="0 0 0 8"/>
-                <ItemsControl ItemsSource="{Binding InReviewTasks}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border Background="#EDE9FE" BorderBrush="#7C3AED" BorderThickness="2" CornerRadius="4" Margin="0 4" Padding="8" Cursor="Hand" PreviewMouseMove="TaskCard_PreviewMouseMove" MouseLeftButtonDown="TaskCard_MouseLeftButtonDown">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding Title}" Margin="0 0 8 0"/>
-                                    <TextBlock Text="{Binding Priority, StringFormat='|   Priority: {0}'}" Margin="0 0 8 0"/>
-                                    <Button Content="↑" Tag="{Binding}" PreviewMouseLeftButtonDown="ChangePriority_Click" Margin="0 0 8 0">
-                                        <Button.ContextMenu>
-                                            <ContextMenu DataContext="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
-                                                <MenuItem Header="Low" Click="Priority_Low_Click" Tag="{Binding}"/>
-                                                <MenuItem Header="Medium" Click="Priority_Medium_Click" Tag="{Binding}"/>
-                                                <MenuItem Header="High" Click="Priority_High_Click" Tag="{Binding}"/>
-                                            </ContextMenu>
-                                        </Button.ContextMenu>
-                                    </Button>
-                                    <Button Content="🗑️" Tag="{Binding}" PreviewMouseLeftButtonDown="DeleteTask_Click"/>
-                                </StackPanel>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </StackPanel>
+            <Grid Grid.Column="2" Margin="8" Background="Transparent" AllowDrop="True" DragOver="Column_DragOver" Drop="Column_Drop" Tag="{x:Static domain:TaskProgress.Review}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="In Review" FontWeight="Bold" FontSize="16" Margin="0 0 0 8"/>
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <ItemsControl ItemsSource="{Binding InReviewTasks}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="#EDE9FE" BorderBrush="#7C3AED" BorderThickness="2" CornerRadius="4" Margin="0 4" Padding="8" Cursor="Hand" PreviewMouseMove="TaskCard_PreviewMouseMove" MouseLeftButtonDown="TaskCard_MouseLeftButtonDown">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Title}" Margin="0 0 8 0"/>
+                                        <TextBlock Text="{Binding Priority, StringFormat='|   Priority: {0}'}" Margin="0 0 8 0"/>
+                                        <Button Content="↑" Tag="{Binding}" PreviewMouseLeftButtonDown="ChangePriority_Click" Margin="0 0 8 0">
+                                            <Button.ContextMenu>
+                                                <ContextMenu DataContext="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+                                                    <MenuItem Header="Low" Click="Priority_Low_Click" Tag="{Binding}"/>
+                                                    <MenuItem Header="Medium" Click="Priority_Medium_Click" Tag="{Binding}"/>
+                                                    <MenuItem Header="High" Click="Priority_High_Click" Tag="{Binding}"/>
+                                                </ContextMenu>
+                                            </Button.ContextMenu>
+                                        </Button>
+                                        <Button Content="🗑️" Tag="{Binding}" PreviewMouseLeftButtonDown="DeleteTask_Click"/>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
 
             <!-- Done -->
-            <StackPanel Grid.Column="3" Margin="8" Background="Transparent" AllowDrop="True" DragOver="Column_DragOver" Drop="Column_Drop" Tag="{x:Static domain:TaskProgress.Done}">
-                <TextBlock Text="Done" FontWeight="Bold" FontSize="16" Margin="0 0 0 8"/>
-                <ItemsControl ItemsSource="{Binding FinishedTasks}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border Background="#DCFCE7" BorderBrush="#16A34A" BorderThickness="2" CornerRadius="4" Margin="0 4" Padding="8" Cursor="Hand" PreviewMouseMove="TaskCard_PreviewMouseMove" MouseLeftButtonDown="TaskCard_MouseLeftButtonDown">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding Title}" Margin="0 0 8 0"/>
-                                    <TextBlock Text="{Binding Priority, StringFormat='|   Priority: {0}'}" Margin="0 0 8 0"/>
-                                    <Button Content="↑" Tag="{Binding}" PreviewMouseLeftButtonDown="ChangePriority_Click" Margin="0 0 8 0">
-                                        <Button.ContextMenu>
-                                            <ContextMenu DataContext="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
-                                                <MenuItem Header="Low" Click="Priority_Low_Click" Tag="{Binding}"/>
-                                                <MenuItem Header="Medium" Click="Priority_Medium_Click" Tag="{Binding}"/>
-                                                <MenuItem Header="High" Click="Priority_High_Click" Tag="{Binding}"/>
-                                            </ContextMenu>
-                                        </Button.ContextMenu>
-                                    </Button>
-                                    <Button Content="🗑️" Tag="{Binding}" PreviewMouseLeftButtonDown="DeleteTask_Click"/>
-                                </StackPanel>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </StackPanel>
+            <Grid Grid.Column="3" Margin="8" Background="Transparent" AllowDrop="True" DragOver="Column_DragOver" Drop="Column_Drop" Tag="{x:Static domain:TaskProgress.Done}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Done" FontWeight="Bold" FontSize="16" Margin="0 0 0 8"/>
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <ItemsControl ItemsSource="{Binding FinishedTasks}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="#DCFCE7" BorderBrush="#16A34A" BorderThickness="2" CornerRadius="4" Margin="0 4" Padding="8" Cursor="Hand" PreviewMouseMove="TaskCard_PreviewMouseMove" MouseLeftButtonDown="TaskCard_MouseLeftButtonDown">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Title}" Margin="0 0 8 0"/>
+                                        <TextBlock Text="{Binding Priority, StringFormat='|   Priority: {0}'}" Margin="0 0 8 0"/>
+                                        <Button Content="↑" Tag="{Binding}" PreviewMouseLeftButtonDown="ChangePriority_Click" Margin="0 0 8 0">
+                                            <Button.ContextMenu>
+                                                <ContextMenu DataContext="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+                                                    <MenuItem Header="Low" Click="Priority_Low_Click" Tag="{Binding}"/>
+                                                    <MenuItem Header="Medium" Click="Priority_Medium_Click" Tag="{Binding}"/>
+                                                    <MenuItem Header="High" Click="Priority_High_Click" Tag="{Binding}"/>
+                                                </ContextMenu>
+                                            </Button.ContextMenu>
+                                        </Button>
+                                        <Button Content="🗑️" Tag="{Binding}" PreviewMouseLeftButtonDown="DeleteTask_Click"/>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
 
         </Grid>
+
+        <!-- Project Feed -->
+        <Border Grid.Row="2"
+                Margin="8"
+                Padding="12"
+                Background="#F8FAFC"
+                BorderBrush="#CBD5E1"
+                BorderThickness="1"
+                CornerRadius="4">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <DockPanel Margin="0 0 0 10">
+                    <TextBlock Text="Project Feed"
+                               FontSize="16"
+                               FontWeight="Bold"
+                               VerticalAlignment="Center"/>
+                    <TextBlock Text="Recent changes in the selected project"
+                               Foreground="#64748B"
+                               HorizontalAlignment="Right"
+                               DockPanel.Dock="Right"
+                               VerticalAlignment="Center"/>
+                </DockPanel>
+
+                <ScrollViewer Grid.Row="1"
+                              VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <Border BorderBrush="#E2E8F0"
+                                BorderThickness="0 0 0 1"
+                                Padding="0 8">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="110"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="140"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0"
+                                           Text="Task updated"
+                                           FontWeight="SemiBold"/>
+                                <TextBlock Grid.Column="1"
+                                           Text="A task title, priority, progress, or deadline changed."
+                                           Foreground="#334155"/>
+                                <TextBlock Grid.Column="2"
+                                           Text="Just now"
+                                           Foreground="#64748B"
+                                           HorizontalAlignment="Right"/>
+                            </Grid>
+                        </Border>
+
+                        <Border BorderBrush="#E2E8F0"
+                                BorderThickness="0 0 0 1"
+                                Padding="0 8">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="110"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="140"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0"
+                                           Text="Task moved"
+                                           FontWeight="SemiBold"/>
+                                <TextBlock Grid.Column="1"
+                                           Text="A task moved between kanban columns."
+                                           Foreground="#334155"/>
+                                <TextBlock Grid.Column="2"
+                                           Text="Pending data"
+                                           Foreground="#64748B"
+                                           HorizontalAlignment="Right"/>
+                            </Grid>
+                        </Border>
+
+                        <Border Padding="0 8">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="110"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="140"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0"
+                                           Text="Task deleted"
+                                           FontWeight="SemiBold"/>
+                                <TextBlock Grid.Column="1"
+                                           Text="Deleted tasks will appear here once feed data is wired."
+                                           Foreground="#334155"/>
+                                <TextBlock Grid.Column="2"
+                                           Text="Pending data"
+                                           Foreground="#64748B"
+                                           HorizontalAlignment="Right"/>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>
