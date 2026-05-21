@@ -23,6 +23,14 @@ public class ProjectService : IProjectService
         return [.. projectDtos.Select(ToProject)];
     }
 
+    public async Task<List<Project>> GetProjectsAsync(int userId)
+    {
+        var projectDtos =
+            await _httpclient.GetFromJsonAsync<List<ProjectDto>>($"api/projects?userId={userId}") ?? [];
+
+        return [.. projectDtos.Select(ToProject)];
+    }
+
     public async Task<Project> CreateProjectAsync(Project project)
     {
         var response = await _httpclient.PostAsJsonAsync("api/projects", new ProjectCreateDto
@@ -102,6 +110,7 @@ public class ProjectService : IProjectService
         public DateTime StartDate { get; set; }
         public DateTime Deadline { get; set; }
         public List<ProjectTaskDto> Tasks { get; set; } = [];
+        public List<UserDto> Users { get; set; } = [];
     }
 
     private sealed class ProjectTaskDto
@@ -114,5 +123,14 @@ public class ProjectService : IProjectService
         public string Progress { get; set; } = string.Empty;
         public string Priority { get; set; } = string.Empty;
         public int? ProjectId { get; set; }
+        public List<UserDto> Users { get; set; } = [];
+    }
+
+    private sealed class UserDto
+    {
+        public int Id { get; set; }
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
+        public string WorkMail { get; set; } = string.Empty;
     }
 }

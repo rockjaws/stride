@@ -21,14 +21,25 @@ public partial class App : System.Windows.Application
         ILogger logger = new Logger();
         IProjectService projectService = new ProjectService();
         ITaskService taskService = new TaskService();
+        IUserService userService = new UserService(1);
         logger.Log(LogLevel.INFO, "Application Starting..");
 
         // Child viewmodels
-        var dashboardViewModel = new DashboardViewModel(logger, projectService, taskService);
+        var dashboardViewModel = new DashboardViewModel(
+            logger,
+            projectService,
+            taskService,
+            userService
+        );
 
-        var projectViewModel = new ProjectViewModel(logger, projectService, taskService);
+        var projectViewModel = new ProjectViewModel(
+            logger,
+            projectService,
+            taskService,
+            userService
+        );
 
-        var taskViewModel = new TaskViewModel(logger, taskService);
+        var taskViewModel = new TaskViewModel(logger, taskService, userService);
 
         var chatViewModel = new ChatViewModel();
 
