@@ -35,6 +35,7 @@ public class ShowSelectedTaskCommand : IUndoableCommand
         {
             try
             {
+                // The same command handles both save and delete from SelectedTaskWindow.
                 if (window.DeleteRequested)
                 {
                     await _deleteTaskAsync(task);

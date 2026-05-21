@@ -59,6 +59,7 @@ public class ProjectCalendarViewModel : ObservableObject
 
         var cells = new List<CalendarDayViewModel>(42);
 
+        // Always build a six-week grid so the calendar does not resize between months.
         for (int i = leadingBlanks - 1; i >= 0; i--)
             cells.Add(MakeDay(firstOfMonth.AddDays(-(i + 1)), isCurrentMonth: false));
 

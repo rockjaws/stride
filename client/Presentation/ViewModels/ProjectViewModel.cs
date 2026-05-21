@@ -153,6 +153,7 @@ public class ProjectViewModel : ObservableObject
         if (task == null)
             return;
 
+        // Replace the card object instead of mutating it so WPF collection bindings refresh reliably.
         if (
             SelectedProject?.Tasks.FirstOrDefault(p => p.Id == task.Id)
             is not ProjectTask existingTask
@@ -167,6 +168,7 @@ public class ProjectViewModel : ObservableObject
 
     public void ApplyExternalTaskUpdate(ProjectTask task)
     {
+        // Called by MainViewModel when the Tasks tab saves a task that may also be on this board.
         UpdateTask(task);
     }
 
@@ -212,6 +214,7 @@ public class ProjectViewModel : ObservableObject
 
     public void ApplyExternalTaskDelete(ProjectTask task)
     {
+        // Called by MainViewModel when a task is deleted outside the current project view.
         RemoveDeletedTask(task);
     }
 
@@ -241,6 +244,7 @@ public class ProjectViewModel : ObservableObject
         {
             ProjectTask movedTask = await _taskService.MoveTaskAsync(task, progress);
 
+            // Move only after the API accepts the update so the board does not drift from the database.
             GetTaskCollection(task.Progress).Remove(task);
             GetTaskCollection(movedTask.Progress).Add(movedTask);
             ReplaceSelectedProjectTask(task, movedTask);
@@ -270,6 +274,7 @@ public class ProjectViewModel : ObservableObject
         if (SelectedProject == null)
             return;
 
+        // SelectedProject.Tasks is the source used when reselecting the project, so keep it current too.
         int taskIndex = SelectedProject.Tasks.FindIndex(task => task.Id == originalTask.Id);
         if (taskIndex >= 0)
         {
@@ -294,6 +299,7 @@ public class ProjectViewModel : ObservableObject
     {
         try
         {
+            // The API returns only projects associated with the active user, including every task in those projects.
             var projects = await _projectService.GetProjectsAsync(_userService.Id);
 
             ListOfProjects.Clear();

@@ -37,6 +37,7 @@ public class CreateNewTaskCommand : IUndoableCommand
         {
             try
             {
+                // The command owns window flow; the view model/service owns the actual create behavior.
                 int projectId =
                     _getProjectId()
                     ?? throw new InvalidOperationException(

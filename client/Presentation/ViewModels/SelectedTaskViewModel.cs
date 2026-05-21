@@ -78,6 +78,7 @@ public class SelectedTaskViewModel : ObservableObject
 
         _logger.Log(LogLevel.INFO, $"Prepared Task Update: {_originalTask.Id}");
 
+        // Build a replacement task instead of mutating the original bound object before the user saves.
         return new ProjectTask(
             _originalTask.Id,
             _title,

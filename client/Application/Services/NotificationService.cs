@@ -27,6 +27,7 @@ public class NotificationService : INotificationService
 
   public async Task MarkAsReadAsync(int userId, int notificationId)
   {
+    // Marking read is scoped by user so one user's toast state does not hide another user's notification.
     var response = await _httpClient.PutAsJsonAsync(
       $"api/users/{userId}/notifications/{notificationId}",
       new NotificationUpdateDto { IsRead = true }

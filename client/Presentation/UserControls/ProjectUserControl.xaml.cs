@@ -135,6 +135,7 @@ namespace client.Presentation.UserControls
                 return;
             }
 
+            // Tasks are immutable in the UI layer, so changing priority means saving a replacement instance.
             var updatedTask = new ProjectTask(
                 task.Id,
                 task.Title,
@@ -176,6 +177,7 @@ namespace client.Presentation.UserControls
 
         private void RestoreApplicationFocus()
         {
+            // The inline priority picker can leave mouse/keyboard focus captured after a click.
             Dispatcher.BeginInvoke(() =>
             {
                 Mouse.Capture(null);
@@ -195,6 +197,7 @@ namespace client.Presentation.UserControls
         {
             var current = child;
 
+            // Walk up the visual tree so outside clicks can dismiss the floating priority picker.
             while (current != null)
             {
                 if (ReferenceEquals(current, parent))
