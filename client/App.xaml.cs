@@ -1,5 +1,4 @@
 using System.Windows;
-
 using client.Application.Interfaces;
 using client.Application.Services;
 using client.Domain.Enum;
@@ -25,23 +24,22 @@ public partial class App : System.Windows.Application
         logger.Log(LogLevel.INFO, "Application Starting..");
 
         // Child viewmodels
-        var dashboardViewModel = new DashboardViewModel(
-                logger,
-                projectService,
-                taskService
-                );
+        var dashboardViewModel = new DashboardViewModel(logger, projectService, taskService);
 
-        var projectViewModel = new ProjectViewModel(
-                logger,
-                projectService,
-                taskService
-                );
+        var projectViewModel = new ProjectViewModel(logger, projectService, taskService);
+
+        var taskViewModel = new TaskViewModel(logger, taskService);
+
+        var chatViewModel = new ChatViewModel();
 
         // Main viewmodel
         var viewModel = new MainViewModel(
-                logger,
-                dashboardViewModel,
-                projectViewModel);
+            logger,
+            dashboardViewModel,
+            projectViewModel,
+            taskViewModel,
+            chatViewModel
+        );
 
         // Main window
         var mainWindow = new MainWindow(viewModel);
