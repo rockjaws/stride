@@ -1,17 +1,124 @@
+using System.Collections.ObjectModel;
+
 using client.Application.Interfaces;
+using client.Domain.Enum;
+using client.Presentation.Algorithms;
+using client.Domain.Models;
+using client.Presentation.Common;
+using client.Presentation.Strategies;
 
 namespace client.Presentation.ViewModels;
 
-public class DashboardViewModel
+public class DashboardViewModel : ObservableObject
 {
     private readonly ILogger _logger;
     private readonly IProjectService _projectService;
     private readonly ITaskService _taskService;
 
+    private ObservableCollection<ProjectTask> _upcomingTasks = [];
+    private List<ITask> _tasks = [];
+    private ObservableCollection<Notification> _notifications = [];
+
+    private int _backlogCount;
+    private int _inProgressCount;
+    private int _inReviewCount;
+    private int _finishedCount;
+
+    private ITaskSortStrategy _sortingStrategy;
+
+    public ITaskSortStrategy SortingStrategy
+    {
+        get => _sortingStrategy;
+        set => SetProperty(ref _sortingStrategy, value);
+    }
+
+    public ObservableCollection<ProjectTask> UpcomingTasks
+    {
+        get => _upcomingTasks;
+        set => SetProperty(ref _upcomingTasks, value);
+    }
+
+    public ObservableCollection<Notification> Notifications
+    {
+        get => _notifications;
+        set => SetProperty(ref _notifications, value);
+    }
+
+    public int BacklogCount
+    {
+        get => _backlogCount;
+        set => SetProperty(ref _backlogCount, value);
+    }
+
+    public int InProgressCount
+    {
+        get => _inProgressCount;
+        set => SetProperty(ref _inProgressCount, value);
+    }
+    public int InReviewCount
+    {
+        get => _inReviewCount;
+        set => SetProperty(ref _inReviewCount, value);
+    }
+    public int FinishedCount
+    {
+        get => _finishedCount;
+        set => SetProperty(ref _finishedCount, value);
+    }
     public DashboardViewModel(ILogger logger, IProjectService projectService, ITaskService taskService)
     {
         _logger = logger;
         _projectService = projectService;
         _taskService = taskService;
+
+        _sortingStrategy = new SortByDeadline();
+
+        _ = GetDashboardMetricsAsync();
     }
+
+    public async Task GetDashboardMetricsAsync()
+    {
+        try
+        {
+            _logger.Log(LogLevel.INFO, "Fetching dashboard metrics for user: {}");
+            var allTasks = await _taskService.GetTasksAsync();
+            BacklogCount = allTasks.Count(t => t.Progress == TaskProgress.Backlog);
+            InProgressCount = allTasks.Count(t => t.Progress == TaskProgress.InProgress);
+            InReviewCount = allTasks.Count(t => t.Progress == TaskProgress.Review);
+            FinishedCount = allTasks.Count(t => t.Progress == TaskProgress.Done);
+
+            _tasks = allTasks
+                .Where(t => t.Progress != TaskProgress.Done)
+                .Cast<ITask>()
+                .ToList();
+
+            SortTasks();
+
+            _logger.Log(LogLevel.INFO, "Dashboard metrics successfully loaded");
+
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(LogLevel.ERROR, $"Failed to load dashboard metrics: {ex.Message}");
+        }
+    }
+
+    public void ChangeSortingStrategy(ITaskSortStrategy newStrategy)
+    {
+        if (newStrategy == null || SortingStrategy.GetType() == newStrategy.GetType()) return;
+
+        SortingStrategy = newStrategy;
+        _logger.Log(LogLevel.INFO, $"Switched dashboard sorting strategy to {newStrategy.GetType().Name}");
+
+        SortTasks();
+    }
+
+    private void SortTasks()
+    {
+        if (_tasks == null || !_tasks.Any()) return;
+
+        SortingStrategy.SortTasks(_tasks);
+        UpcomingTasks = new ObservableCollection<ProjectTask>(_tasks.Cast<ProjectTask>());
+    }
+
 }
