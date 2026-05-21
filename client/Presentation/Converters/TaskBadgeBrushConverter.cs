@@ -9,6 +9,7 @@ public class TaskBadgeBrushConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
+        // XAML passes "background", "border", or "foreground" to reuse the same status palette.
         string tone = parameter as string ?? "background";
 
         return value switch

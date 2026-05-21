@@ -52,6 +52,7 @@ public class ProjectViewModel : ObservableObject
         {
             SetProperty(ref _selectedProject, value);
             CreateNewTaskCommand.RaiseCanExecuteChanged();
+            // The board columns are derived from the selected project's task list.
             ClearTaskColumns();
 
             if (_selectedProject == null)
@@ -90,6 +91,7 @@ public class ProjectViewModel : ObservableObject
         InProgressTasks = [];
         InReviewTasks = [];
         FinishedTasks = [];
+        // Commands receive callbacks so service calls stay in the view model, not in the command.
         CreateNewTaskCommand = new CreateNewTaskCommand(
             _logger,
             CreateTaskAsync,
@@ -106,6 +108,7 @@ public class ProjectViewModel : ObservableObject
 
     private void LoadTasks(Project currentProject)
     {
+        // Projects are loaded with their tasks, so selecting a project only needs local grouping.
         foreach (ProjectTask task in currentProject.Tasks)
         {
             GetTaskCollection(task.Progress).Add(task);
@@ -126,6 +129,7 @@ public class ProjectViewModel : ObservableObject
         if (task == null)
             return;
 
+        // Add to both the visible column and the backing project list used when the board reloads.
         GetTaskCollection(task.Progress).Add(task);
         SelectedProject?.Tasks.Add(task);
         _logger.Log(LogLevel.INFO, $"Added Created Task To Board: {task.Id}");
@@ -187,6 +191,7 @@ public class ProjectViewModel : ObservableObject
             return;
         }
 
+        // Only remove locally after the API confirms the delete.
         RemoveDeletedTask(task);
         _logger.Log(LogLevel.INFO, $"Deleted Task {id}");
     }
@@ -194,6 +199,7 @@ public class ProjectViewModel : ObservableObject
     private void RemoveDeletedTask(ProjectTask task)
     {
         var existingTask = SelectedProject?.Tasks.FirstOrDefault(t => t.Id == task.Id);
+        // Prefer the project copy because it has the current progress column after moves/edits.
         if (existingTask is ProjectTask projectTask)
             GetTaskCollection(projectTask.Progress).Remove(projectTask);
         else
@@ -259,6 +265,7 @@ public class ProjectViewModel : ObservableObject
 
     private ObservableCollection<ProjectTask> GetTaskCollection(TaskProgress progress)
     {
+        // Centralize progress-to-column mapping so drag/drop, create, update, and delete stay consistent.
         return progress switch
         {
             TaskProgress.Backlog => BacklogTasks,

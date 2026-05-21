@@ -46,6 +46,7 @@ public class TaskViewModel : ObservableObject
     {
         try
         {
+            // The Tasks tab shows direct task assignments for the active user only.
             var tasks = await _taskService.GetTasksAsync(_userService.Id);
 
             Tasks.Clear();
@@ -68,6 +69,7 @@ public class TaskViewModel : ObservableObject
         {
             await _taskService.UpdateTaskAsync(task);
             ReplaceTask(task);
+            // Notify MainViewModel so other views can refresh their local copy of this task.
             TaskUpdated?.Invoke(task);
             _logger.Log(LogLevel.INFO, $"Updated Task {task.Id} From Tasks View");
         }
@@ -86,6 +88,7 @@ public class TaskViewModel : ObservableObject
         {
             await _taskService.DeleteTaskAsync(id);
             RemoveTask(task);
+            // Notify MainViewModel so the kanban board can remove the same task if it is visible.
             TaskDeleted?.Invoke(task);
             _logger.Log(LogLevel.INFO, $"Deleted Task {id} From Tasks View");
         }
@@ -101,6 +104,7 @@ public class TaskViewModel : ObservableObject
         if (existingTask == null)
             return;
 
+        // Replacing the collection item forces WPF to redraw badges and labels bound to the task.
         int taskIndex = Tasks.IndexOf(existingTask);
         Tasks[taskIndex] = task;
     }

@@ -22,6 +22,7 @@ public partial class App : System.Windows.Application
         IProjectService projectService = new ProjectService();
         ITaskService taskService = new TaskService();
         INotificationService notificationService = new NotificationService();
+        // Temporary active user selection until proper login/session handling exists.
         IUserService userService = new UserService(1);
         logger.Log(LogLevel.INFO, "Application Starting..");
 

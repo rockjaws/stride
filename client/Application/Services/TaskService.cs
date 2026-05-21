@@ -26,6 +26,7 @@ public class TaskService : ITaskService
 
   public async Task<List<ProjectTask>> GetTasksAsync(int userId)
   {
+    // The API applies the user filter; the client only passes the active UserService id.
     var taskDtos = await _httpclient.GetFromJsonAsync<List<ProjectTaskDto>>($"api/tasks?userId={userId}") ?? [];
     return [.. taskDtos.Select(ToProjectTask)];
   }
@@ -70,6 +71,7 @@ public class TaskService : ITaskService
     if (task.Id == null)
       throw new InvalidOperationException("Cannot update a task before it has been saved.");
 
+    // Send enum names because the API serializes task enums as strings.
     var response = await _httpclient.PutAsJsonAsync($"api/tasks/{task.Id}", new ProjectTaskUpdateDto
     {
       Title = task.Title,
@@ -110,6 +112,7 @@ public class TaskService : ITaskService
 
   private static ProjectTask ToProjectTask(ProjectTaskDto dto)
   {
+    // Service DTOs stay private so the rest of the client works with domain models only.
     return new ProjectTask(
       dto.Id,
       dto.Title,
@@ -136,6 +139,7 @@ public class TaskService : ITaskService
     if (Enum.TryParse<TaskPriority>(priority, ignoreCase: true, out var parsed))
       return parsed;
 
+    // Unknown priority should not block task rendering.
     return TaskPriority.Normal;
   }
 

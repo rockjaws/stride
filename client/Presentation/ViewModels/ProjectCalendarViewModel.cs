@@ -55,6 +55,7 @@ public class ProjectCalendarViewModel : ObservableObject
 
         var firstOfMonth = new DateTime(_displayMonth.Year, _displayMonth.Month, 1);
         int daysInMonth = DateTime.DaysInMonth(_displayMonth.Year, _displayMonth.Month);
+        // Convert Sunday-first DayOfWeek values into a Monday-first calendar offset.
         int leadingBlanks = ((int)firstOfMonth.DayOfWeek + 6) % 7;
 
         var cells = new List<CalendarDayViewModel>(42);
@@ -78,6 +79,7 @@ public class ProjectCalendarViewModel : ObservableObject
         Date = date,
         IsCurrentMonth = isCurrentMonth,
         IsToday = date.Date == DateTime.Today,
+        // Dates are normalized before lookup so time-of-day never hides an indicator.
         HasTask = _deadlineDates.Contains(date.Date)
     };
 }

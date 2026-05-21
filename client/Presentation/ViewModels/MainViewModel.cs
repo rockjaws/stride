@@ -78,6 +78,7 @@ public class MainViewModel : ObservableObject
         {
             Interval = TimeSpan.FromSeconds(5)
         };
+        // DispatcherTimer runs on the UI thread, so toast bindings can be updated directly.
         _notificationTimer.Tick += async (_, _) => await CheckNotificationsAsync();
     }
 
@@ -87,6 +88,7 @@ public class MainViewModel : ObservableObject
             return;
 
         _notificationTimer.Start();
+        // Run once immediately so unread notifications are not delayed until the first timer tick.
         _ = CheckNotificationsAsync();
     }
 
@@ -94,6 +96,7 @@ public class MainViewModel : ObservableObject
     {
         CurrentView = viewModel;
 
+        // Reload when opening the Tasks tab so edits made elsewhere are picked up.
         if (ReferenceEquals(viewModel, TaskViewModel))
             _ = TaskViewModel.LoadTasksAsync();
     }
@@ -142,6 +145,7 @@ public class MainViewModel : ObservableObject
         ToastText = text;
         IsToastVisible = true;
 
+        // Keep the toast simple for now; future queueing can build on this display delay.
         await Task.Delay(TimeSpan.FromSeconds(4));
 
         IsToastVisible = false;
