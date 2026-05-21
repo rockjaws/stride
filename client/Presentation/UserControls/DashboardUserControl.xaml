@@ -1,9 +1,10 @@
 <UserControl x:Class="client.Presentation.UserControls.DashboardUserControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:client.Presentation.UserControls"
+             mc:Ignorable="d"
              d:DesignHeight="650" d:DesignWidth="950"
              Background="#F8F9FA">
 
@@ -223,9 +224,9 @@
                         <TextBlock Text="May 2026" Foreground="#2563EB" FontWeight="SemiBold" FontSize="12"/>
                     </Border>
                 </Grid>
-                <Viewbox Stretch="Uniform" Margin="0,6,0,0">
-                    <Calendar BorderThickness="0" FontSize="14" Background="White"/>
-                </Viewbox>
+  <local:ProjectCalendarUserControl
+    DataContext="{Binding CalendarViewModel}"
+    Margin="0,6,0,0"/>
             </DockPanel>
         </Border>
     </Grid>
