@@ -24,6 +24,12 @@ public class TaskService : ITaskService
     return [.. taskDtos.Select(ToProjectTask)];
   }
 
+  public async Task<List<ProjectTask>> GetTasksAsync(int userId)
+  {
+    var taskDtos = await _httpclient.GetFromJsonAsync<List<ProjectTaskDto>>($"api/tasks?userId={userId}") ?? [];
+    return [.. taskDtos.Select(ToProjectTask)];
+  }
+
   public async Task<ProjectTask> CreateTaskAsync(ProjectTask task)
   {
     if (task.ProjectId == null)
@@ -160,5 +166,14 @@ public class TaskService : ITaskService
     public string Progress { get; set; } = string.Empty;
     public string Priority { get; set; } = string.Empty;
     public int? ProjectId { get; set; }
+    public List<UserDto> Users { get; set; } = [];
+  }
+
+  private sealed class UserDto
+  {
+    public int Id { get; set; }
+    public string FirstName { get; set; } = string.Empty;
+    public string LastName { get; set; } = string.Empty;
+    public string WorkMail { get; set; } = string.Empty;
   }
 }

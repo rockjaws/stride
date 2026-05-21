@@ -9,7 +9,6 @@ namespace client.Presentation.ViewModels;
 public class MainViewModel : ObservableObject
 {
     private readonly ILogger _logger;
-
     private object _currentView;
 
     public DashboardViewModel DashboardViewModel { get; }
@@ -51,6 +50,9 @@ public class MainViewModel : ObservableObject
     public void SetCurrentView(object viewModel)
     {
         CurrentView = viewModel;
+
+        if (ReferenceEquals(viewModel, TaskViewModel))
+            _ = TaskViewModel.LoadTasksAsync();
     }
 
     private async Task CreateProjectAsync(Project project)
