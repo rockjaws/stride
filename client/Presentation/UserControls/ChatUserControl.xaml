@@ -1,12 +1,253 @@
-﻿<UserControl x:Class="client.Presentation.UserControls.ChatUserControl"
+<UserControl x:Class="client.Presentation.UserControls.ChatUserControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:client.Presentation.UserControls"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             mc:Ignorable="d"
+             d:DesignHeight="650" d:DesignWidth="950"
+             Background="#F8F9FA">
+
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="StrideBgChat" Color="#F8F9FA"/>
+        <SolidColorBrush x:Key="StrideBgHeader" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="StrideBgInput" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="StrideBgCode" Color="#1E1E1E"/>
+        <SolidColorBrush x:Key="StrideBorder" Color="#E2E8F0"/>
+        <SolidColorBrush x:Key="StrideTextMain" Color="#1E293B"/>
+        <SolidColorBrush x:Key="StrideTextMuted" Color="#64748B"/>
+        <SolidColorBrush x:Key="StrideAccent" Color="#7C5DFA"/>
+        <SolidColorBrush x:Key="StrideCodeText" Color="#E5C07B"/>
+
+        <Style x:Key="StrideModernComboBox" TargetType="ComboBox">
+            <Setter Property="Padding" Value="10,0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Background" Value="{StaticResource StrideBgInput}"/>
+            <Setter Property="Foreground" Value="{StaticResource StrideTextMain}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource StrideBorder}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <ToggleButton Name="ToggleButton" 
+                                          BorderBrush="{TemplateBinding BorderBrush}"
+                                          BorderThickness="{TemplateBinding BorderThickness}"
+                                          Background="{TemplateBinding Background}"
+                                          Grid.Column="2" 
+                                          Focusable="false"
+                                          IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}"
+                                          ClickMode="Press">
+                                <ToggleButton.Template>
+                                    <ControlTemplate TargetType="ToggleButton">
+                                        <Border CornerRadius="6" 
+                                                Background="{TemplateBinding Background}" 
+                                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                                BorderThickness="{TemplateBinding BorderThickness}">
+                                            <Grid HorizontalAlignment="Right" Width="30">
+                                                <Path Margin="0,1,0,0" Fill="#64748B" HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 0 0 L 4 4 L 8 0 Z"/>
+                                            </Grid>
+                                        </Border>
+                                    </ControlTemplate>
+                                </ToggleButton.Template>
+                            </ToggleButton>
+                            <ContentPresenter Name="ContentSite" IsHitTestVisible="False"  Content="{TemplateBinding SelectionBoxItem}" ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" Margin="12,0,30,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                            <Popup Name="Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}" AllowsTransparency="True" Focusable="False" PopupAnimation="Slide">
+                                <Grid Name="DropDown" SnapsToDevicePixels="True" MinWidth="{TemplateBinding ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                    <Border Name="DropDownBorder" Background="#FFFFFF" BorderThickness="1" BorderBrush="{StaticResource StrideBorder}" CornerRadius="6" Margin="0,4,0,4">
+                                        <ScrollViewer Margin="4,6" SnapsToDevicePixels="True">
+                                            <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                        </ScrollViewer>
+                                    </Border>
+                                </Grid>
+                            </Popup>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
     <Grid>
-            
+        <Grid.RowDefinitions>
+            <RowDefinition Height="64"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" 
+                Background="{StaticResource StrideBgHeader}"
+                BorderBrush="{StaticResource StrideBorder}"
+                BorderThickness="0,0,0,1"
+                Padding="20,0">
+            <Grid>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+
+                    <ComboBox x:Name="StrideProjectDropdown"
+                              Width="170"
+                              Height="36"
+                              Style="{StaticResource StrideModernComboBox}"
+                              FontWeight="SemiBold">
+                        <ComboBoxItem Content="📁 Project Stride" IsSelected="True"/>
+                        <ComboBoxItem Content="📁 Project Servr"/>
+                    </ComboBox>
+
+                    <TextBlock Text="/" 
+                               Foreground="#CBD5E1" 
+                               FontSize="18" 
+                               Margin="14,0" 
+                               VerticalAlignment="Center"
+                               FontWeight="Light"/>
+
+                    <ComboBox x:Name="StrideChannelDropdown"
+                              Width="190"
+                              Height="36"
+                              Style="{StaticResource StrideModernComboBox}"
+                              Foreground="{StaticResource StrideAccent}"
+                              FontWeight="SemiBold">
+                        <ComboBoxItem Content="# development" IsSelected="True"/>
+                        <ComboBoxItem Content="# general"/>
+                        <ComboBoxItem Content="# sqlite-migrations"/>
+                    </ComboBox>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <Ellipse Width="8" Height="8" Fill="#2ECC71" Margin="0,0,8,0"/>
+                    <TextBlock Text="Live Feed Sync Connected" 
+                               Foreground="{StaticResource StrideTextMuted}" 
+                               FontSize="12"
+                               FontWeight="Medium"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <ScrollViewer Grid.Row="1" 
+                      VerticalScrollBarVisibility="Auto" 
+                      Background="{StaticResource StrideBgChat}"
+                      Padding="24,20">
+
+            <StackPanel VerticalAlignment="Bottom">
+
+                <Grid Margin="0,0,0,24">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="36"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" Height="36" Width="36" 
+                            Background="#3A86FF" CornerRadius="6" VerticalAlignment="Top">
+                        <TextBlock Text="O" Foreground="White" FontWeight="Bold" FontSize="14"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+
+                    <StackPanel Grid.Column="1" Margin="12,0,0,0">
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                            <TextBlock Text="Oliver" Foreground="{StaticResource StrideTextMain}" FontWeight="Bold" FontSize="14"/>
+                            <TextBlock Text="11:04 AM" Foreground="{StaticResource StrideTextMuted}" FontSize="11" Margin="8,0,0,1" VerticalAlignment="Bottom"/>
+                        </StackPanel>
+                        <TextBlock Text="Hey, I just ran the initial database setup on our Web API layer, but the foreign key constraints aren't enforcing natively in the queries. Anyone remember the configuration setup command?" 
+                                   Foreground="{StaticResource StrideTextMain}" FontSize="14" TextWrapping="Wrap" LineHeight="20"/>
+                    </StackPanel>
+                </Grid>
+
+                <Grid Margin="0,0,0,24">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="36"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" Height="36" Width="36" 
+                            Background="{StaticResource StrideAccent}" CornerRadius="6" VerticalAlignment="Top">
+                        <TextBlock Text="N" Foreground="White" FontWeight="Bold" FontSize="14"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+
+                    <StackPanel Grid.Column="1" Margin="12,0,0,0">
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                            <TextBlock Text="Nicolaj" Foreground="{StaticResource StrideTextMain}" FontWeight="Bold" FontSize="14"/>
+                            <TextBlock Text="11:07 AM" Foreground="{StaticResource StrideTextMuted}" FontSize="11" Margin="8,0,0,1" VerticalAlignment="Bottom"/>
+                        </StackPanel>
+
+                        <TextBlock Text="Yeah, SQLite requires you to explicitly turn them on per connection instance. You can hook into the OnConfiguring method in your Entity Framework DbContext setup like this:" 
+                                   Foreground="{StaticResource StrideTextMain}" FontSize="14" TextWrapping="Wrap" LineHeight="20"/>
+
+                        <Border Background="{StaticResource StrideBgCode}" 
+                                BorderBrush="#334155" 
+                                BorderThickness="1" CornerRadius="6" Padding="14" Margin="0,10,0,0">
+                            <TextBox Text="protected override void OnConfiguring(DbContextOptionsBuilder options)&#x0a;{&#x0a;    options.UseSqlite(&quot;Data Source=stride.db&quot;);&#x0a;    var connection = new SqliteConnection(&quot;Data Source=stride.db&quot;);&#x0a;    connection.Open();&#x0a;    // Run PRAGMA foreign_keys = ON;&#x0a;}" 
+                                     FontFamily="Consolas" FontSize="13" 
+                                     Foreground="{StaticResource StrideCodeText}" 
+                                     Background="Transparent" BorderThickness="0" 
+                                     IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True"/>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <Border Grid.Row="2" Padding="24,0,24,24" Background="{StaticResource StrideBgChat}">
+            <Border Background="{StaticResource StrideBgInput}"
+                    BorderBrush="{StaticResource StrideBorder}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="14">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBox x:Name="StrideMessageInput"
+                             Grid.Row="0" 
+                             MinHeight="44"
+                             MaxHeight="120"
+                             Background="Transparent"
+                             Foreground="{StaticResource StrideTextMain}"
+                             BorderThickness="0"
+                             AcceptsReturn="True"
+                             TextWrapping="Wrap"
+                             VerticalScrollBarVisibility="Auto"
+                             FontSize="14"/>
+
+                    <Grid Grid.Row="1" Margin="0,10,0,0">
+                        <TextBlock Text="Formatting supported (wrap blocks in triple backticks)" 
+                                   Foreground="{StaticResource StrideTextMuted}" 
+                                   FontSize="11" 
+                                   VerticalAlignment="Center"/>
+
+                        <Button x:Name="StrideSendMessageBtn"
+                                Content="Send Message" 
+                                HorizontalAlignment="Right"
+                                Padding="16,8"
+                                Background="{StaticResource StrideAccent}"
+                                Foreground="White"
+                                FontWeight="SemiBold"
+                                FontSize="13"
+                                Cursor="Hand">
+                            <Button.Resources>
+                                <Style TargetType="Button">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="6" Padding="{TemplateBinding Padding}">
+                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#654DE0"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Resources>
+                        </Button>
+                    </Grid>
+                </Grid>
+            </Border>
+        </Border>
+
     </Grid>
 </UserControl>
