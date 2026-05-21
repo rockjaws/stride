@@ -40,6 +40,9 @@ public class MainViewModel : ObservableObject
         TaskViewModel = taskViewModel;
         ChatViewModel = chatViewModel;
 
+        TaskViewModel.TaskUpdated += ProjectViewModel.ApplyExternalTaskUpdate;
+        TaskViewModel.TaskDeleted += ProjectViewModel.ApplyExternalTaskDelete;
+
         CurrentView = DashboardViewModel;
 
         ChangeViewCommand = new ChangeViewCommand(_logger, this);
