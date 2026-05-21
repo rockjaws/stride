@@ -29,6 +29,7 @@ public class ShowSelectedTaskCommand : IUndoableCommand
 
         var task = (ProjectTask)param!;
         var vm = new SelectedTaskViewModel(_logger, task);
+        // The dialog edits a copy of the task state through its view model.
         var window = new SelectedTaskWindow { DataContext = vm };
 
         if (window.ShowDialog() == true)
@@ -46,6 +47,7 @@ public class ShowSelectedTaskCommand : IUndoableCommand
                 if (updatedTask == null)
                     return;
 
+                // Delegate persistence back to the owning view model.
                 await _updateTaskAsync(updatedTask);
             }
             catch (Exception ex)

@@ -85,6 +85,8 @@ public class DashboardViewModel : ObservableObject
         {
             _logger.Log(LogLevel.INFO, $"Fetching dashboard metrics for user: {_userService.Id}");
             var allTasks = await _taskService.GetTasksAsync(_userService.Id);
+
+            // Counts and upcoming work are both based on the active user's task assignments.
             BacklogCount = allTasks.Count(t => t.Progress == TaskProgress.Backlog);
             InProgressCount = allTasks.Count(t => t.Progress == TaskProgress.InProgress);
             InReviewCount = allTasks.Count(t => t.Progress == TaskProgress.Review);
@@ -128,6 +130,7 @@ public class DashboardViewModel : ObservableObject
     {
         if (_tasks == null || !_tasks.Any()) return;
 
+        // Sorting strategies operate on ITask, then the UI list is rebuilt from the sorted result.
         SortingStrategy.SortTasks(_tasks);
         UpcomingTasks = new ObservableCollection<ProjectTask>(_tasks.Cast<ProjectTask>());
     }

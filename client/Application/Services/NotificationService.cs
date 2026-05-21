@@ -19,6 +19,7 @@ public class NotificationService : INotificationService
 
   public async Task<List<Notification>> GetNotificationsAsync(int userId)
   {
+    // Polling is user-scoped because notification read state belongs to one user.
     var notificationDtos =
       await _httpClient.GetFromJsonAsync<List<NotificationDto>>($"api/users/{userId}/notifications") ?? [];
 
@@ -37,6 +38,7 @@ public class NotificationService : INotificationService
 
   private static Notification ToNotification(NotificationDto dto)
   {
+    // The client does not need the full related task yet, only the optional task id.
     return new Notification(
       dto.Id,
       dto.Text,

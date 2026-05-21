@@ -31,6 +31,7 @@ public class CreateNewTaskCommand : IUndoableCommand
             return;
 
         var vm = new NewTaskViewModel(_logger);
+        // Keep the command reusable by passing the selected project id through a callback.
         var window = new NewTaskWindow { DataContext = vm };
 
         if (window.ShowDialog() == true)

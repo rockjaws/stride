@@ -30,6 +30,7 @@ namespace client.Presentation.UserControls
             if (sender is not FrameworkElement { DataContext: ProjectTask task } taskCard)
                 return;
 
+            // The dragged data is the task itself; the drop target decides the new progress value.
             DragDrop.DoDragDrop(taskCard, task, DragDropEffects.Move);
         }
 
@@ -67,6 +68,7 @@ namespace client.Presentation.UserControls
             if (DataContext is not ProjectViewModel viewModel)
                 return;
 
+            // Double-click opens the shared selected-task dialog used by both Project and Tasks views.
             viewModel.SelectedTask = task;
             if (viewModel.ShowSelectedTaskCommand.CanExecute(task))
             {
@@ -87,6 +89,7 @@ namespace client.Presentation.UserControls
 
             var maxLeft = Math.Max(8, ProjectRoot.ActualWidth - PriorityPicker.Width - 8);
             var left = Math.Min(position.X, maxLeft);
+            // The picker is an inline overlay, so clamp it inside the project control.
             PriorityPicker.Margin = new Thickness(left, position.Y, 0, 0);
             PriorityPicker.Visibility = Visibility.Visible;
 
@@ -228,6 +231,7 @@ namespace client.Presentation.UserControls
             if (e.Data.GetData(typeof(ProjectTask)) is not ProjectTask task)
                 return;
 
+            // Persist the move through the view model so the database and board stay aligned.
             await viewModel.MoveTaskAsync(task, progress);
             e.Handled = true;
         }

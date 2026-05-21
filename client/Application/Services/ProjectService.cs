@@ -25,6 +25,7 @@ public class ProjectService : IProjectService
 
     public async Task<List<Project>> GetProjectsAsync(int userId)
     {
+        // User membership filtering is handled by the API endpoint.
         var projectDtos =
             await _httpclient.GetFromJsonAsync<List<ProjectDto>>($"api/projects?userId={userId}") ?? [];
 
@@ -80,6 +81,7 @@ public class ProjectService : IProjectService
             dto.StartDate,
             dto.Deadline,
             [],
+            // Project tasks are nested in the project response so the kanban board can populate immediately.
             [
                 .. dto.Tasks.Select(t => new ProjectTask(
                     t.Id,

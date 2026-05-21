@@ -25,6 +25,7 @@ public class CreateNewProjectCommand : IUndoableCommand
             return;
 
         var vm = new NewProjectViewModel(_logger);
+        // The command handles dialog lifetime; the injected callback handles persistence.
         var window = new NewProjectWindow { DataContext = vm };
 
         if (window.ShowDialog() == true)
