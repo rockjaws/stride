@@ -1,5 +1,4 @@
 using System.Collections.ObjectModel;
-
 using client.Application.Interfaces;
 using client.Domain.Enum;
 using client.Domain.Exceptions;
@@ -14,6 +13,7 @@ public class ProjectViewModel : ObservableObject
     private readonly ILogger _logger;
     private readonly IProjectService _projectService;
     private readonly ITaskService _taskService;
+    private readonly IUserService _userService;
     private Project? _selectedProject;
     private ProjectTask? _selectedTask;
     private ObservableCollection<ProjectTask> _backlogTasks = [];
@@ -77,12 +77,14 @@ public class ProjectViewModel : ObservableObject
     public ProjectViewModel(
         ILogger logger,
         IProjectService projectService,
-        ITaskService taskService
+        ITaskService taskService,
+        IUserService userService
     )
     {
         _logger = logger;
         _projectService = projectService;
         _taskService = taskService;
+        _userService = userService;
         ListOfProjects = [];
         BacklogTasks = [];
         InProgressTasks = [];
@@ -278,7 +280,7 @@ public class ProjectViewModel : ObservableObject
     {
         try
         {
-            var projects = await _projectService.GetProjectsAsync();
+            var projects = await _projectService.GetProjectsAsync(_userService.Id);
 
             ListOfProjects.Clear();
             foreach (var project in projects)

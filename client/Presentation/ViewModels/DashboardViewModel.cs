@@ -14,6 +14,7 @@ public class DashboardViewModel : ObservableObject
     private readonly ILogger _logger;
     private readonly IProjectService _projectService;
     private readonly ITaskService _taskService;
+    private readonly IUserService _userService;
 
     private ObservableCollection<ProjectTask> _upcomingTasks = [];
     private List<ITask> _tasks = [];
@@ -65,11 +66,12 @@ public class DashboardViewModel : ObservableObject
         get => _finishedCount;
         set => SetProperty(ref _finishedCount, value);
     }
-    public DashboardViewModel(ILogger logger, IProjectService projectService, ITaskService taskService)
+    public DashboardViewModel(ILogger logger, IProjectService projectService, ITaskService taskService, IUserService userService)
     {
         _logger = logger;
         _projectService = projectService;
         _taskService = taskService;
+        _userServce = userService;
 
         _sortingStrategy = new SortByDeadline();
 

@@ -1,5 +1,4 @@
 using System.Windows;
-
 using client.Application.Interfaces;
 using client.Application.Services;
 using client.Domain.Enum;
@@ -22,26 +21,36 @@ public partial class App : System.Windows.Application
         ILogger logger = new Logger();
         IProjectService projectService = new ProjectService();
         ITaskService taskService = new TaskService();
+        IUserService userService = new UserService(1);
         logger.Log(LogLevel.INFO, "Application Starting..");
 
         // Child viewmodels
         var dashboardViewModel = new DashboardViewModel(
-                logger,
-                projectService,
-                taskService
-                );
+            logger,
+            projectService,
+            taskService,
+            userService
+        );
 
         var projectViewModel = new ProjectViewModel(
-                logger,
-                projectService,
-                taskService
-                );
+            logger,
+            projectService,
+            taskService,
+            userService
+        );
+
+        var taskViewModel = new TaskViewModel(logger, taskService, userService);
+
+        var chatViewModel = new ChatViewModel();
 
         // Main viewmodel
         var viewModel = new MainViewModel(
-                logger,
-                dashboardViewModel,
-                projectViewModel);
+            logger,
+            dashboardViewModel,
+            projectViewModel,
+            taskViewModel,
+            chatViewModel
+        );
 
         // Main window
         var mainWindow = new MainWindow(viewModel);

@@ -1,7 +1,5 @@
 using System.Windows.Input;
-
 using client.Application.Interfaces;
-using client.Domain.Enum;
 using client.Domain.Models;
 using client.Presentation.Commands;
 using client.Presentation.Common;
@@ -11,11 +9,12 @@ namespace client.Presentation.ViewModels;
 public class MainViewModel : ObservableObject
 {
     private readonly ILogger _logger;
-
     private object _currentView;
 
     public DashboardViewModel DashboardViewModel { get; }
     public ProjectViewModel ProjectViewModel { get; }
+    public TaskViewModel TaskViewModel { get; }
+    public ChatViewModel ChatViewModel { get; }
 
     public ICommand ChangeViewCommand { get; }
     public ICommand CreateNewProjectCommand { get; }
@@ -29,27 +28,31 @@ public class MainViewModel : ObservableObject
     public MainViewModel(
         ILogger logger,
         DashboardViewModel dashboardViewModel,
-        ProjectViewModel projectViewModel)
+        ProjectViewModel projectViewModel,
+        TaskViewModel taskViewModel,
+        ChatViewModel chatViewModel
+    )
     {
         _logger = logger;
 
         DashboardViewModel = dashboardViewModel;
         ProjectViewModel = projectViewModel;
+        TaskViewModel = taskViewModel;
+        ChatViewModel = chatViewModel;
 
         CurrentView = DashboardViewModel;
 
-        ChangeViewCommand = new ChangeViewCommand(
-            _logger,
-            this);
+        ChangeViewCommand = new ChangeViewCommand(_logger, this);
 
-        CreateNewProjectCommand = new CreateNewProjectCommand(
-            _logger,
-            CreateProjectAsync);
+        CreateNewProjectCommand = new CreateNewProjectCommand(_logger, CreateProjectAsync);
     }
 
     public void SetCurrentView(object viewModel)
     {
         CurrentView = viewModel;
+
+        if (ReferenceEquals(viewModel, TaskViewModel))
+            _ = TaskViewModel.LoadTasksAsync();
     }
 
     private async Task CreateProjectAsync(Project project)
