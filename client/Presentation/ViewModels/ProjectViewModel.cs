@@ -165,6 +165,11 @@ public class ProjectViewModel : ObservableObject
         _logger.Log(LogLevel.INFO, $"Updated Task On Board: {task.Id}");
     }
 
+    public void ApplyExternalTaskUpdate(ProjectTask task)
+    {
+        UpdateTask(task);
+    }
+
     public async Task DeleteTaskAsync(ProjectTask task)
     {
         if (task.Id is not int id)
@@ -186,19 +191,28 @@ public class ProjectViewModel : ObservableObject
 
     private void RemoveDeletedTask(ProjectTask task)
     {
-        GetTaskCollection(task.Progress).Remove(task);
+        var existingTask = SelectedProject?.Tasks.FirstOrDefault(t => t.Id == task.Id);
+        if (existingTask is ProjectTask projectTask)
+            GetTaskCollection(projectTask.Progress).Remove(projectTask);
+        else
+            GetTaskCollection(task.Progress).Remove(task);
 
         if (SelectedProject != null)
         {
-            ITask? projectTask = SelectedProject.Tasks.FirstOrDefault(t => t.Id == task.Id);
-            if (projectTask != null)
-                SelectedProject.Tasks.Remove(projectTask);
+            ITask? taskToRemove = SelectedProject.Tasks.FirstOrDefault(t => t.Id == task.Id);
+            if (taskToRemove != null)
+                SelectedProject.Tasks.Remove(taskToRemove);
         }
 
         if (SelectedTask?.Id == task.Id)
             SelectedTask = null;
 
         _logger.Log(LogLevel.INFO, $"Removed Task From Board: {task.Id}");
+    }
+
+    public void ApplyExternalTaskDelete(ProjectTask task)
+    {
+        RemoveDeletedTask(task);
     }
 
     public async Task UpdateTaskAsync(ProjectTask task)

@@ -5,9 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:client.Presentation.UserControls"
              xmlns:domain="clr-namespace:client.Domain.Enum"
+             xmlns:converters="clr-namespace:client.Presentation.Converters"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
+        <converters:TaskBadgeBrushConverter x:Key="TaskBadgeBrushConverter"/>
+
         <Style x:Key="ToolbarButtonStyle" TargetType="Button">
             <Setter Property="Height" Value="32"/>
             <Setter Property="MinWidth" Value="104"/>
@@ -217,7 +220,7 @@
                         <ItemsControl ItemsSource="{Binding BacklogTasks}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Background="#F8FAFC" BorderBrush="#64748B" BorderThickness="1" CornerRadius="6" Margin="0 0 0 8" Padding="10" Cursor="Hand" PreviewMouseMove="TaskCard_PreviewMouseMove" MouseLeftButtonDown="TaskCard_MouseLeftButtonDown">
+                                    <Border Background="{Binding Progress, Converter={StaticResource TaskBadgeBrushConverter}, ConverterParameter=background}" BorderBrush="{Binding Progress, Converter={StaticResource TaskBadgeBrushConverter}, ConverterParameter=border}" BorderThickness="1" CornerRadius="6" Margin="0 0 0 8" Padding="10" Cursor="Hand" PreviewMouseMove="TaskCard_PreviewMouseMove" MouseLeftButtonDown="TaskCard_MouseLeftButtonDown">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*"/>
@@ -250,7 +253,7 @@
                         <ItemsControl ItemsSource="{Binding InProgressTasks}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Background="#FFFBEB" BorderBrush="#D97706" BorderThickness="1" CornerRadius="6" Margin="0 0 0 8" Padding="10" Cursor="Hand" PreviewMouseMove="TaskCard_PreviewMouseMove" MouseLeftButtonDown="TaskCard_MouseLeftButtonDown">
+                                    <Border Background="{Binding Progress, Converter={StaticResource TaskBadgeBrushConverter}, ConverterParameter=background}" BorderBrush="{Binding Progress, Converter={StaticResource TaskBadgeBrushConverter}, ConverterParameter=border}" BorderThickness="1" CornerRadius="6" Margin="0 0 0 8" Padding="10" Cursor="Hand" PreviewMouseMove="TaskCard_PreviewMouseMove" MouseLeftButtonDown="TaskCard_MouseLeftButtonDown">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*"/>
@@ -283,7 +286,7 @@
                         <ItemsControl ItemsSource="{Binding InReviewTasks}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Background="#F5F3FF" BorderBrush="#7C3AED" BorderThickness="1" CornerRadius="6" Margin="0 0 0 8" Padding="10" Cursor="Hand" PreviewMouseMove="TaskCard_PreviewMouseMove" MouseLeftButtonDown="TaskCard_MouseLeftButtonDown">
+                                    <Border Background="{Binding Progress, Converter={StaticResource TaskBadgeBrushConverter}, ConverterParameter=background}" BorderBrush="{Binding Progress, Converter={StaticResource TaskBadgeBrushConverter}, ConverterParameter=border}" BorderThickness="1" CornerRadius="6" Margin="0 0 0 8" Padding="10" Cursor="Hand" PreviewMouseMove="TaskCard_PreviewMouseMove" MouseLeftButtonDown="TaskCard_MouseLeftButtonDown">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*"/>
@@ -316,7 +319,7 @@
                         <ItemsControl ItemsSource="{Binding FinishedTasks}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Background="#F0FDF4" BorderBrush="#16A34A" BorderThickness="1" CornerRadius="6" Margin="0 0 0 8" Padding="10" Cursor="Hand" PreviewMouseMove="TaskCard_PreviewMouseMove" MouseLeftButtonDown="TaskCard_MouseLeftButtonDown">
+                                    <Border Background="{Binding Progress, Converter={StaticResource TaskBadgeBrushConverter}, ConverterParameter=background}" BorderBrush="{Binding Progress, Converter={StaticResource TaskBadgeBrushConverter}, ConverterParameter=border}" BorderThickness="1" CornerRadius="6" Margin="0 0 0 8" Padding="10" Cursor="Hand" PreviewMouseMove="TaskCard_PreviewMouseMove" MouseLeftButtonDown="TaskCard_MouseLeftButtonDown">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*"/>

@@ -4,9 +4,38 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:client.Presentation.UserControls"
+             xmlns:converters="clr-namespace:client.Presentation.Converters"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Background="#F1F5F9">
+        <Grid.Resources>
+            <converters:TaskBadgeBrushConverter x:Key="TaskBadgeBrushConverter"/>
+
+            <Style x:Key="TaskCardButtonStyle" TargetType="Button">
+                <Setter Property="Margin" Value="0 0 0 8"/>
+                <Setter Property="Padding" Value="0"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderBrush" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <ContentPresenter/>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="TaskBadgeTextStyle" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="12"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+            </Style>
+        </Grid.Resources>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -37,46 +66,69 @@
             <ItemsControl ItemsSource="{Binding Tasks}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border Margin="0 0 0 8"
-                                Padding="12"
-                                Background="#FFFFFF"
-                                BorderBrush="#E2E8F0"
-                                BorderThickness="1"
-                                CornerRadius="8">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="110"/>
-                                    <ColumnDefinition Width="110"/>
-                                    <ColumnDefinition Width="130"/>
-                                </Grid.ColumnDefinitions>
+                        <Button Style="{StaticResource TaskCardButtonStyle}"
+                                Command="{Binding DataContext.ShowSelectedTaskCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                CommandParameter="{Binding}">
+                            <Border Padding="12"
+                                    Background="#FFFFFF"
+                                    BorderBrush="#E2E8F0"
+                                    BorderThickness="1"
+                                    CornerRadius="8">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="120"/>
+                                        <ColumnDefinition Width="120"/>
+                                        <ColumnDefinition Width="130"/>
+                                    </Grid.ColumnDefinitions>
 
-                                <StackPanel Grid.Column="0">
-                                    <TextBlock Text="{Binding Title}"
-                                               FontWeight="SemiBold"
-                                               Foreground="#0F172A"
-                                               TextTrimming="CharacterEllipsis"/>
-                                    <TextBlock Text="{Binding Description}"
-                                               Margin="0 4 16 0"
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="{Binding Title}"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="#0F172A"
+                                                   TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Text="{Binding Description}"
+                                                   Margin="0 4 16 0"
+                                                   Foreground="#64748B"
+                                                   TextTrimming="CharacterEllipsis"/>
+                                    </StackPanel>
+
+                                    <Border Grid.Column="1"
+                                            Width="112"
+                                            Height="28"
+                                            Background="{Binding Progress, Converter={StaticResource TaskBadgeBrushConverter}, ConverterParameter=background}"
+                                            BorderBrush="{Binding Progress, Converter={StaticResource TaskBadgeBrushConverter}, ConverterParameter=border}"
+                                            BorderThickness="1"
+                                            CornerRadius="14"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding Progress, StringFormat='Progress: {0}'}"
+                                                   Foreground="{Binding Progress, Converter={StaticResource TaskBadgeBrushConverter}, ConverterParameter=foreground}"
+                                                   Style="{StaticResource TaskBadgeTextStyle}"/>
+                                    </Border>
+
+                                    <Border Grid.Column="2"
+                                            Width="112"
+                                            Height="28"
+                                            Background="{Binding Priority, Converter={StaticResource TaskBadgeBrushConverter}, ConverterParameter=background}"
+                                            BorderBrush="{Binding Priority, Converter={StaticResource TaskBadgeBrushConverter}, ConverterParameter=border}"
+                                            BorderThickness="1"
+                                            CornerRadius="14"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding Priority, StringFormat='Priority: {0}'}"
+                                                   Foreground="{Binding Priority, Converter={StaticResource TaskBadgeBrushConverter}, ConverterParameter=foreground}"
+                                                   Style="{StaticResource TaskBadgeTextStyle}"/>
+                                    </Border>
+
+                                    <TextBlock Grid.Column="3"
+                                               Text="{Binding Deadline, StringFormat={}{0:dd/MM/yyyy}}"
                                                Foreground="#64748B"
-                                               TextTrimming="CharacterEllipsis"/>
-                                </StackPanel>
-
-                                <TextBlock Grid.Column="1"
-                                           Text="{Binding Progress}"
-                                           Foreground="#334155"
-                                           VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="2"
-                                           Text="{Binding Priority}"
-                                           Foreground="#334155"
-                                           VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="3"
-                                           Text="{Binding Deadline, StringFormat={}{0:dd/MM/yyyy}}"
-                                           Foreground="#64748B"
-                                           HorizontalAlignment="Right"
-                                           VerticalAlignment="Center"/>
-                            </Grid>
-                        </Border>
+                                               HorizontalAlignment="Right"
+                                               VerticalAlignment="Center"/>
+                                </Grid>
+                            </Border>
+                        </Button>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
