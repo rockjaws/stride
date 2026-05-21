@@ -1,0 +1,170 @@
+<UserControl x:Class="client.Presentation.UserControls.ProjectCalendarUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d">
+
+    <UserControl.Resources>
+
+        <!-- Nav button -->
+        <Style x:Key="NavBtn" TargetType="Button">
+            <Setter Property="Width"           Value="28"/>
+            <Setter Property="Height"          Value="28"/>
+            <Setter Property="Background"      Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor"          Value="Hand"/>
+            <Setter Property="FontSize"        Value="14"/>
+            <Setter Property="Foreground"      Value="#64748B"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bg"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bg" Property="Background" Value="#F1F5F9"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Day cell -->
+        <Style x:Key="DayCellStyle" TargetType="ContentControl">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ContentControl">
+                        <Grid Width="34" Height="34">
+
+                            <!-- Today / hover ring -->
+                            <Ellipse x:Name="Ring"
+                                     Fill="Transparent"
+                                     HorizontalAlignment="Stretch"
+                                     VerticalAlignment="Stretch"/>
+
+                            <!-- Day number -->
+                            <TextBlock x:Name="Num"
+                                       Text="{Binding DayNumber}"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       FontSize="12"
+                                       FontWeight="SemiBold"
+                                       Foreground="#334155"/>
+
+                            <!-- Task dot -->
+                            <Ellipse x:Name="Dot"
+                                     Width="5" Height="5"
+                                     Fill="#EF4444"
+                                     HorizontalAlignment="Center"
+                                     VerticalAlignment="Bottom"
+                                     Margin="0,0,0,2"
+                                     Visibility="Collapsed"/>
+
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+
+                            <DataTrigger Binding="{Binding HasTask}" Value="True">
+                                <Setter TargetName="Dot" Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+
+                            <DataTrigger Binding="{Binding IsToday}" Value="True">
+                                <Setter TargetName="Ring" Property="Fill" Value="#DBEAFE"/>
+                                <Setter TargetName="Num"  Property="Foreground" Value="#1D4ED8"/>
+                            </DataTrigger>
+
+                            <DataTrigger Binding="{Binding IsCurrentMonth}" Value="False">
+                                <Setter TargetName="Num" Property="Foreground" Value="#CBD5E1"/>
+                            </DataTrigger>
+
+                            <!-- Today + has task: switch dot to white so it shows on blue -->
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsToday}" Value="True"/>
+                                    <Condition Binding="{Binding HasTask}" Value="True"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter TargetName="Dot" Property="Fill" Value="#1D4ED8"/>
+                            </MultiDataTrigger>
+
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </UserControl.Resources>
+
+    <StackPanel>
+
+        <!-- ── Header row: prev / month label / next ── -->
+        <Grid Margin="0,0,0,12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0"
+                    Content="&#8249;"
+                    Style="{StaticResource NavBtn}"
+                    Command="{Binding PreviousMonthCommand}"/>
+
+            <TextBlock Grid.Column="1"
+                       Text="{Binding MonthLabel}"
+                       FontSize="14"
+                       FontWeight="SemiBold"
+                       Foreground="#0F172A"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"/>
+
+            <Button Grid.Column="2"
+                    Content="&#8250;"
+                    Style="{StaticResource NavBtn}"
+                    Command="{Binding NextMonthCommand}"/>
+        </Grid>
+
+        <!-- ── Day-of-week headers ── -->
+        <ItemsControl ItemsSource="{Binding DayHeaders}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Rows="1" Columns="7"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding}"
+                               Width="34" Height="24"
+                               FontSize="11"
+                               FontWeight="SemiBold"
+                               Foreground="#94A3B8"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               TextAlignment="Center"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <!-- ── Day cells ── -->
+        <ItemsControl ItemsSource="{Binding Days}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Rows="6" Columns="7"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <ContentControl Style="{StaticResource DayCellStyle}"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+    </StackPanel>
+</UserControl>

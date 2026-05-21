@@ -27,6 +27,7 @@ public class DashboardViewModel : ObservableObject
 
     private ITaskSortStrategy _sortingStrategy;
 
+    public ProjectCalendarViewModel CalendarViewModel { get; } = new();
     public ITaskSortStrategy SortingStrategy
     {
         get => _sortingStrategy;
@@ -71,7 +72,7 @@ public class DashboardViewModel : ObservableObject
         _logger = logger;
         _projectService = projectService;
         _taskService = taskService;
-        _userServce = userService;
+        _userService = userService;
 
         _sortingStrategy = new SortByDeadline();
 
@@ -93,6 +94,13 @@ public class DashboardViewModel : ObservableObject
                 .Where(t => t.Progress != TaskProgress.Done)
                 .Cast<ITask>()
                 .ToList();
+
+            var deadlineDates = allTasks
+                .Where(t => t.Progress != TaskProgress.Done && t.Deadline != default)
+                .Select(t => t.Deadline.Date)
+                .ToHashSet();
+
+            CalendarViewModel.UpdateDeadlines(deadlineDates);
 
             SortTasks();
 
