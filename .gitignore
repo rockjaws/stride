@@ -2,3 +2,6 @@
 db/stride.db
 db/stride.db-shm
 db/stride.db-wal
+
+
+.vs/

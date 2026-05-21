@@ -26,6 +26,7 @@
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Padding" Value="0,0,0,12"/>
             <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
         </Style>
 
         <Style TargetType="DataGridRow">
@@ -79,14 +80,10 @@
                        FontSize="30"
                        FontWeight="Bold"
                        Foreground="#0F172A"/>
-            <TextBlock Text="Project Overview &amp; Tracking"
-                       FontSize="14"
-                       Foreground="#64748B"
-                       Margin="0,4,0,0"/>
         </StackPanel>
 
         <!-- ========================================================= -->
-        <!-- PROJECT STATUS                                            -->
+        <!-- PROJECT OVERVIEW (UPDATED TO MATCH KANBAN)                -->
         <!-- ========================================================= -->
         <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource DashboardCardStyle}">
             <Grid>
@@ -95,36 +92,45 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Text="Project Status"
+                <TextBlock Text="My Task Overview"
                            FontSize="18"
                            FontWeight="SemiBold"
                            Foreground="#0F172A"/>
 
-                <UniformGrid Grid.Row="1" Columns="3" Margin="0,24,0,0">
-                    <!-- TODO -->
+                <!-- Changed Columns to 4 to match Kanban states -->
+                <UniformGrid Grid.Row="1" Columns="4" Margin="0,24,0,0">
+
+                    <!-- BACKLOG -->
                     <StackPanel HorizontalAlignment="Center">
-                        <TextBlock Text="To Do" Foreground="#64748B" FontSize="13" HorizontalAlignment="Center"/>
-                        <TextBlock Text="12" FontSize="32" FontWeight="Bold" Foreground="#475569" Margin="0,4" HorizontalAlignment="Center"/>
-                        <ProgressBar Value="40" Height="6" Width="100" Foreground="#94A3B8" Background="#E2E8F0" BorderThickness="0"/>
+                        <TextBlock Text="Backlog" Foreground="#64748B" FontSize="13" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{Binding BacklogCount}" FontSize="32" FontWeight="Bold" Foreground="#475569" Margin="0,4" HorizontalAlignment="Center"/>
+                        <ProgressBar Value="40" Height="6" Width="80" Foreground="#94A3B8" Background="#E2E8F0" BorderThickness="0"/>
                     </StackPanel>
 
                     <!-- IN PROGRESS -->
                     <StackPanel HorizontalAlignment="Center">
                         <TextBlock Text="In Progress" Foreground="#2563EB" FontSize="13" HorizontalAlignment="Center"/>
-                        <TextBlock Text="5" FontSize="32" FontWeight="Bold" Foreground="#2563EB" Margin="0,4" HorizontalAlignment="Center"/>
-                        <ProgressBar Value="65" Height="6" Width="100" Foreground="#3B82F6" Background="#DBEAFE" BorderThickness="0"/>
+                        <TextBlock Text="{Binding InProgressCount}" FontSize="32" FontWeight="Bold" Foreground="#2563EB" Margin="0,4" HorizontalAlignment="Center"/>
+                        <ProgressBar Value="65" Height="6" Width="80" Foreground="#3B82F6" Background="#DBEAFE" BorderThickness="0"/>
                     </StackPanel>
 
-                    <!-- COMPLETED -->
+                    <!-- IN REVIEW (New State!) -->
                     <StackPanel HorizontalAlignment="Center">
-                        <TextBlock Text="Completed" Foreground="#16A34A" FontSize="13" HorizontalAlignment="Center"/>
-                        <TextBlock Text="24" FontSize="32" FontWeight="Bold" Foreground="#16A34A" Margin="0,4" HorizontalAlignment="Center"/>
-                        <ProgressBar Value="100" Height="6" Width="100" Foreground="#22C55E" Background="#DCFCE7" BorderThickness="0"/>
+                        <TextBlock Text="In Review" Foreground="#D97706" FontSize="13" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{Binding InReviewCount}" FontSize="32" FontWeight="Bold" Foreground="#D97706" Margin="0,4" HorizontalAlignment="Center"/>
+                        <ProgressBar Value="85" Height="6" Width="80" Foreground="#F59E0B" Background="#FEF3C7" BorderThickness="0"/>
                     </StackPanel>
+
+                    <!-- DONE -->
+                    <StackPanel HorizontalAlignment="Center">
+                        <TextBlock Text="Done" Foreground="#16A34A" FontSize="13" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{Binding FinishedCount}" FontSize="32" FontWeight="Bold" Foreground="#16A34A" Margin="0,4" HorizontalAlignment="Center"/>
+                        <ProgressBar Value="100" Height="6" Width="80" Foreground="#22C55E" Background="#DCFCE7" BorderThickness="0"/>
+                    </StackPanel>
+
                 </UniformGrid>
             </Grid>
         </Border>
-
         <!-- ========================================================= -->
         <!-- ACTIVITY                                                  -->
         <!-- ========================================================= -->
@@ -185,10 +191,12 @@
                           BorderThickness="0"
                           RowHeight="40"
                           IsReadOnly="True"
-                          SelectionMode="Single">
+                          SelectionMode="Single"
+                          ItemsSource="{Binding UpcomingTasks}"
+                          Sorting="DataGrid_OnSorting">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Task" Width="2*" Binding="{Binding TaskName}"/>
-                        <DataGridTextColumn Header="Due Date" Width="1*" Binding="{Binding DueDate}"/>
+                        <DataGridTextColumn Header="Task" Width="2*" Binding="{Binding Title}" CanUserSort="False"/>
+                        <DataGridTextColumn Header="Due Date" Width="1*" Binding="{Binding Deadline}"/>
                         <DataGridTextColumn Header="Priority" Width="1*" Binding="{Binding Priority}"/>
                     </DataGrid.Columns>
                 </DataGrid>

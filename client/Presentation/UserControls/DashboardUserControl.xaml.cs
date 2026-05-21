@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -11,6 +11,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using client.Presentation.Strategies;
+using client.Presentation.ViewModels;
+
 namespace client.Presentation.UserControls
 {
     /// <summary>
@@ -21,6 +24,27 @@ namespace client.Presentation.UserControls
         public DashboardUserControl()
         {
             InitializeComponent();
+        }
+
+        private void DataGrid_OnSorting(object sender, DataGridSortingEventArgs e)
+        {
+            if (DataContext is not DashboardViewModel viewModel) return;
+
+            switch (e.Column.SortMemberPath)
+            {
+                case "Deadline":
+                    e.Handled = true;
+                    viewModel.ChangeSortingStrategy(new SortByDeadline());
+                    break;
+                case "Priority":
+                    e.Handled = true;
+                    viewModel.ChangeSortingStrategy(new SortByPriority());
+                    break;
+                case "Title":
+                    // maybe later
+                    e.Handled = true;
+                    break;
+            }
         }
     }
 }
