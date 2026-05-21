@@ -6,5 +6,6 @@ public interface INotification
   string Text { get; }
   bool IsRead { get; }
   DateTime SentAt { get; }
-  IUser User { get; }
+  int? TaskId { get; }
+  IUser? User { get; }
 }

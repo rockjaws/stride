@@ -21,6 +21,7 @@ public partial class App : System.Windows.Application
         ILogger logger = new Logger();
         IProjectService projectService = new ProjectService();
         ITaskService taskService = new TaskService();
+        INotificationService notificationService = new NotificationService();
         IUserService userService = new UserService(1);
         logger.Log(LogLevel.INFO, "Application Starting..");
 
@@ -49,7 +50,9 @@ public partial class App : System.Windows.Application
             dashboardViewModel,
             projectViewModel,
             taskViewModel,
-            chatViewModel
+            chatViewModel,
+            notificationService,
+            userService
         );
 
         // Main window
@@ -57,5 +60,6 @@ public partial class App : System.Windows.Application
 
         MainWindow = mainWindow;
         mainWindow.Show();
+        viewModel.StartNotificationPolling();
     }
 }

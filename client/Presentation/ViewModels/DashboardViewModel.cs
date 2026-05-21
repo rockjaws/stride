@@ -71,7 +71,7 @@ public class DashboardViewModel : ObservableObject
         _logger = logger;
         _projectService = projectService;
         _taskService = taskService;
-        _userServce = userService;
+        _userService = userService;
 
         _sortingStrategy = new SortByDeadline();
 
@@ -82,8 +82,8 @@ public class DashboardViewModel : ObservableObject
     {
         try
         {
-            _logger.Log(LogLevel.INFO, "Fetching dashboard metrics for user: {}");
-            var allTasks = await _taskService.GetTasksAsync();
+            _logger.Log(LogLevel.INFO, $"Fetching dashboard metrics for user: {_userService.Id}");
+            var allTasks = await _taskService.GetTasksAsync(_userService.Id);
             BacklogCount = allTasks.Count(t => t.Progress == TaskProgress.Backlog);
             InProgressCount = allTasks.Count(t => t.Progress == TaskProgress.InProgress);
             InReviewCount = allTasks.Count(t => t.Progress == TaskProgress.Review);

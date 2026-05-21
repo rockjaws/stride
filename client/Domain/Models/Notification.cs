@@ -1,4 +1,4 @@
-﻿using client.Application.Interfaces;
+using client.Application.Interfaces;
 
 namespace client.Domain.Models;
 
@@ -8,5 +8,23 @@ public class Notification : INotification
   public string Text { get; }
   public bool IsRead { get; }
   public DateTime SentAt { get; }
-  public IUser User { get; }
+  public int? TaskId { get; }
+  public IUser? User { get; }
+
+  public Notification(
+    int id,
+    string text,
+    bool isRead,
+    DateTime sentAt,
+    int? taskId = null,
+    IUser? user = null
+  )
+  {
+    Id = id;
+    Text = text;
+    IsRead = isRead;
+    SentAt = sentAt;
+    TaskId = taskId;
+    User = user;
+  }
 }

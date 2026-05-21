@@ -117,6 +117,8 @@
                 </Setter>
             </Style>
 
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+
 			<DataTemplate DataType="{x:Type viewModels:DashboardViewModel}">
 				<userControls:DashboardUserControl/>
 			</DataTemplate>
@@ -187,5 +189,31 @@
 		</Grid>
         </Border>
 		<ContentControl Grid.Column="1" Content="{Binding CurrentView}" />
+
+        <Border Grid.ColumnSpan="2"
+                Width="360"
+                Padding="16 12"
+                Margin="0 20 24 0"
+                Background="#0F172A"
+                BorderBrush="#334155"
+                BorderThickness="1"
+                CornerRadius="8"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Panel.ZIndex="100"
+                Visibility="{Binding IsToastVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <StackPanel>
+                <TextBlock Text="Notification"
+                           Foreground="#BFDBFE"
+                           FontSize="12"
+                           FontWeight="SemiBold"/>
+                <TextBlock Text="{Binding ToastText}"
+                           Foreground="#FFFFFF"
+                           FontSize="14"
+                           FontWeight="SemiBold"
+                           TextWrapping="Wrap"
+                           Margin="0 4 0 0"/>
+            </StackPanel>
+        </Border>
 		</Grid>
 		</Window>
