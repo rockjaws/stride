@@ -72,6 +72,7 @@ public class ProjectService : IProjectService
 
     private static Project ToProject(ProjectDto dto)
     {
+        // User filtering happens server-side; the client only maps the project payload into domain models.
         return new Project(
             dto.Id,
             dto.Title,

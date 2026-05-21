@@ -64,6 +64,7 @@ public class MainViewModel : ObservableObject
         TaskViewModel = taskViewModel;
         ChatViewModel = chatViewModel;
 
+        // Keep the kanban board in sync when a task is edited from the standalone Tasks tab.
         TaskViewModel.TaskUpdated += ProjectViewModel.ApplyExternalTaskUpdate;
         TaskViewModel.TaskDeleted += ProjectViewModel.ApplyExternalTaskDelete;
 
@@ -105,6 +106,7 @@ public class MainViewModel : ObservableObject
 
     private async Task CheckNotificationsAsync()
     {
+        // DispatcherTimer can tick again while a slow API call is still running.
         if (_isCheckingNotifications)
             return;
 
@@ -121,6 +123,7 @@ public class MainViewModel : ObservableObject
             if (unreadNotification == null)
                 return;
 
+            // Mark after showing so missed toasts remain unread if the display step fails.
             await ShowToastAsync(unreadNotification.Text);
             await _notificationService.MarkAsReadAsync(_userService.Id, unreadNotification.Id);
         }

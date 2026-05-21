@@ -22,6 +22,7 @@ public class TaskViewModel : ObservableObject
 
     public ShowSelectedTaskCommand ShowSelectedTaskCommand { get; }
 
+    // MainViewModel uses these events to sync edits back to the kanban board.
     public event Action<ProjectTask>? TaskUpdated;
     public event Action<ProjectTask>? TaskDeleted;
 

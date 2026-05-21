@@ -100,6 +100,7 @@ public class DashboardViewModel : ObservableObject
                 .Select(t => t.Deadline.Date)
                 .ToHashSet();
 
+            // The calendar only needs dates, not full task objects, to render deadline indicators.
             CalendarViewModel.UpdateDeadlines(deadlineDates);
 
             SortTasks();

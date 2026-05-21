@@ -60,6 +60,7 @@ public class TaskService : ITaskService
       task.ProjectId
     );
 
+    // The create endpoint does not currently accept progress, so persist the full task immediately after creation.
     await UpdateTaskAsync(savedTask);
     return savedTask;
   }
@@ -83,6 +84,7 @@ public class TaskService : ITaskService
 
   public async Task<ProjectTask> MoveTaskAsync(ProjectTask task, TaskProgress progress)
   {
+    // Return a new instance so callers can replace bound collection items cleanly.
     var movedTask = new ProjectTask(
       task.Id,
       task.Title,
@@ -125,6 +127,7 @@ public class TaskService : ITaskService
     if (Enum.TryParse<TaskProgress>(progress, ignoreCase: true, out var parsed))
       return parsed;
 
+    // Keep the client usable if the API sends an old or unknown enum value.
     return TaskProgress.Backlog;
   }
 
