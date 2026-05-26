@@ -1,4 +1,4 @@
-﻿using api.Data;
+using api.Data;
 using api.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,13 +6,14 @@ namespace api.Repositories;
 
 public class TaskRepository : ITaskRepository
 {
-  private readonly AppDbContext _context;
+    private readonly AppDbContext _context;
 
-  public TaskRepository(AppDbContext context)
-  {
-    _context = context;
-  }
+    public TaskRepository(AppDbContext context)
+    {
+        _context = context;
+    }
 
+<<<<<<< HEAD
   public async Task<IEnumerable<ProjectTask>> GetAllTasksAsync()
   {
     return await _context.ProjectTasks
@@ -36,26 +37,41 @@ public class TaskRepository : ITaskRepository
       .Include(t => t.Users)
       .FirstOrDefaultAsync(t => t.Id == id);
   }
+=======
+    public async Task<IEnumerable<ProjectTask>> GetAllTasksAsync()
+    {
+        return await _context.ProjectTasks
+          .Include(t => t.Users)
+          .ToListAsync();
+    }
 
-  public async Task AddTaskAsync(ProjectTask task)
-  {
-    await _context.ProjectTasks.AddAsync(task);
-  }
+    public async Task<ProjectTask?> GetTaskByIdAsync(int id)
+    {
+        return await _context.ProjectTasks
+          .Include(t => t.Users)
+          .FirstOrDefaultAsync(t => t.Id == id);
+    }
+>>>>>>> 51c8af05bb2ee9efc82699f35cc1e81bca8b3b9c
 
-  public async Task UpdateTaskAsync(ProjectTask task)
-  {
-    _context.ProjectTasks.Update(task);
-    await Task.CompletedTask;
-  }
+    public async Task AddTaskAsync(ProjectTask task)
+    {
+        await _context.ProjectTasks.AddAsync(task);
+    }
 
-  public async Task DeleteTaskAsync(ProjectTask task)
-  {
-    _context.ProjectTasks.Remove(task);
-    await Task.CompletedTask;
-  }
+    public async Task UpdateTaskAsync(ProjectTask task)
+    {
+        _context.ProjectTasks.Update(task);
+        await Task.CompletedTask;
+    }
 
-  public async Task SaveChangesAsync()
-  {
-    await _context.SaveChangesAsync();
-  }
+    public async Task DeleteTaskAsync(ProjectTask task)
+    {
+        _context.ProjectTasks.Remove(task);
+        await Task.CompletedTask;
+    }
+
+    public async Task SaveChangesAsync()
+    {
+        await _context.SaveChangesAsync();
+    }
 }

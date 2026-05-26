@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using client.Application.Interfaces;
 using client.Domain.Enum;
 using client.Domain.Models;
@@ -16,8 +17,12 @@ public class SelectedTaskViewModel : ObservableObject
     private DateTime _deadline = DateTime.Today;
     private TaskProgress _progress = TaskProgress.Backlog;
     private TaskPriority _priority = TaskPriority.Normal;
-    private List<User>? _memberOptions;
-    private User? _selectedMember;
+    private ObservableCollection<AssignableMember> _assignableMembers = [];
+    public ObservableCollection<AssignableMember> AssignableMembers
+    {
+        get => _assignableMembers;
+        set => SetProperty(ref _assignableMembers, value);
+    }
 
     public string Title
     {
@@ -56,20 +61,7 @@ public class SelectedTaskViewModel : ObservableObject
     }
 
     public TaskProgress[] ProgressOptions { get; } = Enum.GetValues<TaskProgress>();
-
     public TaskPriority[] PriorityOptions { get; } = Enum.GetValues<TaskPriority>();
-
-    public List<User>? MemberOptions
-    {
-        get => _memberOptions;
-        set => SetProperty(ref _memberOptions, value);
-    }
-
-    public User? SelectedMember
-    {
-        get => _selectedMember;
-        set => SetProperty(ref _selectedMember, value);
-    }
 
     public SelectedTaskViewModel(ILogger logger, ProjectTask task, IUserService userService)
     {
@@ -87,9 +79,20 @@ public class SelectedTaskViewModel : ObservableObject
 
     private async Task GetUsersAsync(int? projectId)
     {
-        MemberOptions = projectId.HasValue
+        _logger.Log(
+            LogLevel.INFO,
+            $"GetUsersAsync called with projectId: {projectId?.ToString() ?? "null"}"
+        );
+
+        var users = projectId.HasValue
             ? await _userService.GetUsersAsync(projectId.Value)
             : await _userService.GetUsersAsync();
+        _logger.Log(LogLevel.INFO, $"Got {users.Count} users");
+        AssignableMembers = new ObservableCollection<AssignableMember>(
+            users.Select(u => new AssignableMember(u, _originalTask))
+        );
+
+        _logger.Log(LogLevel.INFO, $"AssignableMembers set: {AssignableMembers.Count}");
     }
 
     public ProjectTask? UpdateTask()
@@ -101,8 +104,6 @@ public class SelectedTaskViewModel : ObservableObject
         }
 
         _logger.Log(LogLevel.INFO, $"Prepared Task Update: {_originalTask.Id}");
-
-        // Build a replacement task instead of mutating the original bound object before the user saves.
         return new ProjectTask(
             _originalTask.Id,
             _title,
@@ -112,6 +113,12 @@ public class SelectedTaskViewModel : ObservableObject
             _progress,
             _priority,
             _originalTask.ProjectId
-        );
+        )
+        {
+            UsersAssigned = AssignableMembers
+                .Where(member => member.IsAssigned)
+                .Select(member => member.User)
+                .ToList(),
+        };
     }
 }

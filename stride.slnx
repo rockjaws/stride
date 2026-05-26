@@ -1,5 +1,9 @@
 <Solution>
   <Project Path="client.tests/client.tests.csproj" />
   <Project Path="client/client.csproj" />
+<<<<<<< HEAD
   <Project Path="api/api.csproj"/>
+=======
+  <Project Path="api/api.csproj" />
+>>>>>>> 51c8af05bb2ee9efc82699f35cc1e81bca8b3b9c
 </Solution>

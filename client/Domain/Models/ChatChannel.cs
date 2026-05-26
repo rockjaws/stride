@@ -1,15 +1,18 @@
-﻿using client.Application.Interfaces;
+using client.Application.Interfaces;
 
 namespace client.Domain.Models;
 
 public class ChatChannel : IChatChannel
 {
     public int Id { get; }
+    public string Name { get; } = string.Empty;
+    public int ProjectId { get; }
     public List<IMessage> Messages { get; private set; }
 
-    public ChatChannel(int id, List<IMessage> messages)
+    public ChatChannel(int id, string name, int projectId)
     {
         Id = id;
-        Messages = messages;
+        Name = name;
+        ProjectId = projectId;
     }
 }
