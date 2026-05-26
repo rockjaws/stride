@@ -35,6 +35,7 @@ public class TaskViewModel : ObservableObject
 
         ShowSelectedTaskCommand = new ShowSelectedTaskCommand(
             _logger,
+            _userService,
             UpdateTaskAsync,
             DeleteTaskAsync
         );

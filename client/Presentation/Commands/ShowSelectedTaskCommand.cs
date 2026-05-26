@@ -8,16 +8,19 @@ namespace client.Presentation.Commands;
 public class ShowSelectedTaskCommand : IUndoableCommand
 {
     private readonly ILogger _logger;
+    private readonly IUserService _userService;
     private readonly Func<ProjectTask, Task> _updateTaskAsync;
     private readonly Func<ProjectTask, Task> _deleteTaskAsync;
 
     public ShowSelectedTaskCommand(
         ILogger logger,
+        IUserService userService,
         Func<ProjectTask, Task> updateTaskAsync,
         Func<ProjectTask, Task> deleteTaskAsync
     )
     {
         _logger = logger;
+        _userService = userService;
         _updateTaskAsync = updateTaskAsync;
         _deleteTaskAsync = deleteTaskAsync;
     }
@@ -28,7 +31,7 @@ public class ShowSelectedTaskCommand : IUndoableCommand
             return;
 
         var task = (ProjectTask)param!;
-        var vm = new SelectedTaskViewModel(_logger, task);
+        var vm = new SelectedTaskViewModel(_logger, task, _userService);
         // The dialog edits a copy of the task state through its view model.
         var window = new SelectedTaskWindow { DataContext = vm };
 
@@ -52,7 +55,10 @@ public class ShowSelectedTaskCommand : IUndoableCommand
             }
             catch (Exception ex)
             {
-                _logger.Log(client.Domain.Enum.LogLevel.ERROR, $"Failed To Save Task Changes: {ex.Message}");
+                _logger.Log(
+                    client.Domain.Enum.LogLevel.ERROR,
+                    $"Failed To Save Task Changes: {ex.Message}"
+                );
             }
         }
     }

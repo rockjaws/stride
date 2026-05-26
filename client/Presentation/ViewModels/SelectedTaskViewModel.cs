@@ -9,12 +9,15 @@ public class SelectedTaskViewModel : ObservableObject
 {
     private readonly ILogger _logger;
     private readonly ProjectTask _originalTask;
+    private readonly IUserService _userService;
     private string _title = string.Empty;
     private string _description = string.Empty;
     private DateTime _startDate = DateTime.Today;
     private DateTime _deadline = DateTime.Today;
     private TaskProgress _progress = TaskProgress.Backlog;
     private TaskPriority _priority = TaskPriority.Normal;
+    private List<User>? _memberOptions;
+    private User? _selectedMember;
 
     public string Title
     {
@@ -56,16 +59,37 @@ public class SelectedTaskViewModel : ObservableObject
 
     public TaskPriority[] PriorityOptions { get; } = Enum.GetValues<TaskPriority>();
 
-    public SelectedTaskViewModel(ILogger logger, ProjectTask task)
+    public List<User>? MemberOptions
+    {
+        get => _memberOptions;
+        set => SetProperty(ref _memberOptions, value);
+    }
+
+    public User? SelectedMember
+    {
+        get => _selectedMember;
+        set => SetProperty(ref _selectedMember, value);
+    }
+
+    public SelectedTaskViewModel(ILogger logger, ProjectTask task, IUserService userService)
     {
         _logger = logger;
         _originalTask = task;
+        _userService = userService;
         _title = task.Title;
         _description = task.Description;
         _startDate = task.StartDate;
         _deadline = task.Deadline;
         _progress = task.Progress;
         _priority = task.Priority;
+        _ = GetUsersAsync(task.ProjectId);
+    }
+
+    private async Task GetUsersAsync(int? projectId)
+    {
+        MemberOptions = projectId.HasValue
+            ? await _userService.GetUsersAsync(projectId.Value)
+            : await _userService.GetUsersAsync();
     }
 
     public ProjectTask? UpdateTask()
