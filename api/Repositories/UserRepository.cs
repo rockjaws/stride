@@ -23,7 +23,6 @@ public class UserRepository : IUserRepository
         return await _context.Users.FindAsync(id);
     }
 
-<<<<<<< HEAD
     public async Task<IEnumerable<User>> GetUsersByProjectIdAsync(int projectId)
     {
         return await _context
@@ -48,25 +47,6 @@ public class UserRepository : IUserRepository
         await Task.CompletedTask;
     }
 
-=======
-    public async Task AddUserAsync(User user)
-    {
-        await _context.Users.AddAsync(user);
-    }
-
-    public async Task UpdateUserAsync(User user)
-    {
-        _context.Users.Update(user);
-        await Task.CompletedTask;
-    }
-
-    public async Task DeleteUserAsync(User user)
-    {
-        _context.Users.Remove(user);
-        await Task.CompletedTask;
-    }
-
->>>>>>> 51c8af05bb2ee9efc82699f35cc1e81bca8b3b9c
     public async Task SaveChangesAsync()
     {
         await _context.SaveChangesAsync();

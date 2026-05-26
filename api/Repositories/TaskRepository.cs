@@ -13,45 +13,30 @@ public class TaskRepository : ITaskRepository
         _context = context;
     }
 
-<<<<<<< HEAD
-  public async Task<IEnumerable<ProjectTask>> GetAllTasksAsync()
-  {
-    return await _context.ProjectTasks
-      // Users are needed by the API response and by task update notifications.
-      .Include(t => t.Users)
-      .ToListAsync();
-  }
-
-  public async Task<IEnumerable<ProjectTask>> GetTasksByUserIdAsync(int userId)
-  {
-    return await _context.ProjectTasks
-      .Include(t => t.Users)
-      // This matches the client Tasks tab, which shows direct task assignments.
-      .Where(t => t.Users.Any(u => u.Id == userId))
-      .ToListAsync();
-  }
-
-  public async Task<ProjectTask?> GetTaskByIdAsync(int id)
-  {
-    return await _context.ProjectTasks
-      .Include(t => t.Users)
-      .FirstOrDefaultAsync(t => t.Id == id);
-  }
-=======
     public async Task<IEnumerable<ProjectTask>> GetAllTasksAsync()
     {
-        return await _context.ProjectTasks
-          .Include(t => t.Users)
-          .ToListAsync();
+        return await _context
+            .ProjectTasks
+            // Users are needed by the API response and by task update notifications.
+            .Include(t => t.Users)
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<ProjectTask>> GetTasksByUserIdAsync(int userId)
+    {
+        return await _context
+            .ProjectTasks.Include(t => t.Users)
+            // This matches the client Tasks tab, which shows direct task assignments.
+            .Where(t => t.Users.Any(u => u.Id == userId))
+            .ToListAsync();
     }
 
     public async Task<ProjectTask?> GetTaskByIdAsync(int id)
     {
-        return await _context.ProjectTasks
-          .Include(t => t.Users)
-          .FirstOrDefaultAsync(t => t.Id == id);
+        return await _context
+            .ProjectTasks.Include(t => t.Users)
+            .FirstOrDefaultAsync(t => t.Id == id);
     }
->>>>>>> 51c8af05bb2ee9efc82699f35cc1e81bca8b3b9c
 
     public async Task AddTaskAsync(ProjectTask task)
     {

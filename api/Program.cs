@@ -8,14 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
-<<<<<<< HEAD
-      // Keep enum values consistent with the WPF client, which sends names like "Backlog".
       options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-=======
-        // Ensures Enums are sent/received as strings (e.g., "Backlog") instead of integers
-        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
->>>>>>> 51c8af05bb2ee9efc82699f35cc1e81bca8b3b9c
-    });
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite($"Data Source={Path.GetFullPath(Path.Combine(builder.Environment.ContentRootPath, "..", "db", "stride.db"))}"));
