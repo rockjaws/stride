@@ -1,5 +1,6 @@
 using System.Net.Http;
 using System.Net.Http.Json;
+
 using client.Application.Interfaces;
 using client.Domain.Enum;
 using client.Domain.Models;
@@ -80,7 +81,7 @@ public class ProjectService : IProjectService
             dto.Description,
             dto.StartDate,
             dto.Deadline,
-            [],
+            [.. dto.ChatChannels.Select(c => new ChatChannel(c.Id, c.Name, c.ProjectId))],
             // Project tasks are nested in the project response so the kanban board can populate immediately.
             [
                 .. dto.Tasks.Select(t => new ProjectTask(
@@ -114,6 +115,7 @@ public class ProjectService : IProjectService
         public DateTime Deadline { get; set; }
         public List<ProjectTaskDto> Tasks { get; set; } = [];
         public List<UserDto> Users { get; set; } = [];
+        public List<ChannelDto> ChatChannels { get; set; } = [];
     }
 
     private sealed class ProjectTaskDto
@@ -135,5 +137,12 @@ public class ProjectService : IProjectService
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public string WorkMail { get; set; } = string.Empty;
+    }
+
+    private sealed class ChannelDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public int ProjectId { get; set; }
     }
 }

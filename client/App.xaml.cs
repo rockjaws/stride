@@ -1,4 +1,5 @@
 using System.Windows;
+
 using client.Application.Interfaces;
 using client.Application.Services;
 using client.Domain.Enum;
@@ -22,6 +23,7 @@ public partial class App : System.Windows.Application
         IProjectService projectService = new ProjectService();
         ITaskService taskService = new TaskService();
         INotificationService notificationService = new NotificationService();
+        IMessageService messageService = new MessageService();
         // Temporary active user selection until proper login/session handling exists.
         IUserService userService = new UserService(1);
         logger.Log(LogLevel.INFO, "Application Starting..");
@@ -43,7 +45,11 @@ public partial class App : System.Windows.Application
 
         var taskViewModel = new TaskViewModel(logger, taskService, userService);
 
-        var chatViewModel = new ChatViewModel();
+        var chatViewModel = new ChatViewModel(
+                logger,
+                projectService,
+                messageService,
+                userService);
 
         // Main viewmodel
         var viewModel = new MainViewModel(
