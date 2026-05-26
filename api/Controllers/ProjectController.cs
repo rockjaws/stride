@@ -19,12 +19,9 @@ public class ProjectController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<ProjectDto>>> GetProjects([FromQuery] int? userId)
+    public async Task<ActionResult<IEnumerable<ProjectDto>>> GetProjects()
     {
-        var projects = userId is int id
-            ? await _repository.GetProjectsByUserIdAsync(id)
-            : await _repository.GetAllProjectsAsync();
-
+        var projects = await _repository.GetAllProjectsAsync();
         var dtos = projects.Select(p => new ProjectDto
         {
             Id = p.Id,
