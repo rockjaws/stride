@@ -22,6 +22,14 @@ public class UserService : IUserService
         return [.. userDtos.Select(ToUser)];
     }
 
+    public async Task<List<User>> GetUsersAsync(int projectId)
+    {
+        var userDtos =
+            await _httpClient.GetFromJsonAsync<List<UserDto>>($"api/users?projectId={projectId}")
+            ?? [];
+        return [.. userDtos.Select(ToUser)];
+    }
+
     private static User ToUser(UserDto dto)
     {
         return new User(dto.Id, dto.FirstName, dto.LastName, dto.WorkMail);

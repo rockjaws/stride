@@ -43,7 +43,7 @@ public partial class App : System.Windows.Application
 
         var taskViewModel = new TaskViewModel(logger, taskService, userService);
 
-        var chatViewModel = new ChatViewModel();
+        var chatViewModel = new ChatViewModel(logger);
 
         // Main viewmodel
         var viewModel = new MainViewModel(
