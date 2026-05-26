@@ -5,19 +5,16 @@ using api.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
-      // Ensures Enums are sent/received as strings (e.g., "Backlog") instead of integers
+      // Keep enum values consistent with the WPF client, which sends names like "Backlog".
       options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
 
-// Configure the SQLite database connection
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite($"Data Source={Path.GetFullPath(Path.Combine(builder.Environment.ContentRootPath, "..", "db", "stride.db"))}"));
 
-// This tells the API: "Whenever a Controller asks for an IRepository, give them a Repository."
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -26,7 +23,7 @@ builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 
 var app = builder.Build();
 
-// Automatically apply migrations and create the database folder/file on startup
+// Make local startup self-contained: create the shared SQLite folder and apply pending migrations.
 using (var scope = app.Services.CreateScope())
 {
   var services = scope.ServiceProvider;
@@ -34,14 +31,12 @@ using (var scope = app.Services.CreateScope())
   {
     var context = services.GetRequiredService<AppDbContext>();
 
-    // 1. Ensure the '../db' directory exists so SQLite doesn't crash
     var dbDirectory = Path.GetFullPath(Path.Combine(app.Environment.ContentRootPath, "..", "db"));
     if (!Directory.Exists(dbDirectory))
     {
       Directory.CreateDirectory(dbDirectory);
     }
 
-    // 2. Apply pending migrations (this will also create the stride.db file if missing)
     context.Database.Migrate();
   }
   catch (Exception ex)

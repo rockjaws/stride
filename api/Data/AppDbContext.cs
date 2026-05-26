@@ -6,7 +6,6 @@ namespace api.Data;
 
 public class AppDbContext : DbContext
 {
-  // The constructor accepts configuration options (like our SQLite connection string)
   public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
   {
   }
@@ -21,7 +20,7 @@ public class AppDbContext : DbContext
   {
     base.OnModelCreating(modelBuilder);
 
-    // Convert enums to strings in db
+    // Store enum names so the database remains readable and matches the API JSON contract.
     modelBuilder.Entity<ProjectTask>()
       .Property(t => t.Progress)
       .HasConversion<string>();

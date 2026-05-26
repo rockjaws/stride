@@ -1,4 +1,4 @@
-﻿using api.DTOs;
+using api.DTOs;
 using api.Models;
 using api.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -9,154 +9,165 @@ namespace api.Controllers;
 [Route("api/users")]
 public class UsersController : ControllerBase
 {
-  private readonly IUserRepository _repository;
-  private readonly INotificationRepository _notificationRepository;
+    private readonly IUserRepository _repository;
+    private readonly INotificationRepository _notificationRepository;
 
-  public UsersController(IUserRepository repository, INotificationRepository notificationRepository)
-  {
-    _repository = repository;
-    _notificationRepository = notificationRepository;
-  }
-
-  [HttpGet]
-  public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
-  {
-    var users = await _repository.GetAllUsersAsync();
-    var dtos = users.Select(u => new UserDto
+    public UsersController(
+        IUserRepository repository,
+        INotificationRepository notificationRepository
+    )
     {
-      Id = u.Id,
-      FirstName = u.FirstName,
-      LastName = u.LastName,
-      WorkMail = u.WorkMail,
-      Role = u.Role
-    });
-    return Ok(dtos);
-  }
-
-  [HttpGet("{id}")]
-  public async Task<ActionResult<UserDto?>> GetUser(int id)
-  {
-    var user = await _repository.GetUserByIdAsync(id);
-    if (user == null)
-    {
-      return NotFound();
+        _repository = repository;
+        _notificationRepository = notificationRepository;
     }
 
-    var dto = new UserDto
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers([FromQuery] int? projectId)
     {
-      Id = user.Id,
-      FirstName = user.FirstName,
-      LastName = user.LastName,
-      WorkMail = user.WorkMail,
-      Role = user.Role
-    };
-    return Ok(dto);
-  }
+        var users = projectId.HasValue
+            ? await _repository.GetUsersByProjectIdAsync(projectId.Value)
+            : await _repository.GetAllUsersAsync();
 
-  [HttpPost]
-  public async Task<ActionResult> CreateUser(UserCreateDto dto)
-  {
-    var user = new User
-    {
-      FirstName = dto.FirstName,
-      LastName = dto.LastName,
-      WorkMail = dto.WorkMail,
-    };
-
-    await _repository.AddUserAsync(user);
-    await _repository.SaveChangesAsync();
-
-    var userDto = new UserDto
-    {
-      Id = user.Id,
-      FirstName = user.FirstName,
-      LastName = user.LastName,
-      WorkMail = user.WorkMail,
-      Role = user.Role,
-    };
-
-    return CreatedAtAction(nameof(GetUser), new { id = userDto.Id }, userDto);
-  }
-
-  [HttpPut("{id}")]
-  public async Task<ActionResult> UpdateUser(int id, UserUpdateDto dto)
-  {
-    var user = await _repository.GetUserByIdAsync(id);
-    if (user == null)
-    {
-      return NotFound();
+        var dtos = users.Select(u => new UserDto
+        {
+            Id = u.Id,
+            FirstName = u.FirstName,
+            LastName = u.LastName,
+            WorkMail = u.WorkMail,
+            Role = u.Role,
+        });
+        return Ok(dtos);
     }
 
-    user.FirstName = dto.FirstName;
-    user.LastName = dto.LastName;
-    user.WorkMail = dto.WorkMail;
-
-    await _repository.UpdateUserAsync(user);
-    await _repository.SaveChangesAsync();
-
-    return NoContent();
-  }
-
-  [HttpGet("{id}/notifications")]
-  public async Task<ActionResult<IEnumerable<NotificationDto>>> GetNotifications(int id)
-  {
-    var user = await _repository.GetUserByIdAsync(id);
-    if (user == null)
+    [HttpGet("{id}")]
+    public async Task<ActionResult<UserDto?>> GetUser(int id)
     {
-      return NotFound();
+        var user = await _repository.GetUserByIdAsync(id);
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        var dto = new UserDto
+        {
+            Id = user.Id,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            WorkMail = user.WorkMail,
+            Role = user.Role,
+        };
+        return Ok(dto);
     }
 
-    var notifications = await _notificationRepository.GetNotificationsByIdAsync(id);
-    if (notifications == null)
+    [HttpPost]
+    public async Task<ActionResult> CreateUser(UserCreateDto dto)
     {
-      return NotFound();
+        var user = new User
+        {
+            FirstName = dto.FirstName,
+            LastName = dto.LastName,
+            WorkMail = dto.WorkMail,
+        };
+
+        await _repository.AddUserAsync(user);
+        await _repository.SaveChangesAsync();
+
+        var userDto = new UserDto
+        {
+            Id = user.Id,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            WorkMail = user.WorkMail,
+            Role = user.Role,
+        };
+
+        return CreatedAtAction(nameof(GetUser), new { id = userDto.Id }, userDto);
     }
 
-    var dtos = notifications.Select(n => new NotificationDto
+    [HttpPut("{id}")]
+    public async Task<ActionResult> UpdateUser(int id, UserUpdateDto dto)
     {
-      Id = n.Id,
-      Text = n.Text,
-      IsRead = n.IsRead,
-      Time = n.Time,
-      TaskId = n.TaskId
-    });
-    return Ok(dtos);
-  }
+        var user = await _repository.GetUserByIdAsync(id);
+        if (user == null)
+        {
+            return NotFound();
+        }
 
-  [HttpPut("{id}/notifications/{notificationId}")]
-  public async Task<ActionResult> UpdateNotification(int id, int notificationId, NotificationUpdateDto dto)
-  {
-    var user = await _repository.GetUserByIdAsync(id);
-    if (user == null)
-    {
-      return NotFound();
+        user.FirstName = dto.FirstName;
+        user.LastName = dto.LastName;
+        user.WorkMail = dto.WorkMail;
+
+        await _repository.UpdateUserAsync(user);
+        await _repository.SaveChangesAsync();
+
+        return NoContent();
     }
 
-    var notification = await _notificationRepository.GetNotificationByIdAsync(notificationId);
-    if (notification == null)
+    [HttpGet("{id}/notifications")]
+    public async Task<ActionResult<IEnumerable<NotificationDto>>> GetNotifications(int id)
     {
-      return NotFound();
+        var user = await _repository.GetUserByIdAsync(id);
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        var notifications = await _notificationRepository.GetNotificationsByIdAsync(id);
+        if (notifications == null)
+        {
+            return NotFound();
+        }
+
+        // Notifications are scoped by route user id so each client only polls its own feed.
+        var dtos = notifications.Select(n => new NotificationDto
+        {
+            Id = n.Id,
+            Text = n.Text,
+            IsRead = n.IsRead,
+            Time = n.Time,
+            TaskId = n.TaskId,
+        });
+        return Ok(dtos);
     }
 
-    notification.IsRead = dto.IsRead;
-    await _notificationRepository.UpdateNotification(notification);
-    await _notificationRepository.SaveChangesAsync();
-
-    return NoContent();
-  }
-
-  [HttpDelete("{id}")]
-  public async Task<ActionResult> DeleteUser(int id)
-  {
-    var user = await _repository.GetUserByIdAsync(id);
-    if (user == null)
+    [HttpPut("{id}/notifications/{notificationId}")]
+    public async Task<ActionResult> UpdateNotification(
+        int id,
+        int notificationId,
+        NotificationUpdateDto dto
+    )
     {
-      return NotFound();
+        var user = await _repository.GetUserByIdAsync(id);
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        var notification = await _notificationRepository.GetNotificationByIdAsync(notificationId);
+        if (notification == null)
+        {
+            return NotFound();
+        }
+
+        notification.IsRead = dto.IsRead;
+        await _notificationRepository.UpdateNotification(notification);
+        await _notificationRepository.SaveChangesAsync();
+
+        return NoContent();
     }
 
-    await _repository.DeleteUserAsync(user);
-    await _repository.SaveChangesAsync();
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> DeleteUser(int id)
+    {
+        var user = await _repository.GetUserByIdAsync(id);
+        if (user == null)
+        {
+            return NotFound();
+        }
 
-    return NoContent();
-  }
+        await _repository.DeleteUserAsync(user);
+        await _repository.SaveChangesAsync();
+
+        return NoContent();
+    }
 }

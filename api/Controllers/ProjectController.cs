@@ -19,9 +19,13 @@ public class ProjectController : ControllerBase
   }
 
   [HttpGet]
-  public async Task<ActionResult<IEnumerable<ProjectDto>>> GetProjects()
+  public async Task<ActionResult<IEnumerable<ProjectDto>>> GetProjects([FromQuery] int? userId)
   {
-    var projects = await _repository.GetAllProjectsAsync();
+    // User filtering applies to project membership; associated projects still include all their tasks.
+    var projects = userId is int id
+      ? await _repository.GetProjectsByUserIdAsync(id)
+      : await _repository.GetAllProjectsAsync();
+
     var dtos = projects.Select(p => new ProjectDto
     {
       Id = p.Id,

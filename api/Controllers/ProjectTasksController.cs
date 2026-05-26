@@ -10,16 +10,22 @@ namespace api.Controllers;
 public class ProjectTasksController : ControllerBase
 {
   private readonly ITaskRepository _repository;
+  private readonly INotificationRepository _notificationRepository;
 
-  public ProjectTasksController(ITaskRepository repository)
+  public ProjectTasksController(ITaskRepository repository, INotificationRepository notificationRepository)
   {
     _repository = repository;
+    _notificationRepository = notificationRepository;
   }
 
   [HttpGet]
-  public async Task<ActionResult<IEnumerable<ProjectTaskDto>>> GetProjectTasks()
+  public async Task<ActionResult<IEnumerable<ProjectTaskDto>>> GetProjectTasks([FromQuery] int? userId)
   {
-    var projectTasks = await _repository.GetAllTasksAsync();
+    // When a user id is supplied, only return tasks assigned directly to that user.
+    var projectTasks = userId is int id
+      ? await _repository.GetTasksByUserIdAsync(id)
+      : await _repository.GetAllTasksAsync();
+
     var dtos = projectTasks.Select(t => new ProjectTaskDto
     {
       Id = t.Id,
@@ -120,6 +126,20 @@ public class ProjectTasksController : ControllerBase
     projectTask.Priority = dto.Priority;
 
     await _repository.UpdateTaskAsync(projectTask);
+
+    // Notify every assigned user in the same unit of work as the task update.
+    foreach (var user in projectTask.Users)
+    {
+      await _notificationRepository.AddNotificationAsync(new Notification
+      {
+        Text = $"Task updated: {projectTask.Title}",
+        IsRead = false,
+        Time = DateTime.Now,
+        UserId = user.Id,
+        TaskId = projectTask.Id
+      });
+    }
+
     await _repository.SaveChangesAsync();
 
     return NoContent();

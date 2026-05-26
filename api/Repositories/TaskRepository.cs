@@ -16,7 +16,17 @@ public class TaskRepository : ITaskRepository
   public async Task<IEnumerable<ProjectTask>> GetAllTasksAsync()
   {
     return await _context.ProjectTasks
+      // Users are needed by the API response and by task update notifications.
       .Include(t => t.Users)
+      .ToListAsync();
+  }
+
+  public async Task<IEnumerable<ProjectTask>> GetTasksByUserIdAsync(int userId)
+  {
+    return await _context.ProjectTasks
+      .Include(t => t.Users)
+      // This matches the client Tasks tab, which shows direct task assignments.
+      .Where(t => t.Users.Any(u => u.Id == userId))
       .ToListAsync();
   }
 

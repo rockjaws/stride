@@ -16,6 +16,7 @@ public class NotificationRepository : INotificationRepository
   public async Task<IEnumerable<Notification>> GetNotificationsByIdAsync(int id)
   {
     return await _context.Notifications
+      // Clients poll by active user id and then mark individual notifications as read.
       .Where(u => u.UserId == id)
       .ToListAsync();
   }
@@ -23,6 +24,11 @@ public class NotificationRepository : INotificationRepository
   public async Task<Notification?> GetNotificationByIdAsync(int id)
   {
     return await _context.Notifications.FindAsync(id);
+  }
+
+  public async Task AddNotificationAsync(Notification notification)
+  {
+    await _context.Notifications.AddAsync(notification);
   }
 
   public async Task UpdateNotification(Notification notification)
