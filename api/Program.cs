@@ -1,5 +1,7 @@
 using System.Text.Json.Serialization;
+
 using Microsoft.EntityFrameworkCore;
+
 using api.Data;
 using api.Repositories;
 
@@ -32,29 +34,22 @@ using (var scope = app.Services.CreateScope())
     {
         var context = services.GetRequiredService<AppDbContext>();
 
+        // 1. Ensure the '../db' directory exists so SQLite doesn't crash
         var dbDirectory = Path.GetFullPath(Path.Combine(app.Environment.ContentRootPath, "..", "db"));
         if (!Directory.Exists(dbDirectory))
         {
-            var context = services.GetRequiredService<AppDbContext>();
-            context.Database.Migrate();
+            Directory.CreateDirectory(dbDirectory);
         }
+
+        // 2. Apply pending migrations (this will also create the stride.db file if missing)
+        context.Database.Migrate();
     }
     catch (Exception ex)
     {
         var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "An error occurred creating the DB.");
+        logger.LogError(ex, "An error occurred creating or migrating the DB.");
     }
-    // 1. Ensure the '../db' directory exists so SQLite doesn't crash
-    var dbDirectory = Path.GetFullPath(Path.Combine(app.Environment.ContentRootPath, "..", "db"));
-    if (!Directory.Exists(dbDirectory))
-    {
-        Directory.CreateDirectory(dbDirectory);
-    }
-
-    // 2. Apply pending migrations (this will also create the stride.db file if missing)
-    context.Database.Migrate();
 }
-
 
 app.MapControllers();
 
