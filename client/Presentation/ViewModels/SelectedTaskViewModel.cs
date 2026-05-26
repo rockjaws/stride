@@ -17,6 +17,7 @@ public class SelectedTaskViewModel : ObservableObject
     private TaskProgress _progress = TaskProgress.Backlog;
     private TaskPriority _priority = TaskPriority.Normal;
     private List<User>? _memberOptions;
+    private User? _selectedMember;
 
     public string Title
     {
@@ -62,6 +63,12 @@ public class SelectedTaskViewModel : ObservableObject
     {
         get => _memberOptions;
         set => SetProperty(ref _memberOptions, value);
+    }
+
+    public User? SelectedMember
+    {
+        get => _selectedMember;
+        set => SetProperty(ref _selectedMember, value);
     }
 
     public SelectedTaskViewModel(ILogger logger, ProjectTask task, IUserService userService)

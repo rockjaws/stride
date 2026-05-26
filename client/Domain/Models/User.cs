@@ -1,4 +1,4 @@
-﻿using client.Application.Interfaces;
+using client.Application.Interfaces;
 
 namespace client.Domain.Models;
 
@@ -8,6 +8,8 @@ public class User : IUser
     public string FirstName { get; }
     public string LastName { get; }
     public string WorkMail { get; }
+
+    public string FullName => $"{FirstName} {LastName}";
 
     public User(int id, string firstName, string lastName, string workMail)
     {
