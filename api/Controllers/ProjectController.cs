@@ -1,7 +1,6 @@
 using api.DTOs;
 using api.Models;
 using api.Repositories;
-
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
@@ -13,34 +12,19 @@ public class ProjectController : ControllerBase
     private readonly IProjectRepository _repository;
     private readonly IChannelRepository _channelRepository;
 
-<<<<<<< HEAD
-  public ProjectController(IProjectRepository repository, IChannelRepository channelRepository)
-  {
-    _repository = repository;
-    _channelRepository = channelRepository;
-  }
-
-  [HttpGet]
-  public async Task<ActionResult<IEnumerable<ProjectDto>>> GetProjects([FromQuery] int? userId)
-  {
-    // User filtering applies to project membership; associated projects still include all their tasks.
-    var projects = userId is int id
-      ? await _repository.GetProjectsByUserIdAsync(id)
-      : await _repository.GetAllProjectsAsync();
-
-    var dtos = projects.Select(p => new ProjectDto
-=======
     public ProjectController(IProjectRepository repository, IChannelRepository channelRepository)
->>>>>>> 51c8af05bb2ee9efc82699f35cc1e81bca8b3b9c
     {
         _repository = repository;
         _channelRepository = channelRepository;
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<ProjectDto>>> GetProjects()
+    public async Task<ActionResult<IEnumerable<ProjectDto>>> GetProjects([FromQuery] int? userId)
     {
-        var projects = await _repository.GetAllProjectsAsync();
+        var projects = userId is int id
+            ? await _repository.GetProjectsByUserIdAsync(id)
+            : await _repository.GetAllProjectsAsync();
+
         var dtos = projects.Select(p => new ProjectDto
         {
             Id = p.Id,
@@ -48,31 +32,40 @@ public class ProjectController : ControllerBase
             Description = p.Description,
             StartDate = p.StartDate,
             Deadline = p.Deadline,
-            ChatChannels = [.. p.ChatChannels.Select(c => new ChannelDto
-      {
-        Id = c.Id,
-        Name = c.Name,
-        ProjectId = p.Id
-      })],
-            Tasks = [.. p.Tasks.Select(t => new ProjectTaskDto
-      {
-        Id = t.Id,
-        Title = t.Title,
-        Description = t.Description,
-        StartDate = t.StartDate,
-        Deadline = t.Deadline,
-        Progress = t.Progress,
-        Priority = t.Priority,
-        ProjectId = p.Id
-      })],
-            Users = [.. p.Users.Select(u => new UserDto
-      {
-        Id = u.Id,
-        FirstName = u.FirstName,
-        LastName = u.LastName,
-        WorkMail = u.WorkMail,
-        Role = u.Role
-      })]
+            ChatChannels =
+            [
+                .. p.ChatChannels.Select(c => new ChannelDto
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    ProjectId = p.Id,
+                }),
+            ],
+            Tasks =
+            [
+                .. p.Tasks.Select(t => new ProjectTaskDto
+                {
+                    Id = t.Id,
+                    Title = t.Title,
+                    Description = t.Description,
+                    StartDate = t.StartDate,
+                    Deadline = t.Deadline,
+                    Progress = t.Progress,
+                    Priority = t.Priority,
+                    ProjectId = p.Id,
+                }),
+            ],
+            Users =
+            [
+                .. p.Users.Select(u => new UserDto
+                {
+                    Id = u.Id,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
+                    WorkMail = u.WorkMail,
+                    Role = u.Role,
+                }),
+            ],
         });
         return Ok(dtos);
     }
@@ -92,30 +85,40 @@ public class ProjectController : ControllerBase
             Description = project.Description,
             StartDate = project.StartDate,
             Deadline = project.Deadline,
-            ChatChannels = [.. project.ChatChannels.Select(c => new ChannelDto {
-          Id = c.Id,
-          Name = c.Name,
-          ProjectId = project.Id
-          })],
-            Tasks = [.. project.Tasks.Select(t => new ProjectTaskDto
-      {
-        Id = t.Id,
-        Title = t.Title,
-        Description = t.Description,
-        StartDate = t.StartDate,
-        Deadline = t.Deadline,
-        Progress = t.Progress,
-        Priority = t.Priority,
-        ProjectId = project.Id
-      })],
-            Users = [.. project.Users.Select(u => new UserDto
-      {
-        Id = u.Id,
-        FirstName = u.FirstName,
-        LastName = u.LastName,
-        WorkMail = u.WorkMail,
-        Role = u.Role
-      })]
+            ChatChannels =
+            [
+                .. project.ChatChannels.Select(c => new ChannelDto
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    ProjectId = project.Id,
+                }),
+            ],
+            Tasks =
+            [
+                .. project.Tasks.Select(t => new ProjectTaskDto
+                {
+                    Id = t.Id,
+                    Title = t.Title,
+                    Description = t.Description,
+                    StartDate = t.StartDate,
+                    Deadline = t.Deadline,
+                    Progress = t.Progress,
+                    Priority = t.Priority,
+                    ProjectId = project.Id,
+                }),
+            ],
+            Users =
+            [
+                .. project.Users.Select(u => new UserDto
+                {
+                    Id = u.Id,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
+                    WorkMail = u.WorkMail,
+                    Role = u.Role,
+                }),
+            ],
         };
         return Ok(dto);
     }
@@ -128,7 +131,7 @@ public class ProjectController : ControllerBase
             Title = dto.Title,
             Description = dto.Description,
             StartDate = dto.StartDate,
-            Deadline = dto.Deadline
+            Deadline = dto.Deadline,
         };
         await _repository.AddProjectAsync(project);
         await _repository.SaveChangesAsync();
@@ -142,7 +145,7 @@ public class ProjectController : ControllerBase
             Deadline = project.Deadline,
             ChatChannels = [],
             Tasks = [],
-            Users = []
+            Users = [],
         };
 
         return CreatedAtAction(nameof(GetProject), new { id = projectDto.Id }, projectDto);
@@ -190,7 +193,14 @@ public class ProjectController : ControllerBase
         {
             return NotFound();
         }
-        return Ok(new ChannelDto { Id = channel.Id, Name = channel.Name, ProjectId = channel.ProjectId });
+        return Ok(
+            new ChannelDto
+            {
+                Id = channel.Id,
+                Name = channel.Name,
+                ProjectId = channel.ProjectId,
+            }
+        );
     }
 
     [HttpPost("{id}/channels")]
@@ -202,12 +212,7 @@ public class ProjectController : ControllerBase
             return NotFound();
         }
 
-        var chatChannel = new ChatChannel
-        {
-            Name = dto.Name,
-            ProjectId = id
-        };
-
+        var chatChannel = new ChatChannel { Name = dto.Name, ProjectId = id };
 
         await _channelRepository.CreateChannelAsync(chatChannel);
         await _channelRepository.SaveChangesAsync();
@@ -216,9 +221,13 @@ public class ProjectController : ControllerBase
         {
             Id = chatChannel.Id,
             Name = chatChannel.Name,
-            ProjectId = chatChannel.ProjectId
+            ProjectId = chatChannel.ProjectId,
         };
 
-        return CreatedAtAction(nameof(GetChannel), new { id, channelId = chatChannel.Id }, chatChannelDto);
+        return CreatedAtAction(
+            nameof(GetChannel),
+            new { id, channelId = chatChannel.Id },
+            chatChannelDto
+        );
     }
 }
