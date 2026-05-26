@@ -111,7 +111,8 @@
             <ComboBox Grid.Row="6"
           Grid.Column="1"
           ItemsSource="{Binding MemberOptions}"
-          SelectedItem="{Binding Priority, Mode=TwoWay}"/>
+          SelectedItem="{Binding SelectedMember, Mode=TwoWay}"
+          DisplayMemberPath="FullName"/>
         </Grid>
 
         <StackPanel Grid.Row="2"
