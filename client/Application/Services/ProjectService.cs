@@ -27,23 +27,28 @@ public class ProjectService : IProjectService
     {
         // User membership filtering is handled by the API endpoint.
         var projectDtos =
-            await _httpclient.GetFromJsonAsync<List<ProjectDto>>($"api/projects?userId={userId}") ?? [];
+            await _httpclient.GetFromJsonAsync<List<ProjectDto>>($"api/projects?userId={userId}")
+            ?? [];
 
         return [.. projectDtos.Select(ToProject)];
     }
 
     public async Task<Project> CreateProjectAsync(Project project)
     {
-        var response = await _httpclient.PostAsJsonAsync("api/projects", new ProjectCreateDto
-        {
-            Title = project.Title,
-            Description = project.Description,
-            StartDate = project.StartDate,
-            Deadline = project.Deadline
-        });
+        var response = await _httpclient.PostAsJsonAsync(
+            "api/projects",
+            new ProjectCreateDto
+            {
+                Title = project.Title,
+                Description = project.Description,
+                StartDate = project.StartDate,
+                Deadline = project.Deadline,
+            }
+        );
         response.EnsureSuccessStatusCode();
 
-        var createdProject = await response.Content.ReadFromJsonAsync<ProjectDto>()
+        var createdProject =
+            await response.Content.ReadFromJsonAsync<ProjectDto>()
             ?? throw new InvalidOperationException("The API did not return the created project.");
 
         return ToProject(createdProject);
@@ -73,6 +78,9 @@ public class ProjectService : IProjectService
 
     private static Project ToProject(ProjectDto dto)
     {
+        var members = dto
+            .Users.Select(u => new User(u.Id, u.FirstName, u.LastName, u.WorkMail))
+            .ToList();
         // User filtering happens server-side; the client only maps the project payload into domain models.
         return new Project(
             dto.Id,
@@ -93,7 +101,8 @@ public class ProjectService : IProjectService
                     ParsePriority(t.Priority),
                     t.ProjectId
                 )),
-            ]
+            ],
+            members
         );
     }
 

@@ -100,6 +100,7 @@ public class ProjectViewModel : ObservableObject
         );
         ShowSelectedTaskCommand = new ShowSelectedTaskCommand(
             _logger,
+            _userService,
             UpdateTaskAsync,
             DeleteTaskAsync
         );
