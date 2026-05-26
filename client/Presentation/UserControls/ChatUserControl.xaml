@@ -87,10 +87,10 @@
                               Width="170"
                               Height="36"
                               Style="{StaticResource StrideModernComboBox}"
-                              FontWeight="SemiBold">
-                        <ComboBoxItem Content="📁 Project Stride" IsSelected="True"/>
-                        <ComboBoxItem Content="📁 Project Servr"/>
-                    </ComboBox>
+                              FontWeight="SemiBold"
+                              ItemsSource="{Binding Projects}"
+                              SelectedItem="{Binding SelectedProject}"
+                              DisplayMemberPath="Title"/>
 
                     <TextBlock Text="/" 
                                Foreground="#CBD5E1" 
@@ -104,11 +104,10 @@
                               Height="36"
                               Style="{StaticResource StrideModernComboBox}"
                               Foreground="{StaticResource StrideAccent}"
-                              FontWeight="SemiBold">
-                        <ComboBoxItem Content="# development" IsSelected="True"/>
-                        <ComboBoxItem Content="# general"/>
-                        <ComboBoxItem Content="# sqlite-migrations"/>
-                    </ComboBox>
+                              FontWeight="SemiBold"
+                              ItemsSource="{Binding ChatChannels}"
+                              SelectedItem="{Binding SelectedChannel}"
+                              DisplayMemberPath="Name"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
@@ -126,64 +125,33 @@
                       Background="{StaticResource StrideBgChat}"
                       Padding="24,20">
 
-            <StackPanel VerticalAlignment="Bottom">
+            <ItemsControl ItemsSource="{Binding Messages}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="0,0,0,24">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="36"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
 
-                <Grid Margin="0,0,0,24">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="36"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Height="36" Width="36" 
+                                    Background="{StaticResource StrideAccent}" CornerRadius="6" VerticalAlignment="Top">
+                                <TextBlock Text="{Binding SenderName[0]}" Foreground="White" FontWeight="Bold" FontSize="14"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
 
-                    <Border Grid.Column="0" Height="36" Width="36" 
-                            Background="#3A86FF" CornerRadius="6" VerticalAlignment="Top">
-                        <TextBlock Text="O" Foreground="White" FontWeight="Bold" FontSize="14"
-                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    </Border>
+                            <StackPanel Grid.Column="1" Margin="12,0,0,0">
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                                    <TextBlock Text="{Binding SenderName}" Foreground="{StaticResource StrideTextMain}" FontWeight="Bold" FontSize="14"/>
+                                    <TextBlock Text="{Binding Time, StringFormat=\{0:hh:mm tt\}}" Foreground="{StaticResource StrideTextMuted}" FontSize="11" Margin="8,0,0,1" VerticalAlignment="Bottom"/>
+                                </StackPanel>
 
-                    <StackPanel Grid.Column="1" Margin="12,0,0,0">
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
-                            <TextBlock Text="Oliver" Foreground="{StaticResource StrideTextMain}" FontWeight="Bold" FontSize="14"/>
-                            <TextBlock Text="11:04 AM" Foreground="{StaticResource StrideTextMuted}" FontSize="11" Margin="8,0,0,1" VerticalAlignment="Bottom"/>
-                        </StackPanel>
-                        <TextBlock Text="Hey, I just ran the initial database setup on our Web API layer, but the foreign key constraints aren't enforcing natively in the queries. Anyone remember the configuration setup command?" 
-                                   Foreground="{StaticResource StrideTextMain}" FontSize="14" TextWrapping="Wrap" LineHeight="20"/>
-                    </StackPanel>
-                </Grid>
-
-                <Grid Margin="0,0,0,24">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="36"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <Border Grid.Column="0" Height="36" Width="36" 
-                            Background="{StaticResource StrideAccent}" CornerRadius="6" VerticalAlignment="Top">
-                        <TextBlock Text="N" Foreground="White" FontWeight="Bold" FontSize="14"
-                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    </Border>
-
-                    <StackPanel Grid.Column="1" Margin="12,0,0,0">
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
-                            <TextBlock Text="Nicolaj" Foreground="{StaticResource StrideTextMain}" FontWeight="Bold" FontSize="14"/>
-                            <TextBlock Text="11:07 AM" Foreground="{StaticResource StrideTextMuted}" FontSize="11" Margin="8,0,0,1" VerticalAlignment="Bottom"/>
-                        </StackPanel>
-
-                        <TextBlock Text="Yeah, SQLite requires you to explicitly turn them on per connection instance. You can hook into the OnConfiguring method in your Entity Framework DbContext setup like this:" 
-                                   Foreground="{StaticResource StrideTextMain}" FontSize="14" TextWrapping="Wrap" LineHeight="20"/>
-
-                        <Border Background="{StaticResource StrideBgCode}" 
-                                BorderBrush="#334155" 
-                                BorderThickness="1" CornerRadius="6" Padding="14" Margin="0,10,0,0">
-                            <TextBox Text="protected override void OnConfiguring(DbContextOptionsBuilder options)&#x0a;{&#x0a;    options.UseSqlite(&quot;Data Source=stride.db&quot;);&#x0a;    var connection = new SqliteConnection(&quot;Data Source=stride.db&quot;);&#x0a;    connection.Open();&#x0a;    // Run PRAGMA foreign_keys = ON;&#x0a;}" 
-                                     FontFamily="Consolas" FontSize="13" 
-                                     Foreground="{StaticResource StrideCodeText}" 
-                                     Background="Transparent" BorderThickness="0" 
-                                     IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True"/>
-                        </Border>
-                    </StackPanel>
-                </Grid>
-
-            </StackPanel>
+                                <TextBlock Text="{Binding Text}" Foreground="{StaticResource StrideTextMain}" FontSize="14" TextWrapping="Wrap" LineHeight="20"/>
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </ScrollViewer>
 
         <Border Grid.Row="2" Padding="24,0,24,24" Background="{StaticResource StrideBgChat}">
@@ -208,7 +176,8 @@
                              AcceptsReturn="True"
                              TextWrapping="Wrap"
                              VerticalScrollBarVisibility="Auto"
-                             FontSize="14"/>
+                             FontSize="14"
+                             Text="{Binding MessageInputText, UpdateSourceTrigger=PropertyChanged}"/>
 
                     <Grid Grid.Row="1" Margin="0,10,0,0">
                         <TextBlock Text="Formatting supported (wrap blocks in triple backticks)" 
@@ -224,7 +193,8 @@
                                 Foreground="White"
                                 FontWeight="SemiBold"
                                 FontSize="13"
-                                Cursor="Hand">
+                                Cursor="Hand"
+                                Command="{Binding SendMessageCommand}">
                             <Button.Resources>
                                 <Style TargetType="Button">
                                     <Setter Property="Template">
