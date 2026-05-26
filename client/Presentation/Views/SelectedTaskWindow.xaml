@@ -28,7 +28,6 @@
                 <ColumnDefinition Width="120"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -39,23 +38,19 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0"
-                       Grid.Column="0"
+            <TextBlock Grid.Row="0" Grid.Column="0"
                        Text="Title"
                        VerticalAlignment="Center"
                        Margin="0 0 12 10"/>
-            <TextBox Grid.Row="0"
-                     Grid.Column="1"
+            <TextBox Grid.Row="0" Grid.Column="1"
                      Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"
                      Margin="0 0 0 10"/>
 
-            <TextBlock Grid.Row="1"
-                       Grid.Column="0"
+            <TextBlock Grid.Row="1" Grid.Column="0"
                        Text="Description"
                        VerticalAlignment="Top"
                        Margin="0 4 12 10"/>
-            <TextBox Grid.Row="1"
-                     Grid.Column="1"
+            <TextBox Grid.Row="1" Grid.Column="1"
                      Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
                      Height="90"
                      TextWrapping="Wrap"
@@ -63,56 +58,60 @@
                      VerticalScrollBarVisibility="Auto"
                      Margin="0 0 0 10"/>
 
-            <TextBlock Grid.Row="2"
-                       Grid.Column="0"
+            <TextBlock Grid.Row="2" Grid.Column="0"
                        Text="Start date"
                        VerticalAlignment="Center"
                        Margin="0 0 12 10"/>
-            <DatePicker Grid.Row="2"
-                        Grid.Column="1"
+            <DatePicker Grid.Row="2" Grid.Column="1"
                         SelectedDate="{Binding StartDate, Mode=TwoWay}"
                         Margin="0 0 0 10"/>
 
-            <TextBlock Grid.Row="3"
-                       Grid.Column="0"
+            <TextBlock Grid.Row="3" Grid.Column="0"
                        Text="Deadline"
                        VerticalAlignment="Center"
                        Margin="0 0 12 10"/>
-            <DatePicker Grid.Row="3"
-                        Grid.Column="1"
+            <DatePicker Grid.Row="3" Grid.Column="1"
                         SelectedDate="{Binding Deadline, Mode=TwoWay}"
                         Margin="0 0 0 10"/>
 
-            <TextBlock Grid.Row="4"
-                       Grid.Column="0"
+            <TextBlock Grid.Row="4" Grid.Column="0"
                        Text="Progress"
                        VerticalAlignment="Center"
                        Margin="0 0 12 10"/>
-            <ComboBox Grid.Row="4"
-                      Grid.Column="1"
+            <ComboBox Grid.Row="4" Grid.Column="1"
                       ItemsSource="{Binding ProgressOptions}"
                       SelectedItem="{Binding Progress, Mode=TwoWay}"
                       Margin="0 0 0 10"/>
 
-            <TextBlock Grid.Row="5"
-                       Grid.Column="0"
+            <TextBlock Grid.Row="5" Grid.Column="0"
                        Text="Priority"
                        VerticalAlignment="Center"
                        Margin="0 0 12 10"/>
-            <ComboBox Grid.Row="5"
-                      Grid.Column="1"
+            <ComboBox Grid.Row="5" Grid.Column="1"
                       ItemsSource="{Binding PriorityOptions}"
-                      SelectedItem="{Binding Priority, Mode=TwoWay}" Margin="0 0 0 10"/>
-            <TextBlock Grid.Row="6"
-           Grid.Column="0"
+                      SelectedItem="{Binding Priority, Mode=TwoWay}"
+                      Margin="0 0 0 10"/>
+
+            <TextBlock Grid.Row="6" Grid.Column="0"
            Text="Assign"
-           VerticalAlignment="Center"
-           Margin="0 0 12 0"/>
-            <ComboBox Grid.Row="6"
-          Grid.Column="1"
-          ItemsSource="{Binding MemberOptions}"
-          SelectedItem="{Binding SelectedMember, Mode=TwoWay}"
-          DisplayMemberPath="FullName"/>
+           VerticalAlignment="Top"
+           Margin="0 4 12 0"/>
+            <ListBox Grid.Row="6"
+Grid.Column="1"
+ItemsSource="{Binding AssignableMembers}"
+BorderThickness="1"
+MaxHeight="120"
+ScrollViewer.VerticalScrollBarVisibility="Auto">
+
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <CheckBox Content="{Binding User.FullName}"
+             IsChecked="{Binding IsAssigned, Mode=TwoWay}"
+             Margin="4"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+
+            </ListBox>
         </Grid>
 
         <StackPanel Grid.Row="2"
@@ -120,19 +119,16 @@
                     HorizontalAlignment="Right"
                     Margin="0 20 0 0">
             <Button Content="Delete"
-                    Width="90"
-                    Height="30"
+                    Width="90" Height="30"
                     Margin="0 0 8 0"
                     Click="onDeleteTask"/>
             <Button Content="Cancel"
-                    Width="90"
-                    Height="30"
+                    Width="90" Height="30"
                     Margin="0 0 8 0"
                     IsCancel="True"
                     Click="onCancel"/>
             <Button Content="Update"
-                    Width="90"
-                    Height="30"
+                    Width="90" Height="30"
                     IsDefault="True"
                     Click="onUpdateTask"/>
         </StackPanel>
