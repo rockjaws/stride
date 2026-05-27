@@ -34,7 +34,6 @@ public class UsersController : ControllerBase
             FirstName = u.FirstName,
             LastName = u.LastName,
             WorkMail = u.WorkMail,
-            Role = u.Role,
         });
         return Ok(dtos);
     }
@@ -54,7 +53,6 @@ public class UsersController : ControllerBase
             FirstName = user.FirstName,
             LastName = user.LastName,
             WorkMail = user.WorkMail,
-            Role = user.Role,
         };
         return Ok(dto);
     }
@@ -78,7 +76,6 @@ public class UsersController : ControllerBase
             FirstName = user.FirstName,
             LastName = user.LastName,
             WorkMail = user.WorkMail,
-            Role = user.Role,
         };
 
         return CreatedAtAction(nameof(GetUser), new { id = userDto.Id }, userDto);

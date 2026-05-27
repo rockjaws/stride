@@ -1,13 +1,12 @@
-﻿namespace api.Models;
+namespace api.Models;
 
 public class User
 {
-  public int Id { get; set; }
-  public string FirstName { get; set; } = string.Empty;
-  public string LastName { get; set; } = string.Empty;
-  public string WorkMail { get; set; } = string.Empty;
-  public int Role { get; set; }
+    public int Id { get; set; }
+    public string FirstName { get; set; } = string.Empty;
+    public string LastName { get; set; } = string.Empty;
+    public string WorkMail { get; set; } = string.Empty;
 
-  public List<Project> Projects { get; set; } = new();
-  public List<ProjectTask> ProjectTasks { get; set; } = new();
+    public List<Project> Projects { get; set; } = new();
+    public List<ProjectTask> ProjectTasks { get; set; } = new();
 }

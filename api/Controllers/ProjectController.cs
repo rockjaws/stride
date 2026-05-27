@@ -60,7 +60,6 @@ public class ProjectController : ControllerBase
                     FirstName = u.FirstName,
                     LastName = u.LastName,
                     WorkMail = u.WorkMail,
-                    Role = u.Role,
                 }),
             ],
         });
@@ -113,7 +112,6 @@ public class ProjectController : ControllerBase
                     FirstName = u.FirstName,
                     LastName = u.LastName,
                     WorkMail = u.WorkMail,
-                    Role = u.Role,
                 }),
             ],
         };
