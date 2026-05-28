@@ -9,7 +9,7 @@
              Background="#F8F9FA">
 
     <UserControl.Resources>
-        <SolidColorBrush x:Key="StrideBgChat" Color="#F8F9FA"/>
+        <SolidColorBrush x:Key="StrideBgChat" Color="#F1F5F9"/>
         <SolidColorBrush x:Key="StrideBgHeader" Color="#FFFFFF"/>
         <SolidColorBrush x:Key="StrideBgInput" Color="#FFFFFF"/>
         <SolidColorBrush x:Key="StrideBgCode" Color="#1E1E1E"/>

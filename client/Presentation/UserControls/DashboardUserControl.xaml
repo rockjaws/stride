@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:client.Presentation.UserControls"
              mc:Ignorable="d"
              d:DesignHeight="650" d:DesignWidth="950"
-             Background="#F8F9FA">
+             Background="#F1F5F9">
 
     <UserControl.Resources>
         <!-- MODERN CARD STYLE -->

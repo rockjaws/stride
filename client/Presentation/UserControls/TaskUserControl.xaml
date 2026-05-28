@@ -102,7 +102,7 @@
                                             CornerRadius="14"
                                             HorizontalAlignment="Center"
                                             VerticalAlignment="Center">
-                                        <TextBlock Text="{Binding Progress, StringFormat='Progress: {0}'}"
+                                        <TextBlock Text="{Binding Progress}"
                                                    Foreground="{Binding Progress, Converter={StaticResource TaskBadgeBrushConverter}, ConverterParameter=foreground}"
                                                    Style="{StaticResource TaskBadgeTextStyle}"/>
                                     </Border>
