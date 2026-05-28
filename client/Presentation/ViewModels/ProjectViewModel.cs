@@ -206,11 +206,14 @@ public class ProjectViewModel : ObservableObject
         if (SelectedProject == null)
             return;
 
+        if (project.Id is not int id)
+            return;
+
         project.Archive();
 
         try
         {
-            await _projectService.ArchiveProjectAsync(project.Id);
+            await _projectService.ArchiveProjectAsync(id);
         }
         catch (Exception ex)
         {
@@ -228,11 +231,14 @@ public class ProjectViewModel : ObservableObject
         if (SelectedProject == null)
             return;
 
+        if (project.Id is not int id)
+            return;
+
         project.UnArchive();
 
         try
         {
-            await _projectService.UnArchiveProjectAsync(project.Id);
+            await _projectService.UnArchiveProjectAsync(id);
         }
         catch (Exception ex)
         {

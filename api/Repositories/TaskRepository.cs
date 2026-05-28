@@ -1,5 +1,6 @@
 using api.Data;
 using api.Models;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace api.Repositories;
@@ -45,7 +46,6 @@ public class TaskRepository : ITaskRepository
 
     public async Task UpdateTaskAsync(ProjectTask task)
     {
-        _context.ProjectTasks.Update(task);
         await Task.CompletedTask;
     }
 
