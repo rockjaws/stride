@@ -1,6 +1,7 @@
 using api.DTOs;
 using api.Models;
 using api.Repositories;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
@@ -50,6 +51,15 @@ public class ProjectController : ControllerBase
                     Progress = t.Progress,
                     Priority = t.Priority,
                     ProjectId = p.Id,
+                    Users =
+                    [ .. p.Users.Select(u => new UserDto
+                            {
+                            Id = u.Id,
+                            FirstName = u.FirstName,
+                            LastName = u.LastName,
+                            WorkMail = u.WorkMail
+                            }),
+                    ],
                 }),
             ],
             Users =
@@ -102,6 +112,15 @@ public class ProjectController : ControllerBase
                     Progress = t.Progress,
                     Priority = t.Priority,
                     ProjectId = project.Id,
+                    Users =
+                    [ .. project.Users.Select(u => new UserDto
+                            {
+                            Id = u.Id,
+                            FirstName = u.FirstName,
+                            LastName = u.LastName,
+                            WorkMail = u.WorkMail
+                            }),
+                    ],
                 }),
             ],
             Users =
