@@ -19,8 +19,7 @@ public class ProjectService : IProjectService
     {
         var projectDtos =
             await _httpclient.GetFromJsonAsync<List<ProjectDto>>("api/projects") ?? [];
-
-        return [.. projectDtos.Select(ToProject)];
+        return [.. projectDtos.Where(p => !p.IsArchived).Select(ToProject)];
     }
 
     public async Task<List<Project>> GetProjectsAsync(int userId)
@@ -93,6 +92,8 @@ public class ProjectService : IProjectService
             dto.StartDate,
             dto.Deadline,
             [.. dto.ChatChannels.Select(c => new ChatChannel(c.Id, c.Name, c.ProjectId))],
+            dto.IsArchived,
+            // Project tasks are nested in the project response so the kanban board can populate immediately.
             [
                 .. dto.Tasks.Select(t => new ProjectTask(
                     t.Id,
@@ -127,6 +128,7 @@ public class ProjectService : IProjectService
         public int Id { get; set; }
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
+        public bool IsArchived { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime Deadline { get; set; }
         public List<ProjectTaskDto> Tasks { get; set; } = [];
