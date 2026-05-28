@@ -7,6 +7,7 @@ public class Project : IProject
     public int? Id { get; }
     public string Title { get; }
     public string Description { get; }
+    public bool IsArchived { get; private set; }
     public DateTime StartDate { get; private set; }
     public DateTime Deadline { get; private set; }
     public List<IChatChannel> ChatChannels { get; private set; }
@@ -21,6 +22,7 @@ public class Project : IProject
         DateTime startDate,
         DateTime deadline,
         List<IChatChannel>? chatChannels,
+        bool isArchived = false,
         List<ITask>? tasks = null,
         List<User>? members = null
     )
@@ -28,10 +30,21 @@ public class Project : IProject
         Id = id;
         Title = title;
         Description = description;
+        IsArchived = isArchived;
         StartDate = startDate;
         Deadline = deadline;
         ChatChannels = chatChannels ?? [];
         Tasks = tasks ?? [];
         Members = members ?? [];
+    }
+
+    public void Archive()
+    {
+        IsArchived = true;
+    }
+
+    public void UnArchive()
+    {
+        IsArchived = false;
     }
 }

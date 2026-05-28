@@ -177,6 +177,76 @@ public class ProjectViewModel : ObservableObject
         UpdateTask(task);
     }
 
+    public async Task DeleteProjectAsync(Project project)
+    {
+        if (SelectedProject == null)
+            return;
+
+        if (project.Id is not int id)
+            return;
+
+        try
+        {
+            await _projectService.DeleteProjectAsync(id);
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(LogLevel.ERROR, $"Failed To Delete Project {project.Id}: {ex.Message}");
+            return;
+        }
+
+        // Remove project after API confirms the delete.
+        ListOfProjects.Remove(project);
+        _logger.Log(LogLevel.INFO, $"Deleted Project {project.Id}");
+    }
+
+    public async Task ArchiveProjectAsync(Project project)
+    {
+        if (SelectedProject == null)
+            return;
+
+        project.Archive();
+
+        try
+        {
+            await _projectService.ArchiveProjectAsync(project.Id);
+        }
+        catch (Exception ex)
+        {
+            project.UnArchive();
+            _logger.Log(LogLevel.ERROR, $"Failed To Archive Project {project.Id}: {ex.Message}");
+            return;
+        }
+
+        // Only archive project after API has confirmed.
+        _logger.Log(LogLevel.INFO, $"Archived Project {project.Id}");
+    }
+
+    public async Task UnArchiveProjectAsync(Project project)
+    {
+        if (SelectedProject == null)
+            return;
+
+        project.UnArchive();
+
+        try
+        {
+            await _projectService.UnArchiveProjectAsync(project.Id);
+        }
+        catch (Exception ex)
+        {
+            project.Archive();
+            _logger.Log(
+                LogLevel.ERROR,
+                $"Failed To Undo Project Archive {project.Id}: {ex.Message}"
+            );
+            return;
+        }
+
+        // Only readd project after API has confirmed.
+        _logger.Log(LogLevel.INFO, $"Project reinstated {project.Id}");
+    }
+
     public async Task DeleteTaskAsync(ProjectTask task)
     {
         if (task.Id is not int id)
