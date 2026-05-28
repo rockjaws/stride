@@ -53,6 +53,7 @@ public class NewProjectViewModel : ObservableObject
             _startDate,
             _deadline,
             [],
+            false,
             []
         );
     }
