@@ -84,7 +84,7 @@ public class ProjectService : IProjectService
         var members = dto
             .Users.Select(u => new User(u.Id, u.FirstName, u.LastName, u.WorkMail))
             .ToList();
-        // User filtering happens server-side; the client only maps the project payload into domain models.
+
         return new Project(
             dto.Id,
             dto.Title,
@@ -104,7 +104,12 @@ public class ProjectService : IProjectService
                     ParseProgress(t.Progress),
                     ParsePriority(t.Priority),
                     t.ProjectId
-                )),
+                )
+                {
+                    // ADD THIS EXACT LINE:
+                    // This is what actually takes the JSON users and hands them to the checkboxes!
+                    UsersAssigned = t.Users.Select(u => new User(u.Id, u.FirstName, u.LastName, u.WorkMail)).ToList()
+                }),
             ],
             members
         );

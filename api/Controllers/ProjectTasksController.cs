@@ -1,6 +1,7 @@
 using api.DTOs;
 using api.Models;
 using api.Repositories;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
@@ -11,11 +12,13 @@ public class ProjectTasksController : ControllerBase
 {
     private readonly ITaskRepository _repository;
     private readonly INotificationRepository _notificationRepository;
+    private readonly IUserRepository _userRepository;
 
-    public ProjectTasksController(ITaskRepository repository, INotificationRepository notificationRepository)
+    public ProjectTasksController(ITaskRepository repository, INotificationRepository notificationRepository, IUserRepository userRepository)
     {
         _repository = repository;
         _notificationRepository = notificationRepository;
+        _userRepository = userRepository;
     }
 
     [HttpGet]
@@ -122,6 +125,16 @@ public class ProjectTasksController : ControllerBase
         projectTask.Deadline = dto.Deadline;
         projectTask.Progress = dto.Progress;
         projectTask.Priority = dto.Priority;
+
+        projectTask.Users.Clear();
+        foreach (var userId in dto.AssignedUserIds)
+        {
+            var user = await _userRepository.GetUserByIdAsync(userId);
+            if (user != null)
+            {
+                projectTask.Users.Add(user);
+            }
+        }
 
         await _repository.UpdateTaskAsync(projectTask);
 
