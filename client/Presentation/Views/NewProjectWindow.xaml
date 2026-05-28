@@ -9,7 +9,7 @@
         Width="520"
         MinHeight="360"
         MinWidth="480"
-        WindowStartupLocation="CenterOwner">
+        WindowStartupLocation="CenterOwner" Focusable="True">
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
