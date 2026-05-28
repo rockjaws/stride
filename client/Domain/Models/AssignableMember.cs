@@ -15,6 +15,6 @@ public class AssignableMember : ObservableObject
     public AssignableMember(User user, ProjectTask task)
     {
         User = user;
-        _isAssigned = task.UsersAssigned?.Any(x => x.Id == user.Id) == true;
+        IsAssigned = task.UsersAssigned?.Any(x => x.Id == user.Id) == true;
     }
 }
