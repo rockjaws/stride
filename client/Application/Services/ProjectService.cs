@@ -1,6 +1,5 @@
 using System.Net.Http;
 using System.Net.Http.Json;
-
 using client.Application.Interfaces;
 using client.Domain.Enum;
 using client.Domain.Models;
@@ -60,6 +59,10 @@ public class ProjectService : IProjectService
         var response = await _httpclient.DeleteAsync($"api/projects/{id}");
         response.EnsureSuccessStatusCode();
     }
+
+    public async Task ArchiveProjectAsync(int id) { }
+
+    public async Task UnArchiveProjectAsync(int id) { }
 
     private static TaskProgress ParseProgress(string progress)
     {
