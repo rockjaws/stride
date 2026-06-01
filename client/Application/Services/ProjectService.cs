@@ -1,5 +1,7 @@
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text;
+using System.Text.Json;
 using client.Application.Interfaces;
 using client.Domain.Enum;
 using client.Domain.Models;
@@ -59,9 +61,18 @@ public class ProjectService : IProjectService
         response.EnsureSuccessStatusCode();
     }
 
-    public async Task ArchiveProjectAsync(int id) { }
+    public async Task SetProjectArchivedAsync(int id, bool isArchived)
+    {
+        var payload = new { isArchived };
+        var content = new StringContent(
+            JsonSerializer.Serialize(payload),
+            Encoding.UTF8,
+            "application/json"
+        );
 
-    public async Task UnArchiveProjectAsync(int id) { }
+        var response = await _httpclient.PatchAsync($"api/projects/{id}", content);
+        response.EnsureSuccessStatusCode();
+    }
 
     private static TaskProgress ParseProgress(string progress)
     {
@@ -108,7 +119,9 @@ public class ProjectService : IProjectService
                 {
                     // ADD THIS EXACT LINE:
                     // This is what actually takes the JSON users and hands them to the checkboxes!
-                    UsersAssigned = t.Users.Select(u => new User(u.Id, u.FirstName, u.LastName, u.WorkMail)).ToList()
+                    UsersAssigned = t
+                        .Users.Select(u => new User(u.Id, u.FirstName, u.LastName, u.WorkMail))
+                        .ToList(),
                 }),
             ],
             members
