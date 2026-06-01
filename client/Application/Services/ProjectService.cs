@@ -33,7 +33,7 @@ public class ProjectService : IProjectService
         return [.. projectDtos.Select(ToProject)];
     }
 
-    public async Task<Project> CreateProjectAsync(Project project)
+    public async Task<Project> CreateProjectAsync(Project project, int userId)
     {
         var response = await _httpclient.PostAsJsonAsync(
             "api/projects",
@@ -43,6 +43,7 @@ public class ProjectService : IProjectService
                 Description = project.Description,
                 StartDate = project.StartDate,
                 Deadline = project.Deadline,
+                UserId = userId,
             }
         );
         response.EnsureSuccessStatusCode();
@@ -129,6 +130,7 @@ public class ProjectService : IProjectService
         public string Description { get; set; } = string.Empty;
         public DateTime StartDate { get; set; }
         public DateTime Deadline { get; set; }
+        public int UserId { get; set; }
     }
 
     private sealed class ProjectDto
