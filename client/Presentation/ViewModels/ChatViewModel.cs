@@ -29,7 +29,6 @@ public class ChatViewModel : ObservableObject
         {
             if (SetProperty(ref _selectedProject, value))
             {
-                _logger.Log(LogLevel.WARNING, $"[SelectedProject] Changed to: {value?.Id} — '{value?.Description ?? "null"}'");
                 _ = LoadChannelsForSelectedProjectAsync();
             }
         }
@@ -64,8 +63,6 @@ public class ChatViewModel : ObservableObject
         _messageService = messageService;
         _userService = userService;
 
-        _logger.Log(LogLevel.WARNING, "[ChatViewModel] Initialising");
-
         SendMessageCommand = new SendMessageCommand(this);
 
         _refreshTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(5) };
@@ -76,26 +73,17 @@ public class ChatViewModel : ObservableObject
 
     private async Task LoadDataAsync()
     {
-        _logger.Log(LogLevel.WARNING, "[LoadDataAsync] Starting");
-
         try
         {
-            _logger.Log(LogLevel.WARNING, "[LoadDataAsync] Fetching projects from service");
             var projects = await _projectService.GetProjectsAsync();
-
-            _logger.Log(LogLevel.WARNING, $"[LoadDataAsync] Received {projects?.Count ?? 0} project(s)");
-
             Projects.Clear();
             foreach (var project in projects)
             {
-                _logger.Log(LogLevel.WARNING, $"[LoadDataAsync] Adding project: {project.Id} — '{project.Description}'");
                 Projects.Add(project);
             }
 
             if (Projects.Count > 0)
             {
-                _logger.Log(LogLevel.WARNING, $"[LoadDataAsync] Auto-selecting first project: {Projects[0].Id} — '{Projects[0].Description}'");
-
                 _selectedProject = Projects[0];
                 OnPropertyChanged(nameof(SelectedProject));
 
@@ -112,11 +100,8 @@ public class ChatViewModel : ObservableObject
         }
         finally
         {
-            _logger.Log(LogLevel.WARNING, $"[LoadDataAsync] Complete — Projects: {Projects.Count}, Channels: {ChatChannels.Count}, SelectedChannel: {SelectedChannel?.Id ?? 0}");
-
             if (SelectedChannel != null)
             {
-                _logger.Log(LogLevel.WARNING, "[LoadDataAsync] Starting refresh timer");
                 _refreshTimer.Start();
             }
             else
@@ -128,36 +113,26 @@ public class ChatViewModel : ObservableObject
 
     private async Task LoadChannelsForSelectedProjectAsync()
     {
-        _logger.Log(LogLevel.WARNING, $"[LoadChannelsForSelectedProjectAsync] Starting for project: {SelectedProject?.Id ?? 0}");
-
         ChatChannels.Clear();
         Messages.Clear();
 
         if (SelectedProject == null)
         {
-            _logger.Log(LogLevel.WARNING, "[LoadChannelsForSelectedProjectAsync] SelectedProject is null — aborting");
             return;
         }
 
         try
         {
             var channels = SelectedProject.ChatChannels;
-            _logger.Log(LogLevel.WARNING, $"[LoadChannelsForSelectedProjectAsync] Channels on project: {channels?.Count ?? 0}");
-
-
             if (channels == null || channels.Count == 0)
             {
-                _logger.Log(LogLevel.WARNING, $"[LoadChannelsForSelectedProjectAsync] No channels found for project: {SelectedProject.Id} — '{SelectedProject.Description}'");
                 return;
             }
 
             foreach (var channel in channels)
             {
-                _logger.Log(LogLevel.WARNING, $"[LoadChannelsForSelectedProjectAsync] Adding channel: {channel.Id} — '{channel.Name}'");
                 ChatChannels.Add(channel);
             }
-
-            _logger.Log(LogLevel.WARNING, $"[LoadChannelsForSelectedProjectAsync] Total channels loaded: {ChatChannels.Count} — auto-selecting first");
             SelectedChannel = ChatChannels[0];
         }
         catch (Exception ex)
@@ -168,11 +143,8 @@ public class ChatViewModel : ObservableObject
 
     public async Task LoadMessagesForSelectedChannelAsync()
     {
-        _logger.Log(LogLevel.WARNING, $"[LoadMessagesForSelectedChannelAsync] Starting for channel: {SelectedChannel?.Id ?? 0}");
-
         if (SelectedChannel == null)
         {
-            _logger.Log(LogLevel.WARNING, "[LoadMessagesForSelectedChannelAsync] SelectedChannel is null — clearing messages");
             Messages.Clear();
             return;
         }
@@ -180,9 +152,6 @@ public class ChatViewModel : ObservableObject
         try
         {
             var chatHistory = await _messageService.GetMessagesAsync(SelectedChannel.Id);
-
-            _logger.Log(LogLevel.WARNING, $"[LoadMessagesForSelectedChannelAsync] Received {chatHistory?.Count ?? 0} message(s) for channel: {SelectedChannel.Id}");
-
             Messages.Clear();
             foreach (var message in chatHistory)
             {
@@ -201,15 +170,11 @@ public class ChatViewModel : ObservableObject
 
         if (SelectedChannel == null || string.IsNullOrWhiteSpace(MessageInputText))
         {
-            _logger.Log(LogLevel.WARNING, $"[SendMessageAsync] Aborted — SelectedChannel: {SelectedChannel?.Id ?? 0}, MessageInputText empty: {string.IsNullOrWhiteSpace(MessageInputText)}");
             return;
         }
-
         try
         {
             var sentMessage = await _messageService.SendMessageAsync(SelectedChannel.Id, MessageInputText, _userService.Id);
-            _logger.Log(LogLevel.WARNING, $"[SendMessageAsync] Message sent successfully: {sentMessage?.Id}");
-
             Messages.Add(sentMessage);
             MessageInputText = string.Empty;
         }
@@ -223,7 +188,6 @@ public class ChatViewModel : ObservableObject
     {
         if (SelectedChannel == null)
         {
-            _logger.Log(LogLevel.WARNING, "[PollLatestMessageAsync] SelectedChannel is null — skipping poll");
             return;
         }
 
@@ -232,20 +196,15 @@ public class ChatViewModel : ObservableObject
             _refreshTimer.Stop();
 
             var currentChannelId = SelectedChannel.Id;
-            _logger.Log(LogLevel.WARNING, $"[PollLatestMessageAsync] Polling channel: {currentChannelId}");
-
             var serverMessages = await _messageService.GetMessagesAsync(currentChannelId);
-            _logger.Log(LogLevel.WARNING, $"[PollLatestMessageAsync] Server returned {serverMessages?.Count ?? 0} message(s), local count: {Messages.Count}");
 
             if (SelectedChannel?.Id != currentChannelId)
             {
-                _logger.Log(LogLevel.WARNING, $"[PollLatestMessageAsync] Channel changed during poll ({currentChannelId} -> {SelectedChannel?.Id ?? 0}) — discarding result");
                 return;
             }
 
             if (serverMessages.Count != Messages.Count)
             {
-                _logger.Log(LogLevel.WARNING, $"[PollLatestMessageAsync] Count mismatch — refreshing message list");
                 Messages.Clear();
                 foreach (var message in serverMessages)
                 {
@@ -272,5 +231,10 @@ public class ChatViewModel : ObservableObject
                 _logger.Log(LogLevel.WARNING, "[PollLatestMessageAsync] SelectedChannel is null in finally — timer will not restart");
             }
         }
+    }
+
+    public void AddProject(IProject project)
+    {
+        Projects.Add(project);
     }
 }

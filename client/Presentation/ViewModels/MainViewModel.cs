@@ -1,5 +1,6 @@
 using System.Windows.Input;
 using System.Windows.Threading;
+
 using client.Application.Interfaces;
 using client.Domain.Enum;
 using client.Domain.Models;
@@ -104,6 +105,7 @@ public class MainViewModel : ObservableObject
     private async Task CreateProjectAsync(Project project)
     {
         await ProjectViewModel.CreateProjectAsync(project);
+        ChatViewModel.AddProject(ProjectViewModel.ListOfProjects.Last());
         CurrentView = ProjectViewModel;
     }
 
