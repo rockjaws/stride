@@ -28,58 +28,8 @@ public class ProjectController : ControllerBase
         var projects = userId.HasValue
             ? await _repository.GetProjectsByUserIdAsync(userId.Value)
             : await _repository.GetAllProjectsAsync();
-        var dtos = projects.Select(p => new ProjectDto
-        {
-            Id = p.Id,
-            Title = p.Title,
-            Description = p.Description,
-            StartDate = p.StartDate,
-            Deadline = p.Deadline,
-            IsArchived = p.IsArchived,
-            ChatChannels =
-            [
-                .. p.ChatChannels.Select(c => new ChannelDto
-                {
-                    Id = c.Id,
-                    Name = c.Name,
-                    ProjectId = p.Id,
-                }),
-            ],
-            Tasks =
-            [
-                .. p.Tasks.Select(t => new ProjectTaskDto
-                {
-                    Id = t.Id,
-                    Title = t.Title,
-                    Description = t.Description,
-                    StartDate = t.StartDate,
-                    Deadline = t.Deadline,
-                    Progress = t.Progress,
-                    Priority = t.Priority,
-                    ProjectId = p.Id,
-                    Users =
-                    [
-                        .. t.Users.Select(u => new UserDto
-                        {
-                            Id = u.Id,
-                            FirstName = u.FirstName,
-                            LastName = u.LastName,
-                            WorkMail = u.WorkMail,
-                        }),
-                    ],
-                }),
-            ],
-            Users =
-            [
-                .. p.Users.Select(u => new UserDto
-                {
-                    Id = u.Id,
-                    FirstName = u.FirstName,
-                    LastName = u.LastName,
-                    WorkMail = u.WorkMail,
-                }),
-            ],
-        });
+
+        var dtos = projects.Select(p => p.ToDto());
         return Ok(dtos);
     }
 
@@ -107,59 +57,7 @@ public class ProjectController : ControllerBase
         {
             return NotFound();
         }
-        var dto = new ProjectDto
-        {
-            Id = project.Id,
-            Title = project.Title,
-            Description = project.Description,
-            StartDate = project.StartDate,
-            Deadline = project.Deadline,
-            IsArchived = project.IsArchived,
-            ChatChannels =
-            [
-                .. project.ChatChannels.Select(c => new ChannelDto
-                {
-                    Id = c.Id,
-                    Name = c.Name,
-                    ProjectId = project.Id,
-                }),
-            ],
-            Tasks =
-            [
-                .. project.Tasks.Select(t => new ProjectTaskDto
-                {
-                    Id = t.Id,
-                    Title = t.Title,
-                    Description = t.Description,
-                    StartDate = t.StartDate,
-                    Deadline = t.Deadline,
-                    Progress = t.Progress,
-                    Priority = t.Priority,
-                    ProjectId = project.Id,
-                    Users =
-                    [
-                        .. t.Users.Select(u => new UserDto
-                        {
-                            Id = u.Id,
-                            FirstName = u.FirstName,
-                            LastName = u.LastName,
-                            WorkMail = u.WorkMail,
-                        }),
-                    ],
-                }),
-            ],
-            Users =
-            [
-                .. project.Users.Select(u => new UserDto
-                {
-                    Id = u.Id,
-                    FirstName = u.FirstName,
-                    LastName = u.LastName,
-                    WorkMail = u.WorkMail,
-                }),
-            ],
-        };
-        return Ok(dto);
+        return Ok(project.ToDto());
     }
 
     [HttpPost]
