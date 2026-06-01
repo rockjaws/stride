@@ -110,8 +110,7 @@ public class ProjectViewModel : ObservableObject
         ArchiveProjectCommand = new ArchiveProjectCommand(
             _logger,
             () => SelectedProject,
-            ArchiveProjectAsync,
-            UnarchiveProjectAsync
+            ArchiveProjectAsync
         );
         _ = GetProjectsAsync();
     }
@@ -219,29 +218,13 @@ public class ProjectViewModel : ObservableObject
         {
             await _projectService.SetProjectArchivedAsync(id, true);
             _logger.Log(LogLevel.INFO, $"Archived Project {id}");
+            SelectedProject = null;
+            ListOfProjects.Remove(project);
         }
         catch (Exception ex)
         {
             project.UnArchive(); // Rollback
             _logger.Log(LogLevel.ERROR, $"Failed To Archive Project {id}: {ex.Message}");
-        }
-    }
-
-    public async Task UnarchiveProjectAsync(Project project)
-    {
-        if (project.Id is not int id)
-            return;
-
-        project.UnArchive(); // Optimistic update, rolled back on failure
-        try
-        {
-            await _projectService.SetProjectArchivedAsync(id, false);
-            _logger.Log(LogLevel.INFO, $"Unarchived Project {id}");
-        }
-        catch (Exception ex)
-        {
-            project.Archive(); // Rollback
-            _logger.Log(LogLevel.ERROR, $"Failed To Unarchive Project {id}: {ex.Message}");
         }
     }
 

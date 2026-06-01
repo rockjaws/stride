@@ -8,19 +8,16 @@ public class ArchiveProjectCommand : IUndoableCommand
     private readonly ILogger _logger;
     private readonly Func<Project?> _getProject;
     private readonly Func<Project, Task> _archiveAsync;
-    private readonly Func<Project, Task> _unarchiveAsync;
 
     public ArchiveProjectCommand(
         ILogger logger,
         Func<Project?> getProject,
-        Func<Project, Task> archiveAsync,
-        Func<Project, Task> unarchiveAsync
+        Func<Project, Task> archiveAsync
     )
     {
         _logger = logger;
         _getProject = getProject;
         _archiveAsync = archiveAsync;
-        _unarchiveAsync = unarchiveAsync;
     }
 
     public async void Execute(object? param)
@@ -32,10 +29,7 @@ public class ArchiveProjectCommand : IUndoableCommand
         if (project == null)
             return;
 
-        if (project.IsArchived)
-            await _unarchiveAsync(project);
-        else
-            await _archiveAsync(project);
+        await _archiveAsync(project);
     }
 
     public void Undo() { }

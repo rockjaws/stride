@@ -2,7 +2,9 @@ using System.Collections.ObjectModel;
 using client.Application.Interfaces;
 using client.Domain.Enum;
 using client.Domain.Models;
+using client.Presentation.Commands;
 using client.Presentation.Common;
+using client.Presentation.Events;
 
 namespace client.Presentation.ViewModels;
 
@@ -11,8 +13,16 @@ public class ArchiveViewModel : ObservableObject
     private readonly ILogger _logger;
     private readonly IProjectService _projectService;
     private readonly IUserService _userService;
+    private Project? _selectedProject;
 
     public ObservableCollection<Project> ArchivedProjects { get; }
+    public RestoreProjectCommand RestoreProjectCommand { get; }
+
+    public Project? SelectedProject
+    {
+        get => _selectedProject;
+        set => SetProperty(ref _selectedProject, value);
+    }
 
     public ArchiveViewModel(
         ILogger logger,
@@ -24,7 +34,31 @@ public class ArchiveViewModel : ObservableObject
         _projectService = projectService;
         _userService = userService;
         ArchivedProjects = [];
+        RestoreProjectCommand = new RestoreProjectCommand(
+            logger,
+            () => SelectedProject,
+            UnarchiveProjectAsync
+        );
         _ = GetProjectsAsync();
+    }
+
+    public async Task UnarchiveProjectAsync(Project project)
+    {
+        if (project.Id is not int id)
+            return;
+
+        project.Archive();
+        try
+        {
+            await _projectService.SetProjectArchivedAsync(id, false);
+            _logger.Log(LogLevel.INFO, $"Unarchived Project {id}");
+            ArchivedProjects.Remove(project);
+        }
+        catch (Exception ex)
+        {
+            project.UnArchive();
+            _logger.Log(LogLevel.ERROR, $"Failed To Unarchive Project {id}: {ex.Message}");
+        }
     }
 
     private async Task GetProjectsAsync()
