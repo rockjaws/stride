@@ -3,24 +3,28 @@
 -- ===========================================
 
 -- Users
-INSERT INTO Users (FirstName, LastName, WorkMail, Role) VALUES
-('Alice', 'Hansen', 'alice.hansen@stride.dev', 0),
-('Bob', 'Nielsen', 'bob.nielsen@stride.dev', 0),
-('Clara', 'Jensen', 'clara.jensen@stride.dev', 0);
+INSERT INTO Users (FirstName, LastName, WorkMail) VALUES
+('Alice', 'Hansen', 'alice.hansen@stride.dev'),
+('Bob', 'Nielsen', 'bob.nielsen@stride.dev'),
+('Clara', 'Jensen', 'clara.jensen@stride.dev');
 
 -- Projects
-INSERT INTO Projects (Title, Description, StartDate, Deadline) VALUES
+INSERT INTO Projects (
+    Title, Description, StartDate, Deadline, IsArchived
+) VALUES
 (
     'Stride Platform',
     'Internal project management tool built with WPF and ASP.NET Core.',
     '2026-05-01',
-    '2026-08-31'
+    '2026-08-31',
+    0
 ),
 (
     'Mobile Companion App',
     'Cross-platform mobile client for Stride using .NET MAUI.',
     '2026-06-01',
-    '2026-12-01'
+    '2026-12-01',
+    0
 );
 
 -- Assign all users to both projects
