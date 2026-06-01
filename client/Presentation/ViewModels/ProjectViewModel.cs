@@ -52,6 +52,7 @@ public class ProjectViewModel : ObservableObject
         {
             SetProperty(ref _selectedProject, value);
             CreateNewTaskCommand.RaiseCanExecuteChanged();
+            ArchiveProjectCommand.RaiseCanExecuteChanged();
             // The board columns are derived from the selected project's task list.
             ClearTaskColumns();
 
@@ -74,6 +75,8 @@ public class ProjectViewModel : ObservableObject
     public CreateNewTaskCommand CreateNewTaskCommand { get; }
 
     public ShowSelectedTaskCommand ShowSelectedTaskCommand { get; }
+
+    public ArchiveProjectCommand ArchiveProjectCommand { get; }
 
     public ProjectViewModel(
         ILogger logger,
@@ -103,6 +106,12 @@ public class ProjectViewModel : ObservableObject
             _userService,
             UpdateTaskAsync,
             DeleteTaskAsync
+        );
+        ArchiveProjectCommand = new ArchiveProjectCommand(
+            _logger,
+            () => SelectedProject,
+            ArchiveProjectAsync,
+            UnarchiveProjectAsync
         );
         _ = GetProjectsAsync();
     }
@@ -202,55 +211,38 @@ public class ProjectViewModel : ObservableObject
 
     public async Task ArchiveProjectAsync(Project project)
     {
-        if (SelectedProject == null)
-            return;
-
         if (project.Id is not int id)
             return;
 
-        project.Archive();
-
+        project.Archive(); // Optimistic update, rolled back on failure
         try
         {
             await _projectService.SetProjectArchivedAsync(id, true);
+            _logger.Log(LogLevel.INFO, $"Archived Project {id}");
         }
         catch (Exception ex)
         {
-            project.UnArchive();
-            _logger.Log(LogLevel.ERROR, $"Failed To Archive Project {project.Id}: {ex.Message}");
-            return;
+            project.UnArchive(); // Rollback
+            _logger.Log(LogLevel.ERROR, $"Failed To Archive Project {id}: {ex.Message}");
         }
-
-        // Only archive project after API has confirmed.
-        _logger.Log(LogLevel.INFO, $"Archived Project {project.Id}");
     }
 
-    public async Task UnArchiveProjectAsync(Project project)
+    public async Task UnarchiveProjectAsync(Project project)
     {
-        if (SelectedProject == null)
-            return;
-
         if (project.Id is not int id)
             return;
 
-        project.UnArchive();
-
+        project.UnArchive(); // Optimistic update, rolled back on failure
         try
         {
             await _projectService.SetProjectArchivedAsync(id, false);
+            _logger.Log(LogLevel.INFO, $"Unarchived Project {id}");
         }
         catch (Exception ex)
         {
-            project.Archive();
-            _logger.Log(
-                LogLevel.ERROR,
-                $"Failed To Undo Project Archive {project.Id}: {ex.Message}"
-            );
-            return;
+            project.Archive(); // Rollback
+            _logger.Log(LogLevel.ERROR, $"Failed To Unarchive Project {id}: {ex.Message}");
         }
-
-        // Only readd project after API has confirmed.
-        _logger.Log(LogLevel.INFO, $"Project reinstated {project.Id}");
     }
 
     public async Task DeleteTaskAsync(ProjectTask task)
@@ -389,7 +381,10 @@ public class ProjectViewModel : ObservableObject
             ListOfProjects.Clear();
             foreach (var project in projects)
             {
-                ListOfProjects.Add(project);
+                if (!project.IsArchived)
+                {
+                    ListOfProjects.Add(project);
+                }
             }
             _logger.Log(LogLevel.INFO, "All Projects Fetched Succesfully.");
         }

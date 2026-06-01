@@ -64,13 +64,9 @@ public class ProjectService : IProjectService
     public async Task SetProjectArchivedAsync(int id, bool isArchived)
     {
         var payload = new { isArchived };
-        var content = new StringContent(
-            JsonSerializer.Serialize(payload),
-            Encoding.UTF8,
-            "application/json"
-        );
 
-        var response = await _httpclient.PatchAsync($"api/projects/{id}", content);
+        var response = await _httpclient.PatchAsJsonAsync($"api/projects/{id}/archive", payload);
+
         response.EnsureSuccessStatusCode();
     }
 
