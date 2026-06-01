@@ -22,7 +22,7 @@ public class NewChatViewModel : ObservableObject
 
     public ChatChannel CreateChannel(int projectId)
     {
-        return new ChatChannel(1, Name, projectId);
+        return new ChatChannel(0, Name, projectId);
     }
 
 }
