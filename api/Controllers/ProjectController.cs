@@ -32,6 +32,7 @@ public class ProjectController : ControllerBase
             Description = p.Description,
             StartDate = p.StartDate,
             Deadline = p.Deadline,
+            IsArchived = p.IsArchived,
             ChatChannels =
             [
                 .. p.ChatChannels.Select(c => new ChannelDto
@@ -93,6 +94,7 @@ public class ProjectController : ControllerBase
             Description = project.Description,
             StartDate = project.StartDate,
             Deadline = project.Deadline,
+            IsArchived = project.IsArchived,
             ChatChannels =
             [
                 .. project.ChatChannels.Select(c => new ChannelDto
@@ -159,6 +161,7 @@ public class ProjectController : ControllerBase
             Description = project.Description,
             StartDate = project.StartDate,
             Deadline = project.Deadline,
+            IsArchived = project.IsArchived,
             ChatChannels = [],
             Tasks = [],
             Users = [],

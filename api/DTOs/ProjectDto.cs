@@ -1,5 +1,3 @@
-using api.Models;
-
 namespace api.DTOs;
 
 public class ProjectDto
@@ -9,6 +7,7 @@ public class ProjectDto
     public string Description { get; set; } = string.Empty;
     public DateTime StartDate { get; set; }
     public DateTime Deadline { get; set; }
+    public bool IsArchived { get; set; } = false;
 
     public List<ChannelDto> ChatChannels { get; set; } = new();
     public List<ProjectTaskDto> Tasks { get; set; } = new();
