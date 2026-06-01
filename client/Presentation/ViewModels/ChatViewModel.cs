@@ -55,6 +55,7 @@ public class ChatViewModel : ObservableObject
     }
 
     public ICommand SendMessageCommand { get; }
+    public ICommand CreateChannelCommand { get; }
 
     public ChatViewModel(ILogger logger, IProjectService projectService, IMessageService messageService, IUserService userService)
     {
@@ -64,6 +65,7 @@ public class ChatViewModel : ObservableObject
         _userService = userService;
 
         SendMessageCommand = new SendMessageCommand(this);
+        CreateChannelCommand = new CreateChannelCommand(_logger, CreateChannelAsync, () => SelectedProject?.Id);
 
         _refreshTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(5) };
         _refreshTimer.Tick += async (s, e) => await PollLatestMessageAsync();
@@ -236,5 +238,20 @@ public class ChatViewModel : ObservableObject
     public void AddProject(IProject project)
     {
         Projects.Add(project);
+    }
+
+    private async Task CreateChannelAsync(IChatChannel channel)
+    {
+        try
+        {
+            var saved = await _projectService.CreateChannelAsync(channel.ProjectId, channel.Name);
+            ChatChannels.Add(saved);
+            SelectedChannel = saved;
+            _logger.Log(LogLevel.INFO, $"Created channel '{saved.Name}' (id {saved.Id})");
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(LogLevel.ERROR, $"Failed to create channel: {ex.Message}");
+        }
     }
 }

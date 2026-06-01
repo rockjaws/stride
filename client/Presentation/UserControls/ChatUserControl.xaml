@@ -30,19 +30,19 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="ComboBox">
                         <Grid>
-                            <ToggleButton Name="ToggleButton" 
+                            <ToggleButton Name="ToggleButton"
                                           BorderBrush="{TemplateBinding BorderBrush}"
                                           BorderThickness="{TemplateBinding BorderThickness}"
                                           Background="{TemplateBinding Background}"
-                                          Grid.Column="2" 
+                                          Grid.Column="2"
                                           Focusable="false"
                                           IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}"
                                           ClickMode="Press">
                                 <ToggleButton.Template>
                                     <ControlTemplate TargetType="ToggleButton">
-                                        <Border CornerRadius="6" 
-                                                Background="{TemplateBinding Background}" 
-                                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                        <Border CornerRadius="6"
+                                                Background="{TemplateBinding Background}"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
                                                 BorderThickness="{TemplateBinding BorderThickness}">
                                             <Grid HorizontalAlignment="Right" Width="30">
                                                 <Path Margin="0,1,0,0" Fill="#64748B" HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 0 0 L 4 4 L 8 0 Z"/>
@@ -75,7 +75,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" 
+        <Border Grid.Row="0"
                 Background="{StaticResource StrideBgHeader}"
                 BorderBrush="{StaticResource StrideBorder}"
                 BorderThickness="0,0,0,1"
@@ -92,10 +92,10 @@
                               SelectedItem="{Binding SelectedProject}"
                               DisplayMemberPath="Title"/>
 
-                    <TextBlock Text="/" 
-                               Foreground="#CBD5E1" 
-                               FontSize="18" 
-                               Margin="14,0" 
+                    <TextBlock Text="/"
+                               Foreground="#CBD5E1"
+                               FontSize="18"
+                               Margin="14,0"
                                VerticalAlignment="Center"
                                FontWeight="Light"/>
 
@@ -108,20 +108,45 @@
                               ItemsSource="{Binding ChatChannels}"
                               SelectedItem="{Binding SelectedChannel}"
                               DisplayMemberPath="Name"/>
+
+                    <Button Content="+ Channel"
+                            Margin="12 0 0 0"
+                            Padding="10 0"
+                            Height="32"
+                            Background="{StaticResource StrideAccent}"
+                            Foreground="White"
+                            FontWeight="SemiBold"
+                            FontSize="12"
+                            Cursor="Hand"
+                            Command="{Binding CreateChannelCommand}">
+                        <Button.Resources>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}" CornerRadius="6" Padding="{TemplateBinding Padding}">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                     <Ellipse Width="8" Height="8" Fill="#2ECC71" Margin="0,0,8,0"/>
-                    <TextBlock Text="Live Feed Sync Connected" 
-                               Foreground="{StaticResource StrideTextMuted}" 
+                    <TextBlock Text="Live Feed Sync Connected"
+                               Foreground="{StaticResource StrideTextMuted}"
                                FontSize="12"
                                FontWeight="Medium"/>
                 </StackPanel>
             </Grid>
         </Border>
 
-        <ScrollViewer Grid.Row="1" 
-                      VerticalScrollBarVisibility="Auto" 
+        <ScrollViewer Grid.Row="1"
+                      VerticalScrollBarVisibility="Auto"
                       Background="{StaticResource StrideBgChat}"
                       Padding="24,20">
 
@@ -134,7 +159,7 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
 
-                            <Border Grid.Column="0" Height="36" Width="36" 
+                            <Border Grid.Column="0" Height="36" Width="36"
                                     Background="{StaticResource StrideAccent}" CornerRadius="6" VerticalAlignment="Top">
                                 <TextBlock Text="{Binding SenderName[0]}" Foreground="White" FontWeight="Bold" FontSize="14"
                                            HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -167,7 +192,7 @@
                     </Grid.RowDefinitions>
 
                     <TextBox x:Name="StrideMessageInput"
-                             Grid.Row="0" 
+                             Grid.Row="0"
                              MinHeight="44"
                              MaxHeight="120"
                              Background="Transparent"
@@ -180,13 +205,13 @@
                              Text="{Binding MessageInputText, UpdateSourceTrigger=PropertyChanged}"/>
 
                     <Grid Grid.Row="1" Margin="0,10,0,0">
-                        <TextBlock Text="Formatting supported (wrap blocks in triple backticks)" 
-                                   Foreground="{StaticResource StrideTextMuted}" 
-                                   FontSize="11" 
+                        <TextBlock Text="Formatting supported (wrap blocks in triple backticks)"
+                                   Foreground="{StaticResource StrideTextMuted}"
+                                   FontSize="11"
                                    VerticalAlignment="Center"/>
 
                         <Button x:Name="StrideSendMessageBtn"
-                                Content="Send Message" 
+                                Content="Send Message"
                                 HorizontalAlignment="Right"
                                 Padding="16,8"
                                 Background="{StaticResource StrideAccent}"

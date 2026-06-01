@@ -55,6 +55,20 @@ public class ProjectService : IProjectService
         return ToProject(createdProject);
     }
 
+    public async Task<ChatChannel> CreateChannelAsync(int projectId, string name)
+    {
+        var response = await _httpclient.PostAsJsonAsync(
+                $"api/projects/{projectId}/channels",
+                new { name }
+                );
+        response.EnsureSuccessStatusCode();
+
+        var dto = await response.Content.ReadFromJsonAsync<ChannelDto>()
+            ?? throw new InvalidOperationException("Api did not return new channel");
+
+        return new ChatChannel(dto.Id, dto.Name, dto.ProjectId);
+    }
+
     public async Task DeleteProjectAsync(int id)
     {
         var response = await _httpclient.DeleteAsync($"api/projects/{id}");
