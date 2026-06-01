@@ -1,6 +1,8 @@
 using api.DTOs;
 using api.Models;
 using api.Repositories;
+using api.Extensions;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
@@ -171,20 +173,16 @@ public class ProjectController : ControllerBase
         await _repository.AddProjectAsync(project);
         await _repository.SaveChangesAsync();
 
-        var projectDto = new ProjectDto
+        var generalChannel = new ChatChannel
         {
-            Id = project.Id,
-            Title = project.Title,
-            Description = project.Description,
-            StartDate = project.StartDate,
-            Deadline = project.Deadline,
-            IsArchived = project.IsArchived,
-            ChatChannels = [],
-            Tasks = [],
-            Users = [],
+            Name = "general",
+            ProjectId = project.Id
         };
 
-        return CreatedAtAction(nameof(GetProject), new { id = projectDto.Id }, projectDto);
+        await _channelRepository.CreateChannelAsync(generalChannel);
+        await _channelRepository.SaveChangesAsync();
+
+        return CreatedAtAction(nameof(GetProject), new { id = project.Id }, project.ToDto());
     }
 
     [HttpPut("{id}")]
