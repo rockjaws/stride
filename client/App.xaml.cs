@@ -1,5 +1,4 @@
 using System.Windows;
-
 using client.Application.Interfaces;
 using client.Application.Services;
 using client.Domain.Enum;
@@ -45,11 +44,9 @@ public partial class App : System.Windows.Application
 
         var taskViewModel = new TaskViewModel(logger, taskService, userService);
 
-        var chatViewModel = new ChatViewModel(
-                logger,
-                projectService,
-                messageService,
-                userService);
+        var chatViewModel = new ChatViewModel(logger, projectService, messageService, userService);
+
+        var archiveViewModel = new ArchiveViewModel(logger, projectService, userService);
 
         // Main viewmodel
         var viewModel = new MainViewModel(
@@ -58,6 +55,7 @@ public partial class App : System.Windows.Application
             projectViewModel,
             taskViewModel,
             chatViewModel,
+            archiveViewModel,
             notificationService,
             userService
         );
