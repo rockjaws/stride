@@ -131,6 +131,9 @@
         <DataTemplate DataType="{x:Type viewModels:ChatViewModel}">
             <userControls:ChatUserControl/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:ArchiveViewModel}">
+            <userControls:ArchiveUserControl/>
+        </DataTemplate>
     </Window.Resources>
 
 		<Grid>
@@ -174,7 +177,13 @@
 							 Command="{Binding ChangeViewCommand}"
 							 CommandParameter="{Binding ChatViewModel}"
 							 Style="{StaticResource NavRadioButtonStyle}"/>
-            </StackPanel>
+                <RadioButton x:Name="ArchiveButton"
+						     Content="Archive"
+						     GroupName="SideMenu"
+						     Command="{Binding ChangeViewCommand}"
+						     CommandParameter="{Binding ArchiveViewModel}"
+						     Style="{StaticResource NavRadioButtonStyle}"/>
+                </StackPanel>
 
 			<StackPanel Grid.Row="1" Margin="0 0 0 12">
 				<Button x:Name="NewProjectButton"

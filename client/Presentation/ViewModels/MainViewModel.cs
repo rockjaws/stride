@@ -1,6 +1,5 @@
 using System.Windows.Input;
 using System.Windows.Threading;
-
 using client.Application.Interfaces;
 using client.Domain.Enum;
 using client.Domain.Models;
@@ -24,6 +23,7 @@ public class MainViewModel : ObservableObject
     public ProjectViewModel ProjectViewModel { get; }
     public TaskViewModel TaskViewModel { get; }
     public ChatViewModel ChatViewModel { get; }
+    public ArchiveViewModel ArchiveViewModel { get; }
 
     public ICommand ChangeViewCommand { get; }
     public ICommand CreateNewProjectCommand { get; }
@@ -52,6 +52,7 @@ public class MainViewModel : ObservableObject
         ProjectViewModel projectViewModel,
         TaskViewModel taskViewModel,
         ChatViewModel chatViewModel,
+        ArchiveViewModel archiveViewModel,
         INotificationService notificationService,
         IUserService userService
     )
@@ -64,6 +65,7 @@ public class MainViewModel : ObservableObject
         ProjectViewModel = projectViewModel;
         TaskViewModel = taskViewModel;
         ChatViewModel = chatViewModel;
+        ArchiveViewModel = archiveViewModel;
 
         // Keep the kanban board in sync when a task is edited from the standalone Tasks tab.
         TaskViewModel.TaskUpdated += ProjectViewModel.ApplyExternalTaskUpdate;
@@ -75,10 +77,7 @@ public class MainViewModel : ObservableObject
 
         CreateNewProjectCommand = new CreateNewProjectCommand(_logger, CreateProjectAsync);
 
-        _notificationTimer = new DispatcherTimer
-        {
-            Interval = TimeSpan.FromSeconds(5)
-        };
+        _notificationTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(5) };
         // DispatcherTimer runs on the UI thread, so toast bindings can be updated directly.
         _notificationTimer.Tick += async (_, _) => await CheckNotificationsAsync();
     }

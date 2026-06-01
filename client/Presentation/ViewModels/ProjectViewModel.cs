@@ -371,7 +371,7 @@ public class ProjectViewModel : ObservableObject
         _logger.Log(LogLevel.INFO, $"Added Created Project To Project List: {project.Id}");
     }
 
-    public async Task GetProjectsAsync()
+    private async Task GetProjectsAsync()
     {
         try
         {
