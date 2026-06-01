@@ -22,6 +22,8 @@ public class ProjectViewModel : ObservableObject
     private ObservableCollection<ProjectTask> _inReviewTasks = [];
     private ObservableCollection<ProjectTask> _finishedTasks = [];
 
+    public event Action<Project>? ProjectArchived;
+
     public ObservableCollection<ProjectTask> BacklogTasks
     {
         get => _backlogTasks;
@@ -221,6 +223,8 @@ public class ProjectViewModel : ObservableObject
             _logger.Log(LogLevel.INFO, $"Archived Project {id}");
             SelectedProject = null;
             ListOfProjects.Remove(project);
+
+            ProjectArchived?.Invoke(project);
         }
         catch (Exception ex)
         {

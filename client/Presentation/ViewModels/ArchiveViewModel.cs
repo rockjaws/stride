@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+
 using client.Application.Interfaces;
 using client.Domain.Enum;
 using client.Domain.Models;
@@ -13,6 +14,8 @@ public class ArchiveViewModel : ObservableObject
     private readonly IProjectService _projectService;
     private readonly IUserService _userService;
     private Project? _selectedProject;
+
+    public event Action<Project>? ProjectUnarchived;
 
     public ObservableCollection<Project> ArchivedProjects { get; }
     public RestoreProjectCommand RestoreProjectCommand { get; }
@@ -52,6 +55,8 @@ public class ArchiveViewModel : ObservableObject
             await _projectService.SetProjectArchivedAsync(id, false);
             _logger.Log(LogLevel.INFO, $"Unarchived Project {id}");
             ArchivedProjects.Remove(project);
+
+            ProjectUnarchived?.Invoke(project);
         }
         catch (Exception ex)
         {
