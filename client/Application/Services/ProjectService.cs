@@ -3,7 +3,6 @@ using System.Net.Http.Json;
 using client.Application.Interfaces;
 using client.Domain.Enum;
 using client.Domain.Models;
-using client.Presentation.Events;
 
 namespace client.Application.Services;
 
@@ -58,12 +57,13 @@ public class ProjectService : IProjectService
     public async Task<ChatChannel> CreateChannelAsync(int projectId, string name)
     {
         var response = await _httpclient.PostAsJsonAsync(
-                $"api/projects/{projectId}/channels",
-                new { name }
-                );
+            $"api/projects/{projectId}/channels",
+            new { name }
+        );
         response.EnsureSuccessStatusCode();
 
-        var dto = await response.Content.ReadFromJsonAsync<ChannelDto>()
+        var dto =
+            await response.Content.ReadFromJsonAsync<ChannelDto>()
             ?? throw new InvalidOperationException("Api did not return new channel");
 
         return new ChatChannel(dto.Id, dto.Name, dto.ProjectId);

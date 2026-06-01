@@ -4,7 +4,6 @@ using client.Domain.Enum;
 using client.Domain.Models;
 using client.Presentation.Commands;
 using client.Presentation.Common;
-using client.Presentation.Events;
 
 namespace client.Presentation.ViewModels;
 
