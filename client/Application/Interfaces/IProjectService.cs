@@ -6,7 +6,7 @@ public interface IProjectService
 {
     Task<List<Project>> GetProjectsAsync();
     Task<List<Project>> GetProjectsAsync(int userId);
-    Task<Project> CreateProjectAsync(Project project);
+    Task<Project> CreateProjectAsync(Project project, int userId);
     Task DeleteProjectAsync(int id);
     Task SetProjectArchivedAsync(int id, bool isArchived);
 }

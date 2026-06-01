@@ -13,11 +13,13 @@ public class ProjectController : ControllerBase
 {
     private readonly IProjectRepository _repository;
     private readonly IChannelRepository _channelRepository;
+    private readonly IUserRepository _userRepository;
 
-    public ProjectController(IProjectRepository repository, IChannelRepository channelRepository)
+    public ProjectController(IProjectRepository repository, IChannelRepository channelRepository, IUserRepository userRepository)
     {
         _repository = repository;
         _channelRepository = channelRepository;
+        _userRepository = userRepository;
     }
 
     [HttpGet]
@@ -170,6 +172,13 @@ public class ProjectController : ControllerBase
             StartDate = dto.StartDate,
             Deadline = dto.Deadline,
         };
+
+        var user = await _userRepository.GetUserByIdAsync(dto.UserId);
+        if (user != null)
+        {
+            project.Users.Add(user);
+        }
+
         await _repository.AddProjectAsync(project);
         await _repository.SaveChangesAsync();
 
