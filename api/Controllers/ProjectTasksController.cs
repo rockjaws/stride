@@ -1,4 +1,5 @@
 using api.DTOs;
+using api.Extensions;
 using api.Models;
 using api.Repositories;
 
@@ -29,23 +30,7 @@ public class ProjectTasksController : ControllerBase
           ? await _repository.GetTasksByUserIdAsync(id)
           : await _repository.GetAllTasksAsync();
 
-        var dtos = projectTasks.Select(t => new ProjectTaskDto
-        {
-            Id = t.Id,
-            Title = t.Title,
-            Description = t.Description,
-            StartDate = t.StartDate,
-            Deadline = t.Deadline,
-            Progress = t.Progress,
-            Priority = t.Priority,
-            ProjectId = t.ProjectId,
-            Users = [.. t.Users.Select(u => new UserDto {
-           Id = u.Id,
-           FirstName = u.FirstName,
-           LastName = u.LastName,
-           WorkMail = u.WorkMail,
-           })]
-        });
+        var dtos = projectTasks.Select(t => t.ToDto());
         return Ok(dtos);
     }
 
@@ -58,23 +43,7 @@ public class ProjectTasksController : ControllerBase
             return NotFound();
         }
 
-        var dtos = new ProjectTaskDto
-        {
-            Id = projectTask.Id,
-            Title = projectTask.Title,
-            Description = projectTask.Description,
-            StartDate = projectTask.StartDate,
-            Deadline = projectTask.Deadline,
-            Progress = projectTask.Progress,
-            Priority = projectTask.Priority,
-            ProjectId = projectTask.ProjectId,
-            Users = [.. projectTask.Users.Select(u => new UserDto {
-           Id = u.Id,
-           FirstName = u.FirstName,
-           LastName = u.LastName,
-           WorkMail = u.WorkMail,
-           })]
-        };
+        var dtos = projectTask.ToDto();
 
         return Ok(dtos);
     }
@@ -94,20 +63,7 @@ public class ProjectTasksController : ControllerBase
         await _repository.AddTaskAsync(projectTask);
         await _repository.SaveChangesAsync();
 
-        var projectTaskDto = new ProjectTaskDto
-        {
-            Id = projectTask.Id,
-            Title = projectTask.Title,
-            Description = projectTask.Description,
-            StartDate = projectTask.StartDate,
-            Deadline = projectTask.Deadline,
-            Progress = projectTask.Progress,
-            Priority = projectTask.Priority,
-            ProjectId = projectTask.ProjectId,
-            Users = []
-        };
-
-        return CreatedAtAction(nameof(GetProjectTask), new { id = projectTaskDto.Id }, projectTaskDto);
+        return CreatedAtAction(nameof(GetProjectTask), new { id = projectTask.Id }, projectTask.ToDto());
     }
 
     [HttpPut("{id}")]
