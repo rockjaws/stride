@@ -216,13 +216,6 @@
                                Foreground="#0F172A"
                                HorizontalAlignment="Left"
                                VerticalAlignment="Center"/>
-                    <Border Background="#EFF6FF"
-                            CornerRadius="8"
-                            Padding="8,4"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Center">
-                        <TextBlock Text="May 2026" Foreground="#2563EB" FontWeight="SemiBold" FontSize="12"/>
-                    </Border>
                 </Grid>
   <local:ProjectCalendarUserControl
     DataContext="{Binding CalendarViewModel}"

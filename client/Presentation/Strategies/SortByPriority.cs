@@ -9,6 +9,6 @@ public class SortByPriority : ITaskSortStrategy
     {
         if (tasks == null || tasks.Count <= 1) return;
 
-        tasks.MergeSort(0, tasks.Count - 1, (task1, task2) => task1.Priority.CompareTo(task2.Priority));
+        tasks.MergeSort(0, tasks.Count - 1, (task1, task2) => task2.Priority.CompareTo(task1.Priority));
     }
 }
