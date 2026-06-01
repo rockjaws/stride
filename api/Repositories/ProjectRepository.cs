@@ -1,5 +1,6 @@
 using api.Data;
 using api.Models;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace api.Repositories;
@@ -17,10 +18,9 @@ public class ProjectRepository : IProjectRepository
     {
         return await _context
             .Projects
-            // Multiple collection includes can multiply rows; split queries keep the result shape predictable.
             .AsSplitQuery()
             .Include(p => p.Tasks)
-            .Include(p => p.Users)
+            .ThenInclude(p => p.Users)
             .Include(p => p.ChatChannels)
             .ToListAsync();
     }
@@ -30,9 +30,8 @@ public class ProjectRepository : IProjectRepository
         return await _context
             .Projects.AsSplitQuery()
             .Include(p => p.Tasks)
-            .Include(p => p.Users)
+            .ThenInclude(p => p.Users)
             .Include(p => p.ChatChannels)
-            // The client Projects tab should only see projects where the active user is a member.
             .Where(p => p.Users.Any(u => u.Id == userId))
             .ToListAsync();
     }
@@ -42,6 +41,7 @@ public class ProjectRepository : IProjectRepository
         return await _context
             .Projects.AsSplitQuery()
             .Include(p => p.Tasks)
+                .ThenInclude(t => t.Users)
             .Include(p => p.Users)
             .Include(p => p.ChatChannels)
             .FirstOrDefaultAsync(p => p.Id == id);

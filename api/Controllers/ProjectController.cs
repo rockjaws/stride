@@ -20,9 +20,11 @@ public class ProjectController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<ProjectDto>>> GetProjects()
+    public async Task<ActionResult<IEnumerable<ProjectDto>>> GetProjects([FromQuery] int? userId)
     {
-        var projects = await _repository.GetAllProjectsAsync();
+        var projects = userId.HasValue
+            ? await _repository.GetProjectsByUserIdAsync(userId.Value)
+            : await _repository.GetAllProjectsAsync();
         var dtos = projects.Select(p => new ProjectDto
         {
             Id = p.Id,
@@ -30,6 +32,7 @@ public class ProjectController : ControllerBase
             Description = p.Description,
             StartDate = p.StartDate,
             Deadline = p.Deadline,
+            IsArchived = p.IsArchived,
             ChatChannels =
             [
                 .. p.ChatChannels.Select(c => new ChannelDto
@@ -52,7 +55,7 @@ public class ProjectController : ControllerBase
                     Priority = t.Priority,
                     ProjectId = p.Id,
                     Users =
-                    [ .. p.Users.Select(u => new UserDto
+                    [ .. t.Users.Select(u => new UserDto
                             {
                             Id = u.Id,
                             FirstName = u.FirstName,
@@ -91,6 +94,7 @@ public class ProjectController : ControllerBase
             Description = project.Description,
             StartDate = project.StartDate,
             Deadline = project.Deadline,
+            IsArchived = project.IsArchived,
             ChatChannels =
             [
                 .. project.ChatChannels.Select(c => new ChannelDto
@@ -113,7 +117,7 @@ public class ProjectController : ControllerBase
                     Priority = t.Priority,
                     ProjectId = project.Id,
                     Users =
-                    [ .. project.Users.Select(u => new UserDto
+                    [ .. t.Users.Select(u => new UserDto
                             {
                             Id = u.Id,
                             FirstName = u.FirstName,
@@ -157,6 +161,7 @@ public class ProjectController : ControllerBase
             Description = project.Description,
             StartDate = project.StartDate,
             Deadline = project.Deadline,
+            IsArchived = project.IsArchived,
             ChatChannels = [],
             Tasks = [],
             Users = [],

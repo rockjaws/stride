@@ -7,6 +7,7 @@ public class Project
     public string Description { get; set; } = string.Empty;
     public DateTime StartDate { get; set; }
     public DateTime Deadline { get; set; }
+    public bool IsArchived { get; set; } = false;
 
     public List<ChatChannel> ChatChannels { get; set; } = new();
     public List<ProjectTask> Tasks { get; set; } = new();

@@ -112,7 +112,7 @@ public class MergeSortTests
     private int Partition(List<int> arr, int low, int high)
     {
         int pivot = arr[high];
-        int i = (low - 1);
+        int i = low - 1;
 
         for (int j = low; j < high; j++)
         {
