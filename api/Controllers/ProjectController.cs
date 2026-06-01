@@ -1,7 +1,6 @@
 using api.DTOs;
 using api.Models;
 using api.Repositories;
-
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
@@ -55,13 +54,14 @@ public class ProjectController : ControllerBase
                     Priority = t.Priority,
                     ProjectId = p.Id,
                     Users =
-                    [ .. t.Users.Select(u => new UserDto
-                            {
+                    [
+                        .. t.Users.Select(u => new UserDto
+                        {
                             Id = u.Id,
                             FirstName = u.FirstName,
                             LastName = u.LastName,
-                            WorkMail = u.WorkMail
-                            }),
+                            WorkMail = u.WorkMail,
+                        }),
                     ],
                 }),
             ],
@@ -77,6 +77,22 @@ public class ProjectController : ControllerBase
             ],
         });
         return Ok(dtos);
+    }
+
+    [HttpPatch("{id}/archive")]
+    public async Task<ActionResult> SetArchived(int id, ProjectArchiveDto dto)
+    {
+        var project = await _repository.GetProjectByIdAsync(id);
+
+        if (project == null)
+            return NotFound();
+
+        project.IsArchived = dto.IsArchived;
+
+        await _repository.UpdateProjectAsync(project);
+        await _repository.SaveChangesAsync();
+
+        return NoContent();
     }
 
     [HttpGet("{id}")]
@@ -117,13 +133,14 @@ public class ProjectController : ControllerBase
                     Priority = t.Priority,
                     ProjectId = project.Id,
                     Users =
-                    [ .. t.Users.Select(u => new UserDto
-                            {
+                    [
+                        .. t.Users.Select(u => new UserDto
+                        {
                             Id = u.Id,
                             FirstName = u.FirstName,
                             LastName = u.LastName,
-                            WorkMail = u.WorkMail
-                            }),
+                            WorkMail = u.WorkMail,
+                        }),
                     ],
                 }),
             ],

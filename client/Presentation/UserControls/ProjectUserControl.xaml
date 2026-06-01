@@ -10,6 +10,7 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <converters:TaskBadgeBrushConverter x:Key="TaskBadgeBrushConverter"/>
+        
 
         <Style x:Key="ToolbarButtonStyle" TargetType="Button">
             <Setter Property="Height" Value="32"/>
@@ -39,6 +40,42 @@
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
                                 <Setter TargetName="ButtonBorder" Property="Background" Value="#1E40AF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ArchiveButtonStyle"
+       TargetType="Button"
+       BasedOn="{StaticResource ToolbarButtonStyle}">
+            <Setter Property="Background" Value="#DC2626"/>
+            <Setter Property="BorderBrush" Value="#B91C1C"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="ButtonBorder"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ButtonBorder"
+                                Property="Background"
+                                Value="#B91C1C"/>
+                                <Setter TargetName="ButtonBorder"
+                                Property="BorderBrush"
+                                Value="#991B1B"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="ButtonBorder"
+                                Property="Background"
+                                Value="#991B1B"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -190,6 +227,14 @@
                       ItemsSource="{Binding ListOfProjects}"
                       SelectedItem="{Binding SelectedProject}"
                       DisplayMemberPath="Title"/>
+            <Button Grid.Column="1"
+                    Style="{StaticResource ArchiveButtonStyle}"
+                    Margin="0 0 117 0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Content="Archive"
+                    Command="{Binding ArchiveProjectCommand}"
+                    />
 
             <Button Grid.Column="1"
                     Style="{StaticResource ToolbarButtonStyle}"
