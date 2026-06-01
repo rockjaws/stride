@@ -6,131 +6,360 @@
         xmlns:local="clr-namespace:client.Presentation.Views"
         mc:Ignorable="d"
         Title="Stride"
-        Height="520"
+        Height="560"
         Width="520"
         MinHeight="520"
         MinWidth="480"
-        WindowStartupLocation="CenterOwner" Focusable="True">
-    <Grid Margin="20">
+        WindowStartupLocation="CenterOwner"
+        Focusable="True"
+        Background="#F1F5F9">
+
+    <Window.Resources>
+
+        <Style x:Key="FormLabelStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#475569"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="FormTextBoxStyle" TargetType="TextBox">
+            <Setter Property="Background" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#CBD5E1"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10 0"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="#0F172A"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border x:Name="Bd"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6">
+                            <ScrollViewer x:Name="PART_ContentHost"
+                                          Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#94A3B8"/>
+                            </Trigger>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#2563EB"/>
+                                <Setter TargetName="Bd" Property="BorderThickness" Value="1.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="FormComboBoxStyle" TargetType="ComboBox">
+            <Setter Property="Background" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#CBD5E1"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="Padding" Value="10 0"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="#0F172A"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="Padding" Value="20 0"/>
+            <Setter Property="Background" Value="#2563EB"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#1D4ED8"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bd"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#1D4ED8"/>
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#1E40AF"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#1E40AF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SecondaryButtonStyle" TargetType="Button">
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="Padding" Value="20 0"/>
+            <Setter Property="Background" Value="#FFFFFF"/>
+            <Setter Property="Foreground" Value="#475569"/>
+            <Setter Property="BorderBrush" Value="#CBD5E1"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bd"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#F8FAFC"/>
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#94A3B8"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#F1F5F9"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="DangerButtonStyle" TargetType="Button">
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="Padding" Value="20 0"/>
+            <Setter Property="Background" Value="#FEF2F2"/>
+            <Setter Property="Foreground" Value="#DC2626"/>
+            <Setter Property="BorderBrush" Value="#FCA5A5"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bd"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#FEE2E2"/>
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#F87171"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#FECACA"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Window.Resources>
+
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="52"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Task"
-                   FontSize="22"
-                   FontWeight="SemiBold"
-                   Margin="0 0 0 18"/>
+        <!-- Header -->
+        <Border Grid.Row="0"
+                Background="#F8FAFC"
+                BorderBrush="#E2E8F0"
+                BorderThickness="0 0 0 1"
+                Padding="20 0">
+            <TextBlock Text="Task Details"
+                       FontSize="16"
+                       FontWeight="SemiBold"
+                       Foreground="#0F172A"
+                       VerticalAlignment="Center"/>
+        </Border>
 
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="120"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+        <!-- Form -->
+        <ScrollViewer Grid.Row="1"
+                      VerticalScrollBarVisibility="Auto"
+                      Padding="16">
+            <Border Background="#FFFFFF"
+                    BorderBrush="#E2E8F0"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="20">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" Grid.Column="0"
-                       Text="Title"
-                       VerticalAlignment="Center"
-                       Margin="0 0 12 10"/>
-            <TextBox Grid.Row="0" Grid.Column="1"
-                     Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"
-                     Margin="0 0 0 10"/>
+                    <!-- Title -->
+                    <TextBlock Grid.Row="0" Grid.Column="0"
+                               Text="Title"
+                               Style="{StaticResource FormLabelStyle}"
+                               Margin="0 0 12 12"/>
+                    <TextBox Grid.Row="0" Grid.Column="1"
+                             Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"
+                             Style="{StaticResource FormTextBoxStyle}"
+                             Height="36"
+                             Margin="0 0 0 12"/>
 
-            <TextBlock Grid.Row="1" Grid.Column="0"
-                       Text="Description"
-                       VerticalAlignment="Top"
-                       Margin="0 4 12 10"/>
-            <TextBox Grid.Row="1" Grid.Column="1"
-                     Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
-                     Height="90"
-                     TextWrapping="Wrap"
-                     AcceptsReturn="True"
-                     VerticalScrollBarVisibility="Auto"
-                     Margin="0 0 0 10"/>
+                    <!-- Description -->
+                    <TextBlock Grid.Row="1" Grid.Column="0"
+                               Text="Description"
+                               Style="{StaticResource FormLabelStyle}"
+                               VerticalAlignment="Top"
+                               Margin="0 8 12 12"/>
+                    <TextBox Grid.Row="1" Grid.Column="1"
+                             Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
+                             Style="{StaticResource FormTextBoxStyle}"
+                             Height="86"
+                             TextWrapping="Wrap"
+                             AcceptsReturn="True"
+                             VerticalContentAlignment="Top"
+                             VerticalScrollBarVisibility="Auto"
+                             Padding="10 8"
+                             Margin="0 0 0 12"/>
 
-            <TextBlock Grid.Row="2" Grid.Column="0"
-                       Text="Start date"
-                       VerticalAlignment="Center"
-                       Margin="0 0 12 10"/>
-            <DatePicker Grid.Row="2" Grid.Column="1"
-                        SelectedDate="{Binding StartDate, Mode=TwoWay}"
-                        Margin="0 0 0 10"/>
+                    <!-- Start Date -->
+                    <TextBlock Grid.Row="2" Grid.Column="0"
+                               Text="Start date"
+                               Style="{StaticResource FormLabelStyle}"
+                               Margin="0 0 12 12"/>
+                    <DatePicker Grid.Row="2" Grid.Column="1"
+                                SelectedDate="{Binding StartDate, Mode=TwoWay}"
+                                Height="36"
+                                Margin="0 0 0 12"/>
 
-            <TextBlock Grid.Row="3" Grid.Column="0"
-                       Text="Deadline"
-                       VerticalAlignment="Center"
-                       Margin="0 0 12 10"/>
-            <DatePicker Grid.Row="3" Grid.Column="1"
-                        SelectedDate="{Binding Deadline, Mode=TwoWay}"
-                        Margin="0 0 0 10"/>
+                    <!-- Deadline -->
+                    <TextBlock Grid.Row="3" Grid.Column="0"
+                               Text="Deadline"
+                               Style="{StaticResource FormLabelStyle}"
+                               Margin="0 0 12 12"/>
+                    <DatePicker Grid.Row="3" Grid.Column="1"
+                                SelectedDate="{Binding Deadline, Mode=TwoWay}"
+                                Height="36"
+                                Margin="0 0 0 12"/>
 
-            <TextBlock Grid.Row="4" Grid.Column="0"
-                       Text="Progress"
-                       VerticalAlignment="Center"
-                       Margin="0 0 12 10"/>
-            <ComboBox Grid.Row="4" Grid.Column="1"
-                      ItemsSource="{Binding ProgressOptions}"
-                      SelectedItem="{Binding Progress, Mode=TwoWay}"
-                      Margin="0 0 0 10"/>
+                    <!-- Progress -->
+                    <TextBlock Grid.Row="4" Grid.Column="0"
+                               Text="Progress"
+                               Style="{StaticResource FormLabelStyle}"
+                               Margin="0 0 12 12"/>
+                    <ComboBox Grid.Row="4" Grid.Column="1"
+                              Style="{StaticResource FormComboBoxStyle}"
+                              ItemsSource="{Binding ProgressOptions}"
+                              SelectedItem="{Binding Progress, Mode=TwoWay}"
+                              Margin="0 0 0 12"/>
 
-            <TextBlock Grid.Row="5" Grid.Column="0"
-                       Text="Priority"
-                       VerticalAlignment="Center"
-                       Margin="0 0 12 10"/>
-            <ComboBox Grid.Row="5" Grid.Column="1"
-                      ItemsSource="{Binding PriorityOptions}"
-                      SelectedItem="{Binding Priority, Mode=TwoWay}"
-                      Margin="0 0 0 10"/>
+                    <!-- Priority -->
+                    <TextBlock Grid.Row="5" Grid.Column="0"
+                               Text="Priority"
+                               Style="{StaticResource FormLabelStyle}"
+                               Margin="0 0 12 12"/>
+                    <ComboBox Grid.Row="5" Grid.Column="1"
+                              Style="{StaticResource FormComboBoxStyle}"
+                              ItemsSource="{Binding PriorityOptions}"
+                              SelectedItem="{Binding Priority, Mode=TwoWay}"
+                              Margin="0 0 0 12"/>
 
-            <TextBlock Grid.Row="6" Grid.Column="0"
-           Text="Assign"
-           VerticalAlignment="Top"
-           Margin="0 4 12 0"/>
-            <ListBox Grid.Row="6"
-Grid.Column="1"
-ItemsSource="{Binding AssignableMembers}"
-BorderThickness="1"
-MaxHeight="120"
-ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <!-- Assign -->
+                    <TextBlock Grid.Row="6" Grid.Column="0"
+                               Text="Assign"
+                               Style="{StaticResource FormLabelStyle}"
+                               VerticalAlignment="Top"
+                               Margin="0 6 12 0"/>
+                    <Border Grid.Row="6" Grid.Column="1"
+                            BorderBrush="#CBD5E1"
+                            BorderThickness="1"
+                            CornerRadius="6"
+                            Background="#FFFFFF">
+                        <ListBox ItemsSource="{Binding AssignableMembers}"
+                                 BorderThickness="0"
+                                 MaxHeight="120"
+                                 Background="Transparent"
+                                 ScrollViewer.VerticalScrollBarVisibility="Auto">
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="ListBoxItem">
+                                                <ContentPresenter/>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <CheckBox Content="{Binding User.FullName}"
+                                              IsChecked="{Binding IsAssigned, Mode=TwoWay}"
+                                              Foreground="#0F172A"
+                                              FontSize="13"
+                                              Margin="10 6"/>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Border>
 
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <CheckBox Content="{Binding User.FullName}"
-             IsChecked="{Binding IsAssigned, Mode=TwoWay}"
-             Margin="4"/>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
+                </Grid>
+            </Border>
+        </ScrollViewer>
 
-            </ListBox>
-        </Grid>
+        <!-- Footer -->
+        <Border Grid.Row="2"
+                Background="#F8FAFC"
+                BorderBrush="#E2E8F0"
+                BorderThickness="0 1 0 0"
+                Padding="16 12">
+            <Grid>
+                <Button Content="Delete"
+                        Style="{StaticResource DangerButtonStyle}"
+                        HorizontalAlignment="Left"
+                        Click="onDeleteTask"/>
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Right">
+                    <Button Content="Cancel"
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            IsCancel="True"
+                            Margin="0 0 8 0"
+                            Click="onCancel"/>
+                    <Button Content="Update"
+                            Style="{StaticResource PrimaryButtonStyle}"
+                            IsDefault="True"
+                            Click="onUpdateTask"/>
+                </StackPanel>
+            </Grid>
+        </Border>
 
-        <StackPanel Grid.Row="2"
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Right"
-                    Margin="0 20 0 0">
-            <Button Content="Delete"
-                    Width="90" Height="30"
-                    Margin="0 0 8 0"
-                    Click="onDeleteTask"/>
-            <Button Content="Cancel"
-                    Width="90" Height="30"
-                    Margin="0 0 8 0"
-                    IsCancel="True"
-                    Click="onCancel"/>
-            <Button Content="Update"
-                    Width="90" Height="30"
-                    IsDefault="True"
-                    Click="onUpdateTask"/>
-        </StackPanel>
     </Grid>
 </Window>

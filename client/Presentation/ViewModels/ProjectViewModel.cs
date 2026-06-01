@@ -1,5 +1,4 @@
 using System.Collections.ObjectModel;
-
 using client.Application.Interfaces;
 using client.Domain.Enum;
 using client.Domain.Exceptions;
@@ -213,7 +212,7 @@ public class ProjectViewModel : ObservableObject
 
         try
         {
-            await _projectService.ArchiveProjectAsync(id);
+            await _projectService.SetProjectArchivedAsync(id, true);
         }
         catch (Exception ex)
         {
@@ -238,7 +237,7 @@ public class ProjectViewModel : ObservableObject
 
         try
         {
-            await _projectService.UnArchiveProjectAsync(id);
+            await _projectService.SetProjectArchivedAsync(id, false);
         }
         catch (Exception ex)
         {
