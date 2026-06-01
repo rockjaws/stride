@@ -46,6 +46,7 @@ public class TaskRepository : ITaskRepository
 
     public async Task UpdateTaskAsync(ProjectTask task)
     {
+        _context.ProjectTasks.Update(task);
         await Task.CompletedTask;
     }
 

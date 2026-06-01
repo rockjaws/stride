@@ -1,5 +1,6 @@
 using System.Net.Http;
 using System.Net.Http.Json;
+
 using client.Application.Interfaces;
 using client.Domain.Enum;
 using client.Domain.Models;
