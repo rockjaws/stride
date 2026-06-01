@@ -1,5 +1,6 @@
 using System.Windows.Input;
 using System.Windows.Threading;
+
 using client.Application.Interfaces;
 using client.Domain.Enum;
 using client.Domain.Models;
@@ -71,6 +72,9 @@ public class MainViewModel : ObservableObject
         TaskViewModel.TaskUpdated += ProjectViewModel.ApplyExternalTaskUpdate;
         TaskViewModel.TaskDeleted += ProjectViewModel.ApplyExternalTaskDelete;
 
+        ProjectViewModel.ProjectArchived += ApplyExternalProjectArchive;
+        ArchiveViewModel.ProjectUnarchived += ApplyExternalProjectUnarchive;
+
         CurrentView = DashboardViewModel;
 
         ChangeViewCommand = new ChangeViewCommand(_logger, this);
@@ -80,6 +84,18 @@ public class MainViewModel : ObservableObject
         _notificationTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(5) };
         // DispatcherTimer runs on the UI thread, so toast bindings can be updated directly.
         _notificationTimer.Tick += async (_, _) => await CheckNotificationsAsync();
+    }
+
+    private void ApplyExternalProjectArchive(Project project)
+    {
+        ArchiveViewModel.ArchivedProjects.Add(project);
+        CurrentView = ArchiveViewModel;
+    }
+
+    private void ApplyExternalProjectUnarchive(Project project)
+    {
+        ProjectViewModel.AddCreatedProject(project);
+        CurrentView = ProjectViewModel;
     }
 
     public void StartNotificationPolling()
