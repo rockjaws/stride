@@ -227,21 +227,32 @@
                       ItemsSource="{Binding ListOfProjects}"
                       SelectedItem="{Binding SelectedProject}"
                       DisplayMemberPath="Title"/>
-            <Button Grid.Column="1"
+            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <Button 
                     Style="{StaticResource ArchiveButtonStyle}"
-                    Margin="0 0 117 0"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Center"
+                    Margin="0 0 4 0"
                     Content="Archive"
                     Command="{Binding ArchiveProjectCommand}"
                     />
 
-            <Button Grid.Column="1"
+                <Button
+                    Style="{StaticResource ToolbarButtonStyle}"
+                    HorizontalAlignment="Right"
+                    Margin="4 0 4 0"
+                    VerticalAlignment="Center"
+                    Content="Edit Project"
+                    Command="{Binding EditProjectCommand}"/>
+
+                <Button
                     Style="{StaticResource ToolbarButtonStyle}"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Center"
+                    Margin="4 0 2 0"
                     Content="New Task +"
                     Command="{Binding CreateNewTaskCommand}"/>
+            </StackPanel>
         </Grid>
 
         <!-- Kanban Columns -->
