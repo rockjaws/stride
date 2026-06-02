@@ -1,5 +1,4 @@
 using System.Collections.ObjectModel;
-
 using client.Application.Interfaces;
 using client.Domain.Enum;
 using client.Domain.Models;
@@ -17,6 +16,7 @@ public class ArchiveViewModel : ObservableObject
 
     public ObservableCollection<Project> ArchivedProjects { get; }
     public RestoreProjectCommand RestoreProjectCommand { get; }
+    public DeleteProjectCommand DeleteProjectCommand { get; }
 
     public Project? SelectedProject
     {
@@ -40,10 +40,15 @@ public class ArchiveViewModel : ObservableObject
             () => SelectedProject,
             UnarchiveProjectAsync
         );
+        DeleteProjectCommand = new DeleteProjectCommand(
+            _logger,
+            () => SelectedProject!,
+            DeleteProjectAsync
+        );
         _ = GetProjectsAsync();
     }
 
-    public async Task UnarchiveProjectAsync(Project project)
+    private async Task UnarchiveProjectAsync(Project project)
     {
         if (project.Id is not int id)
             return;
@@ -59,6 +64,23 @@ public class ArchiveViewModel : ObservableObject
         {
             project.UnArchive();
             _logger.Log(LogLevel.ERROR, $"Failed To Unarchive Project {id}: {ex.Message}");
+        }
+    }
+
+    private async Task DeleteProjectAsync(Project project)
+    {
+        if (project.Id is not int id)
+            return;
+
+        try
+        {
+            await _projectService.DeleteProjectAsync(id);
+            _logger.Log(LogLevel.INFO, $"Deleted Project {id}");
+            ArchivedProjects.Remove(project);
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(LogLevel.ERROR, $"Failed To Delete Project {id}: {ex.Message}");
         }
     }
 

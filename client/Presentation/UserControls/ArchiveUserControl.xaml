@@ -53,6 +53,50 @@
             </Setter>
         </Style>
 
+        <Style x:Key="DeleteButtonStyle" TargetType="Button">
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Width" Value="100"/>
+            <Setter Property="Background" Value="#EF4444"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#DC2626"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="ButtonBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6">
+
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ButtonBorder"
+                                        Property="Background"
+                                        Value="#DC2626"/>
+                            </Trigger>
+
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="ButtonBorder"
+                                        Property="Background"
+                                        Value="#B91C1C"/>
+                            </Trigger>
+
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
     </UserControl.Resources>
 
     <Grid Background="#F1F5F9">
@@ -62,7 +106,6 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Header -->
         <Border Grid.Row="0"
                 Background="#F8FAFC"
                 BorderBrush="#E2E8F0"
@@ -84,7 +127,6 @@
 
         </Border>
 
-        <!-- Content -->
         <ScrollViewer Grid.Row="1"
                       VerticalScrollBarVisibility="Auto">
 
@@ -110,7 +152,6 @@
 
                             <StackPanel>
 
-                                <!-- Header -->
                                 <Grid Margin="0,0,0,10">
 
                                     <Grid.ColumnDefinitions>
@@ -143,7 +184,6 @@
 
                                 </Grid>
 
-                                <!-- Description -->
                                 <TextBlock Text="{Binding Description}"
                                            TextWrapping="Wrap"
                                            Foreground="#475569"
@@ -152,7 +192,6 @@
 
                                 <Separator Margin="0,0,0,12"/>
 
-                                <!-- Metadata -->
                                 <StackPanel>
 
                                     <TextBlock Text="{Binding Tasks.Count,
@@ -173,12 +212,19 @@
 
                                 <Separator Margin="0,12"/>
 
-                                <!-- Actions -->
-                                <Button Content="Restore"
-                                        Style="{StaticResource RestoreButtonStyle}"
-                                        Command="{Binding DataContext.RestoreProjectCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                        CommandParameter="{Binding}"
-                                        HorizontalAlignment="Left"/>
+                                <Grid>
+                                    <Button Content="Restore"
+                                            Style="{StaticResource RestoreButtonStyle}"
+                                            Command="{Binding DataContext.RestoreProjectCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="{Binding}"
+                                            HorizontalAlignment="Left"/>
+
+                                    <Button Content="Delete"
+                                            Style="{StaticResource DeleteButtonStyle}"
+                                            Command="{Binding DataContext.DeleteProjectCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="{Binding}"
+                                            HorizontalAlignment="Right"/>
+                                </Grid>
 
                             </StackPanel>
 
@@ -192,7 +238,6 @@
 
         </ScrollViewer>
 
-        <!-- Empty State -->
         <Border Grid.Row="1"
                 Background="Transparent"
                 IsHitTestVisible="False">
@@ -232,5 +277,4 @@
         </Border>
 
     </Grid>
-
 </UserControl>
