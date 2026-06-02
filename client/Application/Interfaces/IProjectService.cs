@@ -10,4 +10,5 @@ public interface IProjectService
     Task<ChatChannel> CreateChannelAsync(int projectId, string name);
     Task DeleteProjectAsync(int id);
     Task SetProjectArchivedAsync(int id, bool isArchived);
+    event EventHandler ProjectsChanged;
 }

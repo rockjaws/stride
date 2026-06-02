@@ -11,6 +11,7 @@ public class TaskService : ITaskService
 {
     private readonly HttpClient _httpclient;
 
+    public event EventHandler? TasksChanged;
     public TaskService()
     {
         _httpclient = new HttpClient
@@ -18,6 +19,7 @@ public class TaskService : ITaskService
             BaseAddress = new Uri("http://localhost:5189")
         };
     }
+
 
     public async Task<List<ProjectTask>> GetTasksAsync()
     {
@@ -84,6 +86,7 @@ public class TaskService : ITaskService
             AssignedUserIds = task.UsersAssigned?.Select(u => u.Id).ToList() ?? []
         });
         response.EnsureSuccessStatusCode();
+        NotifyTasksChanged();
     }
 
     public async Task<ProjectTask> MoveTaskAsync(ProjectTask task, TaskProgress progress)
@@ -111,6 +114,8 @@ public class TaskService : ITaskService
     }
 
     public void SortTasks() { }
+
+    private void NotifyTasksChanged() => TasksChanged?.Invoke(this, EventArgs.Empty);
 
     private static ProjectTask ToProjectTask(ProjectTaskDto dto)
     {

@@ -1,5 +1,6 @@
 using System.Net.Http;
 using System.Net.Http.Json;
+
 using client.Application.Interfaces;
 using client.Domain.Enum;
 using client.Domain.Models;
@@ -9,6 +10,8 @@ namespace client.Application.Services;
 public class ProjectService : IProjectService
 {
     private readonly HttpClient _httpclient;
+
+    public event EventHandler? ProjectsChanged;
 
     public ProjectService()
     {
@@ -46,6 +49,7 @@ public class ProjectService : IProjectService
             }
         );
         response.EnsureSuccessStatusCode();
+        NotifyProjectsChanged();
 
         var createdProject =
             await response.Content.ReadFromJsonAsync<ProjectDto>()
@@ -73,6 +77,7 @@ public class ProjectService : IProjectService
     {
         var response = await _httpclient.DeleteAsync($"api/projects/{id}");
         response.EnsureSuccessStatusCode();
+        NotifyProjectsChanged();
     }
 
     public async Task SetProjectArchivedAsync(int id, bool isArchived)
@@ -82,6 +87,7 @@ public class ProjectService : IProjectService
         var response = await _httpclient.PatchAsJsonAsync($"api/projects/{id}/archive", payload);
 
         response.EnsureSuccessStatusCode();
+        NotifyProjectsChanged();
     }
 
     private static TaskProgress ParseProgress(string progress)
@@ -137,6 +143,8 @@ public class ProjectService : IProjectService
             members
         );
     }
+
+    private void NotifyProjectsChanged() => ProjectsChanged?.Invoke(this, EventArgs.Empty);
 
     private sealed class ProjectCreateDto
     {

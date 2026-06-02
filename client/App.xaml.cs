@@ -32,6 +32,7 @@ public partial class App : System.Windows.Application
         var dashboardViewModel = new DashboardViewModel(
             logger,
             projectService,
+            taskService,
             userService
         );
 

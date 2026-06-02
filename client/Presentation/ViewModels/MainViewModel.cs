@@ -89,13 +89,14 @@ public class MainViewModel : ObservableObject
     private void ApplyExternalProjectArchive(Project project)
     {
         ArchiveViewModel.ArchivedProjects.Add(project);
-        DashboardViewModel.Update();
+        _ = DashboardViewModel.GetDashboardMetricsAsync();
         CurrentView = ArchiveViewModel;
     }
 
     private void ApplyExternalProjectUnarchive(Project project)
     {
         ProjectViewModel.AddCreatedProject(project);
+        _ = DashboardViewModel.GetDashboardMetricsAsync();
         CurrentView = ProjectViewModel;
     }
 
