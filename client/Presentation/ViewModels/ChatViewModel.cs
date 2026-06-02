@@ -291,13 +291,10 @@ public class ChatViewModel : ObservableObject
     {
         try
         {
-            await _projectService.DeleteChannelAsync(channel.Id, channel.ProjectId);
+            await _projectService.DeleteChannelAsync(channel.ProjectId, channel.Id);
 
             ChatChannels.Remove(channel);
-            if (SelectedChannel?.Id == channel.Id)
-            {
-                SelectedChannel = ChatChannels.FirstOrDefault();
-            }
+            SelectedChannel = ChatChannels?.ElementAtOrDefault(0);
 
             _logger.Log(LogLevel.INFO, $"Successfully deleted channel {channel.Id}");
         }
