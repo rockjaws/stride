@@ -14,6 +14,9 @@ public class MainViewModel : ObservableObject
     private readonly ILogger _logger;
     private readonly INotificationService _notificationService;
     private readonly IUserService _userService;
+    private readonly IProjectService _projectService;
+    private readonly ITaskService _taskService;
+
     private readonly DispatcherTimer _notificationTimer;
     private object _currentView;
     private string _toastText = string.Empty;
@@ -55,12 +58,16 @@ public class MainViewModel : ObservableObject
         ChatViewModel chatViewModel,
         ArchiveViewModel archiveViewModel,
         INotificationService notificationService,
-        IUserService userService
+        IUserService userService,
+        ITaskService taskService,
+        IProjectService projectService
     )
     {
         _logger = logger;
         _notificationService = notificationService;
         _userService = userService;
+        _taskService = taskService;
+        _projectService = projectService;
 
         DashboardViewModel = dashboardViewModel;
         ProjectViewModel = projectViewModel;
@@ -68,17 +75,9 @@ public class MainViewModel : ObservableObject
         ChatViewModel = chatViewModel;
         ArchiveViewModel = archiveViewModel;
 
-        // Keep the kanban board in sync when a task is edited from the standalone Tasks tab.
-        TaskViewModel.TaskUpdated += ProjectViewModel.ApplyExternalTaskUpdate;
-        TaskViewModel.TaskDeleted += ProjectViewModel.ApplyExternalTaskDelete;
-
-        ProjectViewModel.ProjectArchived += ApplyExternalProjectArchive;
-        ArchiveViewModel.ProjectUnarchived += ApplyExternalProjectUnarchive;
-
         CurrentView = DashboardViewModel;
 
         ChangeViewCommand = new ChangeViewCommand(_logger, this);
-
         CreateNewProjectCommand = new CreateNewProjectCommand(_logger, CreateProjectAsync);
 
         _notificationTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(5) };
@@ -86,19 +85,6 @@ public class MainViewModel : ObservableObject
         _notificationTimer.Tick += async (_, _) => await CheckNotificationsAsync();
     }
 
-    private void ApplyExternalProjectArchive(Project project)
-    {
-        ArchiveViewModel.ArchivedProjects.Add(project);
-        _ = DashboardViewModel.GetDashboardMetricsAsync();
-        CurrentView = ArchiveViewModel;
-    }
-
-    private void ApplyExternalProjectUnarchive(Project project)
-    {
-        ProjectViewModel.AddCreatedProject(project);
-        _ = DashboardViewModel.GetDashboardMetricsAsync();
-        CurrentView = ProjectViewModel;
-    }
 
     public void StartNotificationPolling()
     {

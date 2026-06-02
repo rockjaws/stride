@@ -22,8 +22,6 @@ public class ProjectViewModel : ObservableObject
     private ObservableCollection<ProjectTask> _inReviewTasks = [];
     private ObservableCollection<ProjectTask> _finishedTasks = [];
 
-    public event Action<Project>? ProjectArchived;
-
     public ObservableCollection<ProjectTask> BacklogTasks
     {
         get => _backlogTasks;
@@ -115,6 +113,10 @@ public class ProjectViewModel : ObservableObject
             () => SelectedProject,
             ArchiveProjectAsync
         );
+
+        _taskService.TasksChanged += OnGlobalStateChange;
+        _projectService.ProjectsChanged += OnGlobalStateChange;
+
         _ = GetProjectsAsync();
     }
 
@@ -182,12 +184,6 @@ public class ProjectViewModel : ObservableObject
         _logger.Log(LogLevel.INFO, $"Updated Task On Board: {task.Id}");
     }
 
-    public void ApplyExternalTaskUpdate(ProjectTask task)
-    {
-        // Called by MainViewModel when the Tasks tab saves a task that may also be on this board.
-        UpdateTask(task);
-    }
-
     public async Task DeleteProjectAsync(Project project)
     {
         if (SelectedProject == null)
@@ -223,8 +219,6 @@ public class ProjectViewModel : ObservableObject
             _logger.Log(LogLevel.INFO, $"Archived Project {id}");
             SelectedProject = null;
             ListOfProjects.Remove(project);
-
-            ProjectArchived?.Invoke(project);
         }
         catch (Exception ex)
         {
@@ -273,12 +267,6 @@ public class ProjectViewModel : ObservableObject
             SelectedTask = null;
 
         _logger.Log(LogLevel.INFO, $"Removed Task From Board: {task.Id}");
-    }
-
-    public void ApplyExternalTaskDelete(ProjectTask task)
-    {
-        // Called by MainViewModel when a task is deleted outside the current project view.
-        RemoveDeletedTask(task);
     }
 
     public async Task UpdateTaskAsync(ProjectTask task)
@@ -394,5 +382,32 @@ public class ProjectViewModel : ObservableObject
         {
             _logger.Log(LogLevel.ERROR, $"Failed To Create Project: {ex.Message}");
         }
+    }
+
+    private async void OnGlobalStateChange(object? sender, EventArgs e)
+    {
+        // 1. Grab the index of the project before WPF loses track of it
+        int previousIndex = SelectedProject != null ? ListOfProjects.IndexOf(SelectedProject) : -1;
+
+        // 2. Await the database fetch so the list is fully populated BEFORE we re-assign selection
+        await GetProjectsAsync();
+
+        // 3. Restore selection if the index is still within valid boundaries
+        if (previousIndex >= 0 && previousIndex < ListOfProjects.Count)
+        {
+            SelectedProject = ListOfProjects[previousIndex];
+        }
+        else
+        {
+            // Fallback if the project was deleted or archived
+            SelectedProject = null;
+            ClearTaskColumns();
+        }
+    }
+
+    public void Dispose()
+    {
+        _taskService.TasksChanged -= OnGlobalStateChange;
+        _projectService.ProjectsChanged -= OnGlobalStateChange;
     }
 }

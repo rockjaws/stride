@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+
 using client.Application.Interfaces;
 using client.Domain.Enum;
 using client.Domain.Models;
@@ -7,7 +8,7 @@ using client.Presentation.Common;
 
 namespace client.Presentation.ViewModels;
 
-public class TaskViewModel : ObservableObject
+public class TaskViewModel : ObservableObject, IDisposable
 {
     private readonly ILogger _logger;
     private readonly ITaskService _taskService;
@@ -22,14 +23,11 @@ public class TaskViewModel : ObservableObject
 
     public ShowSelectedTaskCommand ShowSelectedTaskCommand { get; }
 
-    // MainViewModel uses these events to sync edits back to the kanban board.
-    public event Action<ProjectTask>? TaskUpdated;
-    public event Action<ProjectTask>? TaskDeleted;
-
     public TaskViewModel(ILogger logger, ITaskService taskService, IUserService userService)
     {
         _logger = logger;
         _taskService = taskService;
+        _taskService.TasksChanged += OnGlobalStateChange;
         _userService = userService;
         Tasks = [];
 
@@ -70,8 +68,6 @@ public class TaskViewModel : ObservableObject
         {
             await _taskService.UpdateTaskAsync(task);
             ReplaceTask(task);
-            // Notify MainViewModel so other views can refresh their local copy of this task.
-            TaskUpdated?.Invoke(task);
             _logger.Log(LogLevel.INFO, $"Updated Task {task.Id} From Tasks View");
         }
         catch (Exception ex)
@@ -89,8 +85,6 @@ public class TaskViewModel : ObservableObject
         {
             await _taskService.DeleteTaskAsync(id);
             RemoveTask(task);
-            // Notify MainViewModel so the kanban board can remove the same task if it is visible.
-            TaskDeleted?.Invoke(task);
             _logger.Log(LogLevel.INFO, $"Deleted Task {id} From Tasks View");
         }
         catch (Exception ex)
@@ -115,5 +109,15 @@ public class TaskViewModel : ObservableObject
         var existingTask = Tasks.FirstOrDefault(t => t.Id == task.Id);
         if (existingTask != null)
             Tasks.Remove(existingTask);
+    }
+
+    public void OnGlobalStateChange(object? sender, EventArgs e)
+    {
+        _ = LoadTasksAsync();
+    }
+
+    public void Dispose()
+    {
+        _taskService.TasksChanged -= OnGlobalStateChange;
     }
 }
