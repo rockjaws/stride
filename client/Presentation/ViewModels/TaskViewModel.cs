@@ -119,5 +119,6 @@ public class TaskViewModel : ObservableObject, IDisposable
     public void Dispose()
     {
         _taskService.TasksChanged -= OnGlobalStateChange;
+        GC.SuppressFinalize(this);
     }
 }

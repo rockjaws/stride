@@ -9,7 +9,7 @@ using client.Presentation.Common;
 
 namespace client.Presentation.ViewModels;
 
-public class ProjectViewModel : ObservableObject
+public class ProjectViewModel : ObservableObject, IDisposable
 {
     private readonly ILogger _logger;
     private readonly IProjectService _projectService;
@@ -21,6 +21,7 @@ public class ProjectViewModel : ObservableObject
     private ObservableCollection<ProjectTask> _inProgressTasks = [];
     private ObservableCollection<ProjectTask> _inReviewTasks = [];
     private ObservableCollection<ProjectTask> _finishedTasks = [];
+    private bool _isUpdatingGlobalState;
 
     public ObservableCollection<ProjectTask> BacklogTasks
     {
@@ -386,22 +387,32 @@ public class ProjectViewModel : ObservableObject
 
     private async void OnGlobalStateChange(object? sender, EventArgs e)
     {
-        // 1. Grab the index of the project before WPF loses track of it
-        int previousIndex = SelectedProject != null ? ListOfProjects.IndexOf(SelectedProject) : -1;
+        if (_isUpdatingGlobalState) return;
+        _isUpdatingGlobalState = true;
 
-        // 2. Await the database fetch so the list is fully populated BEFORE we re-assign selection
-        await GetProjectsAsync();
-
-        // 3. Restore selection if the index is still within valid boundaries
-        if (previousIndex >= 0 && previousIndex < ListOfProjects.Count)
+        try
         {
-            SelectedProject = ListOfProjects[previousIndex];
+            int previousIndex = SelectedProject != null ? ListOfProjects.IndexOf(SelectedProject) : -1;
+
+            await GetProjectsAsync();
+
+            if (previousIndex >= 0 && previousIndex < ListOfProjects.Count)
+            {
+                SelectedProject = ListOfProjects[previousIndex];
+            }
+            else
+            {
+                SelectedProject = null;
+                ClearTaskColumns();
+            }
         }
-        else
+        catch (Exception ex)
         {
-            // Fallback if the project was deleted or archived
-            SelectedProject = null;
-            ClearTaskColumns();
+            _logger.Log(LogLevel.ERROR, $"Error processing global state sync: {ex.Message}");
+        }
+        finally
+        {
+            _isUpdatingGlobalState = false;
         }
     }
 
@@ -409,5 +420,6 @@ public class ProjectViewModel : ObservableObject
     {
         _taskService.TasksChanged -= OnGlobalStateChange;
         _projectService.ProjectsChanged -= OnGlobalStateChange;
+        GC.SuppressFinalize(this);
     }
 }
