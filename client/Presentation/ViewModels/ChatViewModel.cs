@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Windows.Threading;
+
 using client.Application.Interfaces;
 using client.Domain.Enum;
 using client.Domain.Models;
@@ -9,7 +10,7 @@ using client.Presentation.Common;
 
 namespace client.Presentation.ViewModels;
 
-public class ChatViewModel : ObservableObject
+public class ChatViewModel : ObservableObject, IDisposable
 {
     private readonly ILogger _logger;
     private readonly IProjectService _projectService;
@@ -317,5 +318,11 @@ public class ChatViewModel : ObservableObject
         {
             _logger.Log(LogLevel.ERROR, $"Failed to create channel: {ex.Message}");
         }
+    }
+
+    public void Dispose()
+    {
+        _refreshTimer.Stop();
+        GC.SuppressFinalize(this);
     }
 }
