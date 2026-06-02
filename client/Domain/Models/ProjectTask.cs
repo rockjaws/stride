@@ -13,7 +13,7 @@ public class ProjectTask : ITask
     public TaskProgress Progress { get; }
     public TaskPriority Priority { get; }
     public int? ProjectId { get; }
-    public List<User>? UsersAssigned { get; set; } = null;
+    public List<User>? UsersAssigned { get; set; } = [];
 
     public ProjectTask(
         int? id,

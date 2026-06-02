@@ -13,7 +13,6 @@ public class DashboardViewModel : ObservableObject
 {
     private readonly ILogger _logger;
     private readonly IProjectService _projectService;
-    private readonly ITaskService _taskService;
     private readonly IUserService _userService;
 
     private ObservableCollection<ProjectTask> _upcomingTasks = [];
@@ -67,11 +66,10 @@ public class DashboardViewModel : ObservableObject
         get => _finishedCount;
         set => SetProperty(ref _finishedCount, value);
     }
-    public DashboardViewModel(ILogger logger, IProjectService projectService, ITaskService taskService, IUserService userService)
+    public DashboardViewModel(ILogger logger, IProjectService projectService, IUserService userService)
     {
         _logger = logger;
         _projectService = projectService;
-        _taskService = taskService;
         _userService = userService;
 
         _sortingStrategy = new SortByDeadline();
@@ -84,31 +82,66 @@ public class DashboardViewModel : ObservableObject
         try
         {
             _logger.Log(LogLevel.INFO, $"Fetching dashboard metrics for user: {_userService.Id}");
-            var allTasks = await _taskService.GetTasksAsync(_userService.Id);
 
-            // Counts and upcoming work are both based on the active user's task assignments.
-            BacklogCount = allTasks.Count(t => t.Progress == TaskProgress.Backlog);
-            InProgressCount = allTasks.Count(t => t.Progress == TaskProgress.InProgress);
-            InReviewCount = allTasks.Count(t => t.Progress == TaskProgress.Review);
-            FinishedCount = allTasks.Count(t => t.Progress == TaskProgress.Done);
+            var currentUserId = _userService.Id;
+            var allProjects = await _projectService.GetProjectsAsync(_userService.Id);
 
-            _tasks = allTasks
-                .Where(t => t.Progress != TaskProgress.Done)
-                .Cast<ITask>()
-                .ToList();
+            // 1. Reset counters
+            int backlogCount = 0;
+            int inProgressCount = 0;
+            int inReviewCount = 0;
+            int finishedCount = 0;
 
-            var deadlineDates = allTasks
-                .Where(t => t.Progress != TaskProgress.Done && t.Deadline != default)
-                .Select(t => t.Deadline.Date)
-                .ToHashSet();
+            // 2. Prepare target collections (Pre-allocating objects we actually need)
+            var activeTasks = new List<ITask>();
+            var deadlineDates = new HashSet<DateTime>();
 
-            // The calendar only needs dates, not full task objects, to render deadline indicators.
+            // 3. Single-pass iteration across active projects and tasks
+            foreach (var project in allProjects)
+            {
+                if (project.IsArchived) continue; // Skip archived projects efficiently
+
+                foreach (var task in project.Tasks)
+                {
+                    if (task.UsersAssigned == null || !task.UsersAssigned.Any(u => u.Id == currentUserId))
+                    {
+                        continue;
+                    }
+                    // Increment counters based on progress
+                    switch (task.Progress)
+                    {
+                        case TaskProgress.Backlog: backlogCount++; break;
+                        case TaskProgress.InProgress: inProgressCount++; break;
+                        case TaskProgress.Review: inReviewCount++; break;
+                        case TaskProgress.Done: finishedCount++; break;
+                    }
+
+                    // Gather incomplete task data
+                    if (task.Progress != TaskProgress.Done)
+                    {
+                        activeTasks.Add(task);
+
+                        if (task.Deadline != default)
+                        {
+                            deadlineDates.Add(task.Deadline.Date);
+                        }
+                    }
+                }
+            }
+
+            // 4. Assign values to properties all at once
+            BacklogCount = backlogCount;
+            InProgressCount = inProgressCount;
+            InReviewCount = inReviewCount;
+            FinishedCount = finishedCount;
+
+            _tasks = activeTasks;
+
+            // Update the UI/ViewModel
             CalendarViewModel.UpdateDeadlines(deadlineDates);
-
             SortTasks();
 
             _logger.Log(LogLevel.INFO, "Dashboard metrics successfully loaded");
-
         }
         catch (Exception ex)
         {
@@ -135,4 +168,8 @@ public class DashboardViewModel : ObservableObject
         UpcomingTasks = new ObservableCollection<ProjectTask>(_tasks.Cast<ProjectTask>());
     }
 
+    public void Update()
+    {
+        _ = GetDashboardMetricsAsync();
+    }
 }
