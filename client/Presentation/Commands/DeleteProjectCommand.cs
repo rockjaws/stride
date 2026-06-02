@@ -41,7 +41,7 @@ public class DeleteProjectCommand : IUndoableCommand
         }
     }
 
-    public bool CanExecute(object? parameter) => true;
+    public bool CanExecute(object? parameter) => _getProject != null;
 
     public void Undo() { }
 
