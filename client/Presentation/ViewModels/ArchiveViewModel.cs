@@ -15,8 +15,6 @@ public class ArchiveViewModel : ObservableObject
     private readonly IUserService _userService;
     private Project? _selectedProject;
 
-    public event Action<Project>? ProjectUnarchived;
-
     public ObservableCollection<Project> ArchivedProjects { get; }
     public RestoreProjectCommand RestoreProjectCommand { get; }
 
@@ -35,6 +33,7 @@ public class ArchiveViewModel : ObservableObject
         _logger = logger;
         _projectService = projectService;
         _userService = userService;
+        _projectService.ProjectsChanged += (s, e) => _ = GetProjectsAsync();
         ArchivedProjects = [];
         RestoreProjectCommand = new RestoreProjectCommand(
             logger,
@@ -55,8 +54,6 @@ public class ArchiveViewModel : ObservableObject
             await _projectService.SetProjectArchivedAsync(id, false);
             _logger.Log(LogLevel.INFO, $"Unarchived Project {id}");
             ArchivedProjects.Remove(project);
-
-            ProjectUnarchived?.Invoke(project);
         }
         catch (Exception ex)
         {

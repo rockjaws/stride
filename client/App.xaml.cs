@@ -58,7 +58,9 @@ public partial class App : System.Windows.Application
             chatViewModel,
             archiveViewModel,
             notificationService,
-            userService
+            userService,
+            taskService,
+            projectService
         );
 
         // Main window

@@ -76,16 +76,12 @@ public class DashboardViewModel : ObservableObject, IDisposable
 
         _sortingStrategy = new SortByDeadline();
 
-        _taskService.TasksChanged += OnGlobalStateChange;
         _projectService.ProjectsChanged += OnGlobalStateChange;
+        _taskService.TasksChanged += OnGlobalStateChange;
 
         _ = GetDashboardMetricsAsync();
     }
 
-    private void OnGlobalStateChange(object? sender, EventArgs e)
-    {
-        _ = GetDashboardMetricsAsync();
-    }
 
     public async Task GetDashboardMetricsAsync()
     {
@@ -176,6 +172,11 @@ public class DashboardViewModel : ObservableObject, IDisposable
         // Sorting strategies operate on ITask, then the UI list is rebuilt from the sorted result.
         SortingStrategy.SortTasks(_tasks);
         UpcomingTasks = new ObservableCollection<ProjectTask>(_tasks.Cast<ProjectTask>());
+    }
+
+    private void OnGlobalStateChange(object? sender, EventArgs e)
+    {
+        _ = GetDashboardMetricsAsync();
     }
 
     public void Dispose()
