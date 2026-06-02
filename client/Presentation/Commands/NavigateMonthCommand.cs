@@ -1,4 +1,3 @@
-using System.Windows.Input;
 using client.Application.Interfaces;
 using client.Presentation.ViewModels;
 

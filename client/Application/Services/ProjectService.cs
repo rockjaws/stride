@@ -69,6 +69,14 @@ public class ProjectService : IProjectService
         return new ChatChannel(dto.Id, dto.Name, dto.ProjectId);
     }
 
+    public async Task DeleteChannelAsync(int projectId, int channelId)
+    {
+        var response = await _httpclient.DeleteAsync(
+            $"api/projects/{projectId}/channels/{channelId}"
+        );
+        response.EnsureSuccessStatusCode();
+    }
+
     public async Task DeleteProjectAsync(int id)
     {
         var response = await _httpclient.DeleteAsync($"api/projects/{id}");

@@ -1,9 +1,9 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Windows.Threading;
-
 using client.Application.Interfaces;
 using client.Domain.Enum;
+using client.Domain.Models;
 using client.Presentation.Commands;
 using client.Presentation.Common;
 
@@ -56,8 +56,14 @@ public class ChatViewModel : ObservableObject
 
     public ICommand SendMessageCommand { get; }
     public ICommand CreateChannelCommand { get; }
+    public DeleteChannelCommand DeleteChannelCommand { get; }
 
-    public ChatViewModel(ILogger logger, IProjectService projectService, IMessageService messageService, IUserService userService)
+    public ChatViewModel(
+        ILogger logger,
+        IProjectService projectService,
+        IMessageService messageService,
+        IUserService userService
+    )
     {
         _logger = logger;
         _projectService = projectService;
@@ -65,7 +71,17 @@ public class ChatViewModel : ObservableObject
         _userService = userService;
 
         SendMessageCommand = new SendMessageCommand(this);
-        CreateChannelCommand = new CreateChannelCommand(_logger, CreateChannelAsync, () => SelectedProject?.Id);
+        CreateChannelCommand = new CreateChannelCommand(
+            _logger,
+            CreateChannelAsync,
+            () => SelectedProject?.Id
+        );
+        DeleteChannelCommand = new DeleteChannelCommand(
+            _logger,
+            () => true,
+            () => SelectedChannel as ChatChannel,
+            DeleteChannelAsync
+        );
 
         _refreshTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(5) };
         _refreshTimer.Tick += async (s, e) => await PollLatestMessageAsync();
@@ -93,12 +109,18 @@ public class ChatViewModel : ObservableObject
             }
             else
             {
-                _logger.Log(LogLevel.WARNING, "[LoadDataAsync] No projects returned — channel and message lists will remain empty");
+                _logger.Log(
+                    LogLevel.WARNING,
+                    "[LoadDataAsync] No projects returned — channel and message lists will remain empty"
+                );
             }
         }
         catch (Exception ex)
         {
-            _logger.Log(LogLevel.ERROR, $"[LoadDataAsync] Exception: {ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}");
+            _logger.Log(
+                LogLevel.ERROR,
+                $"[LoadDataAsync] Exception: {ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}"
+            );
         }
         finally
         {
@@ -108,7 +130,10 @@ public class ChatViewModel : ObservableObject
             }
             else
             {
-                _logger.Log(LogLevel.WARNING, "[LoadDataAsync] SelectedChannel is null after load — refresh timer will not start");
+                _logger.Log(
+                    LogLevel.WARNING,
+                    "[LoadDataAsync] SelectedChannel is null after load — refresh timer will not start"
+                );
             }
         }
     }
@@ -139,7 +164,10 @@ public class ChatViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            _logger.Log(LogLevel.WARNING, $"[LoadChannelsForSelectedProjectAsync] Exception: {ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}");
+            _logger.Log(
+                LogLevel.WARNING,
+                $"[LoadChannelsForSelectedProjectAsync] Exception: {ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}"
+            );
         }
     }
 
@@ -162,13 +190,19 @@ public class ChatViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            _logger.Log(LogLevel.ERROR, $"[LoadMessagesForSelectedChannelAsync] Exception: {ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}");
+            _logger.Log(
+                LogLevel.ERROR,
+                $"[LoadMessagesForSelectedChannelAsync] Exception: {ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}"
+            );
         }
     }
 
     public async Task SendMessageAsync()
     {
-        _logger.Log(LogLevel.WARNING, $"[SendMessageAsync] Attempting to send on channel: {SelectedChannel?.Id ?? null}");
+        _logger.Log(
+            LogLevel.WARNING,
+            $"[SendMessageAsync] Attempting to send on channel: {SelectedChannel?.Id ?? null}"
+        );
 
         if (SelectedChannel == null || string.IsNullOrWhiteSpace(MessageInputText))
         {
@@ -176,13 +210,20 @@ public class ChatViewModel : ObservableObject
         }
         try
         {
-            var sentMessage = await _messageService.SendMessageAsync(SelectedChannel.Id, MessageInputText, _userService.Id);
+            var sentMessage = await _messageService.SendMessageAsync(
+                SelectedChannel.Id,
+                MessageInputText,
+                _userService.Id
+            );
             Messages.Add(sentMessage);
             MessageInputText = string.Empty;
         }
         catch (Exception ex)
         {
-            _logger.Log(LogLevel.ERROR, $"[SendMessageAsync] Exception: {ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}");
+            _logger.Log(
+                LogLevel.ERROR,
+                $"[SendMessageAsync] Exception: {ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}"
+            );
         }
     }
 
@@ -220,7 +261,10 @@ public class ChatViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            _logger.Log(LogLevel.ERROR, $"[PollLatestMessageAsync] Exception: {ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}");
+            _logger.Log(
+                LogLevel.ERROR,
+                $"[PollLatestMessageAsync] Exception: {ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}"
+            );
         }
         finally
         {
@@ -230,7 +274,10 @@ public class ChatViewModel : ObservableObject
             }
             else
             {
-                _logger.Log(LogLevel.WARNING, "[PollLatestMessageAsync] SelectedChannel is null in finally — timer will not restart");
+                _logger.Log(
+                    LogLevel.WARNING,
+                    "[PollLatestMessageAsync] SelectedChannel is null in finally — timer will not restart"
+                );
             }
         }
     }
@@ -238,6 +285,26 @@ public class ChatViewModel : ObservableObject
     public void AddProject(IProject project)
     {
         Projects.Add(project);
+    }
+
+    private async Task DeleteChannelAsync(IChatChannel channel)
+    {
+        try
+        {
+            await _projectService.DeleteChannelAsync(channel.Id, channel.ProjectId);
+
+            ChatChannels.Remove(channel);
+            if (SelectedChannel?.Id == channel.Id)
+            {
+                SelectedChannel = ChatChannels.FirstOrDefault();
+            }
+
+            _logger.Log(LogLevel.INFO, $"Successfully deleted channel {channel.Id}");
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(LogLevel.ERROR, $"Failed to delete channel: {ex.Message}");
+        }
     }
 
     private async Task CreateChannelAsync(IChatChannel channel)

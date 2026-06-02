@@ -1,8 +1,7 @@
 using api.DTOs;
+using api.Extensions;
 using api.Models;
 using api.Repositories;
-using api.Extensions;
-
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
@@ -15,7 +14,11 @@ public class ProjectController : ControllerBase
     private readonly IChannelRepository _channelRepository;
     private readonly IUserRepository _userRepository;
 
-    public ProjectController(IProjectRepository repository, IChannelRepository channelRepository, IUserRepository userRepository)
+    public ProjectController(
+        IProjectRepository repository,
+        IChannelRepository channelRepository,
+        IUserRepository userRepository
+    )
     {
         _repository = repository;
         _channelRepository = channelRepository;
@@ -80,11 +83,7 @@ public class ProjectController : ControllerBase
         await _repository.AddProjectAsync(project);
         await _repository.SaveChangesAsync();
 
-        var generalChannel = new ChatChannel
-        {
-            Name = "general",
-            ProjectId = project.Id
-        };
+        var generalChannel = new ChatChannel { Name = "general", ProjectId = project.Id };
 
         await _channelRepository.CreateChannelAsync(generalChannel);
         await _channelRepository.SaveChangesAsync();
@@ -142,6 +141,26 @@ public class ProjectController : ControllerBase
                 ProjectId = channel.ProjectId,
             }
         );
+    }
+
+    [HttpDelete("{projectId}/channels/{channelId}")]
+    public async Task<ActionResult> DeleteChannel(int projectId, int channelId)
+    {
+        var channel = await _channelRepository.GetChannelByIdAsync(channelId);
+
+        if (channel == null)
+        {
+            return NotFound();
+        }
+
+        if (channel.ProjectId != projectId)
+        {
+            return NotFound();
+        }
+
+        await _channelRepository.DeleteChannelAsync(channel);
+
+        return NoContent();
     }
 
     [HttpPost("{id}/channels")]
