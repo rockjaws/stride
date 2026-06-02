@@ -12,4 +12,5 @@ public interface ITaskService
     Task<ProjectTask> MoveTaskAsync(ProjectTask task, TaskProgress progress);
     Task DeleteTaskAsync(int id);
     void SortTasks();
+    event EventHandler TasksChanged;
 }
