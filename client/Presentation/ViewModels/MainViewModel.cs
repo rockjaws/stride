@@ -89,6 +89,7 @@ public class MainViewModel : ObservableObject
     private void ApplyExternalProjectArchive(Project project)
     {
         ArchiveViewModel.ArchivedProjects.Add(project);
+        DashboardViewModel.Update();
         CurrentView = ArchiveViewModel;
     }
 
