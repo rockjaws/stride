@@ -1,5 +1,6 @@
 using client.Presentation.Algorithms;
 using client.Domain.Enum;
+using client.Domain.Models;
 
 using client.Application.Interfaces;
 
@@ -17,6 +18,7 @@ public class MockTask : ITask
     public TaskProgress Progress { get; }
     public TaskPriority Priority { get; }
     public int? ProjectId { get; }
+    public List<User>? UsersAssigned { get; set; }
 
     public MockTask(string title, DateTime deadline, TaskPriority priority, TaskProgress progress)
     {

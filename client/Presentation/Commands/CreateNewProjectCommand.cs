@@ -8,14 +8,17 @@ namespace client.Presentation.Commands;
 public class CreateNewProjectCommand : IUndoableCommand
 {
     private readonly ILogger _logger;
+    private readonly IUserService _userService;
     private readonly Func<Project, Task> _createProjectAsync;
 
     public CreateNewProjectCommand(
         ILogger logger,
+        IUserService userService,
         Func<Project, Task> createProjectAsync
     )
     {
         _logger = logger;
+        _userService = userService;
         _createProjectAsync = createProjectAsync;
     }
 
@@ -24,7 +27,7 @@ public class CreateNewProjectCommand : IUndoableCommand
         if (!CanExecute(param))
             return;
 
-        var vm = new NewProjectViewModel(_logger);
+        var vm = new NewProjectViewModel(_logger, _userService);
         // The command handles dialog lifetime; the injected callback handles persistence.
         var window = new NewProjectWindow { DataContext = vm };
 

@@ -75,10 +75,14 @@ public class ProjectController : ControllerBase
             Deadline = dto.Deadline,
         };
 
-        var user = await _userRepository.GetUserByIdAsync(dto.UserId);
-        if (user != null)
+        var userIds = (dto.UserIds ?? []).Append(dto.UserId).Distinct();
+        foreach (var userId in userIds)
         {
-            project.Users.Add(user);
+            var user = await _userRepository.GetUserByIdAsync(userId);
+            if (user != null)
+            {
+                project.Users.Add(user);
+            }
         }
 
         await _repository.AddProjectAsync(project);
@@ -101,7 +105,20 @@ public class ProjectController : ControllerBase
 
         project.Title = dto.Title;
         project.Description = dto.Description;
+        project.StartDate = dto.StartDate;
         project.Deadline = dto.Deadline;
+        if (dto.UserIds != null)
+        {
+            project.Users.Clear();
+            foreach (var userId in dto.UserIds)
+            {
+                var user = await _userRepository.GetUserByIdAsync(userId);
+                if (user != null)
+                {
+                    project.Users.Add(user);
+                }
+            }
+        }
 
         await _repository.UpdateProjectAsync(project);
         await _repository.SaveChangesAsync();

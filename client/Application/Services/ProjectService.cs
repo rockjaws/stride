@@ -46,6 +46,7 @@ public class ProjectService : IProjectService
                 StartDate = project.StartDate,
                 Deadline = project.Deadline,
                 UserId = userId,
+                UserIds = project.Members.Select(u => u.Id).ToList(),
             }
         );
         response.EnsureSuccessStatusCode();
@@ -56,6 +57,32 @@ public class ProjectService : IProjectService
             ?? throw new InvalidOperationException("The API did not return the created project.");
 
         return ToProject(createdProject);
+    }
+
+    public async Task<Project> UpdateProjectAsync(Project project)
+    {
+        if (project.Id == null)
+            throw new InvalidOperationException("Cannot update a project before it has been saved.");
+
+        var response = await _httpclient.PutAsJsonAsync(
+            $"api/projects/{project.Id}",
+            new ProjectUpdateDto
+            {
+                Title = project.Title,
+                Description = project.Description,
+                StartDate = project.StartDate,
+                Deadline = project.Deadline,
+                UserIds = project.Members.Select(u => u.Id).ToList(),
+            }
+        );
+        response.EnsureSuccessStatusCode();
+
+        var updatedProject =
+            await _httpclient.GetFromJsonAsync<ProjectDto>($"api/projects/{project.Id}")
+            ?? throw new InvalidOperationException("The API did not return the updated project.");
+
+        NotifyProjectsChanged();
+        return ToProject(updatedProject);
     }
 
     public async Task<ChatChannel> CreateChannelAsync(int projectId, string name)
@@ -161,6 +188,16 @@ public class ProjectService : IProjectService
         public DateTime StartDate { get; set; }
         public DateTime Deadline { get; set; }
         public int UserId { get; set; }
+        public List<int> UserIds { get; set; } = [];
+    }
+
+    private sealed class ProjectUpdateDto
+    {
+        public string Title { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public DateTime StartDate { get; set; }
+        public DateTime Deadline { get; set; }
+        public List<int> UserIds { get; set; } = [];
     }
 
     private sealed class ProjectDto

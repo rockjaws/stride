@@ -21,6 +21,7 @@ public class ProjectRepository : IProjectRepository
             .AsSplitQuery()
             .Include(p => p.Tasks)
             .ThenInclude(p => p.Users)
+            .Include(p => p.Users)
             .Include(p => p.ChatChannels)
             .ToListAsync();
     }
@@ -31,6 +32,7 @@ public class ProjectRepository : IProjectRepository
             .Projects.AsSplitQuery()
             .Include(p => p.Tasks)
             .ThenInclude(p => p.Users)
+            .Include(p => p.Users)
             .Include(p => p.ChatChannels)
             .Where(p => p.Users.Any(u => u.Id == userId))
             .ToListAsync();

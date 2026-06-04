@@ -7,6 +7,7 @@ public interface IProjectService
     Task<List<Project>> GetProjectsAsync();
     Task<List<Project>> GetProjectsAsync(int userId);
     Task<Project> CreateProjectAsync(Project project, int userId);
+    Task<Project> UpdateProjectAsync(Project project);
     Task<ChatChannel> CreateChannelAsync(int projectId, string name);
     Task DeleteProjectAsync(int id);
     Task DeleteChannelAsync(int id, int projectId);
