@@ -78,7 +78,7 @@ public class MainViewModel : ObservableObject
         CurrentView = DashboardViewModel;
 
         ChangeViewCommand = new ChangeViewCommand(_logger, this);
-        CreateNewProjectCommand = new CreateNewProjectCommand(_logger, CreateProjectAsync);
+        CreateNewProjectCommand = new CreateNewProjectCommand(_logger, _userService, CreateProjectAsync);
 
         _notificationTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(5) };
         // DispatcherTimer runs on the UI thread, so toast bindings can be updated directly.

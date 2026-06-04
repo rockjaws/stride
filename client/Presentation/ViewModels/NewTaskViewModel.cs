@@ -1,3 +1,5 @@
+using System.Collections.ObjectModel;
+
 using client.Application.Interfaces;
 using client.Domain.Enum;
 using client.Domain.Models;
@@ -8,12 +10,21 @@ namespace client.Presentation.ViewModels
     public class NewTaskViewModel : ObservableObject
     {
         private readonly ILogger _logger;
+        private readonly IUserService _userService;
+        private readonly int _projectId;
         private string _title = string.Empty;
         private string _description = string.Empty;
         private DateTime _startDate = DateTime.Today;
         private DateTime _deadline = DateTime.Today.AddDays(7);
         private TaskProgress _progress = TaskProgress.Backlog;
         private TaskPriority _priority = TaskPriority.Normal;
+        private ObservableCollection<AssignableMember> _assignableMembers = [];
+
+        public ObservableCollection<AssignableMember> AssignableMembers
+        {
+            get => _assignableMembers;
+            set => SetProperty(ref _assignableMembers, value);
+        }
 
         public string Title
         {
@@ -55,9 +66,22 @@ namespace client.Presentation.ViewModels
 
         public TaskPriority[] PriorityOptions { get; } = Enum.GetValues<TaskPriority>();
 
-        public NewTaskViewModel(ILogger logger)
+        public NewTaskViewModel(ILogger logger, IUserService userService, int projectId)
         {
             _logger = logger;
+            _userService = userService;
+            _projectId = projectId;
+            _ = GetUsersAsync();
+        }
+
+        private async Task GetUsersAsync()
+        {
+            var users = await _userService.GetUsersAsync(_projectId);
+            _logger.Log(LogLevel.INFO, $"Got {users.Count} users for new task assignment");
+
+            AssignableMembers = new ObservableCollection<AssignableMember>(
+                users.Select(u => new AssignableMember(u, false))
+            );
         }
 
         public ProjectTask CreateProjectTask(int projectId)
@@ -74,6 +98,11 @@ namespace client.Presentation.ViewModels
                 _priority,
                 projectId
             );
+
+            task.UsersAssigned = AssignableMembers
+                .Where(member => member.IsAssigned)
+                .Select(member => member.User)
+                .ToList();
 
             return task;
         }
