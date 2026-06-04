@@ -28,7 +28,10 @@ public class ShowSelectedTaskCommand : IUndoableCommand
     public async void Execute(object? param)
     {
         if (!CanExecute(param))
+        {
+            _logger.Log(client.Domain.Enum.LogLevel.WARNING, "ShowSelectedTaskCommand cannot execute.");
             return;
+        }
 
         var task = (ProjectTask)param!;
         var vm = new SelectedTaskViewModel(_logger, task, _userService);
@@ -60,7 +63,10 @@ public class ShowSelectedTaskCommand : IUndoableCommand
                     $"Failed To Save Task Changes: {ex.Message}"
                 );
             }
+            return;
         }
+
+        _logger.Log(client.Domain.Enum.LogLevel.INFO, $"Task details dialog cancelled for task {task.Id}.");
     }
 
     public void Undo() { }

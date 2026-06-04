@@ -83,15 +83,20 @@ public class MainViewModel : ObservableObject
         _notificationTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(5) };
         // DispatcherTimer runs on the UI thread, so toast bindings can be updated directly.
         _notificationTimer.Tick += async (_, _) => await CheckNotificationsAsync();
+        _logger.Log(LogLevel.INFO, "MainViewModel initialized.");
     }
 
 
     public void StartNotificationPolling()
     {
         if (_notificationTimer.IsEnabled)
+        {
+            _logger.Log(LogLevel.INFO, "Notification polling already running.");
             return;
+        }
 
         _notificationTimer.Start();
+        _logger.Log(LogLevel.INFO, "Notification polling started.");
         // Run once immediately so unread notifications are not delayed until the first timer tick.
         _ = CheckNotificationsAsync();
     }
@@ -99,6 +104,7 @@ public class MainViewModel : ObservableObject
     public void SetCurrentView(object viewModel)
     {
         CurrentView = viewModel;
+        _logger.Log(LogLevel.INFO, $"Current view set to {viewModel.GetType().Name}.");
 
         // Reload when opening the Tasks tab so edits made elsewhere are picked up.
         if (ReferenceEquals(viewModel, TaskViewModel))
@@ -107,9 +113,11 @@ public class MainViewModel : ObservableObject
 
     private async Task CreateProjectAsync(Project project)
     {
+        _logger.Log(LogLevel.INFO, $"MainViewModel creating project: {project.Title}");
         await ProjectViewModel.CreateProjectAsync(project);
         ChatViewModel.AddProject(ProjectViewModel.ListOfProjects.Last());
         CurrentView = ProjectViewModel;
+        _logger.Log(LogLevel.INFO, "Created project added to chat view and project view selected.");
     }
 
     private async Task CheckNotificationsAsync()
@@ -149,6 +157,7 @@ public class MainViewModel : ObservableObject
     {
         ToastText = text;
         IsToastVisible = true;
+        _logger.Log(LogLevel.INFO, $"Showing notification toast: {text}");
 
         // Keep the toast simple for now; future queueing can build on this display delay.
         await Task.Delay(TimeSpan.FromSeconds(4));

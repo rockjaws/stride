@@ -33,6 +33,7 @@ public class DeleteChannelCommand : IUndoableCommand
         {
             try
             {
+                _logger.Log(LogLevel.INFO, $"DeleteChannelCommand requested for channel {channel.Id}.");
                 await _deleteChannel(channel);
             }
             catch (Exception ex)
@@ -42,7 +43,10 @@ public class DeleteChannelCommand : IUndoableCommand
                     $"Failed to execute DeleteChannelCommand: {ex.Message}"
                 );
             }
+            return;
         }
+
+        _logger.Log(LogLevel.WARNING, "DeleteChannelCommand executed without a channel.");
     }
 
     public bool CanExecute(object? parameter)

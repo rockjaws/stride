@@ -28,11 +28,17 @@ public class EditProjectCommand : IUndoableCommand
     public async void Execute(object? param)
     {
         if (!CanExecute(param))
+        {
+            _logger.Log(client.Domain.Enum.LogLevel.WARNING, "EditProjectCommand cannot execute.");
             return;
+        }
 
         var project = _getProject();
         if (project == null)
+        {
+            _logger.Log(client.Domain.Enum.LogLevel.WARNING, "EditProjectCommand could not resolve a project.");
             return;
+        }
 
         var vm = new EditProjectViewModel(_logger, project, _userService);
         var window = new EditProjectWindow { DataContext = vm };
@@ -54,7 +60,10 @@ public class EditProjectCommand : IUndoableCommand
                     $"Failed To Save Project Changes: {ex.Message}"
                 );
             }
+            return;
         }
+
+        _logger.Log(client.Domain.Enum.LogLevel.INFO, $"Edit project dialog cancelled for project {project.Id}.");
     }
 
     public void Undo() { }

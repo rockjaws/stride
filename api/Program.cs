@@ -3,9 +3,12 @@ using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 using api.Data;
+using api.Infrastructure.Logging;
 using api.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
+var logFilePath = FileLoggerProvider.GetDefaultLogFilePath();
+builder.Logging.AddProvider(new FileLoggerProvider(logFilePath));
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -25,6 +28,7 @@ builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 
 var app = builder.Build();
+app.Logger.LogInformation("API starting. Log file: {LogFilePath}", logFilePath);
 
 // Make local startup self-contained: create the shared SQLite folder and apply pending migrations.
 using (var scope = app.Services.CreateScope())
@@ -43,6 +47,7 @@ using (var scope = app.Services.CreateScope())
 
         // 2. Apply pending migrations (this will also create the stride.db file if missing)
         context.Database.Migrate();
+        app.Logger.LogInformation("Database migration check completed.");
     }
     catch (Exception ex)
     {
