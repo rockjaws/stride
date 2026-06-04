@@ -15,12 +15,16 @@ public class ProjectViewModel : ObservableObject, IDisposable
     private readonly IProjectService _projectService;
     private readonly ITaskService _taskService;
     private readonly IUserService _userService;
+    private readonly INotificationService _notificationService;
+
     private Project? _selectedProject;
     private ProjectTask? _selectedTask;
     private ObservableCollection<ProjectTask> _backlogTasks = [];
     private ObservableCollection<ProjectTask> _inProgressTasks = [];
     private ObservableCollection<ProjectTask> _inReviewTasks = [];
     private ObservableCollection<ProjectTask> _finishedTasks = [];
+    private ObservableCollection<Notification> _projectFeed = [];
+
     private bool _isUpdatingGlobalState;
 
     public ObservableCollection<ProjectTask> BacklogTasks
@@ -47,6 +51,12 @@ public class ProjectViewModel : ObservableObject, IDisposable
         set => SetProperty(ref _finishedTasks, value);
     }
 
+    public ObservableCollection<Notification> ProjectFeed
+    {
+        get => _projectFeed;
+        set => SetProperty(ref _projectFeed, value);
+    }
+
     public Project? SelectedProject
     {
         get => _selectedProject;
@@ -55,14 +65,21 @@ public class ProjectViewModel : ObservableObject, IDisposable
             SetProperty(ref _selectedProject, value);
             CreateNewTaskCommand.RaiseCanExecuteChanged();
             ArchiveProjectCommand.RaiseCanExecuteChanged();
-            // The board columns are derived from the selected project's task list.
+
             ClearTaskColumns();
+            ProjectFeed.Clear();
 
             if (_selectedProject == null)
                 return;
 
             _logger.Log(LogLevel.INFO, $"New Project Selected: {_selectedProject.Title}");
+
             LoadTasks(_selectedProject);
+
+            if (_selectedProject.Id is int projectId)
+            {
+                _ = LoadProjectFeedAsync(projectId);
+            }
         }
     }
 
@@ -84,13 +101,16 @@ public class ProjectViewModel : ObservableObject, IDisposable
         ILogger logger,
         IProjectService projectService,
         ITaskService taskService,
-        IUserService userService
+        IUserService userService,
+        INotificationService notificationService
     )
     {
         _logger = logger;
         _projectService = projectService;
         _taskService = taskService;
         _userService = userService;
+        _notificationService = notificationService;
+
         ListOfProjects = [];
         BacklogTasks = [];
         InProgressTasks = [];
@@ -117,6 +137,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
 
         _taskService.TasksChanged += OnGlobalStateChange;
         _projectService.ProjectsChanged += OnGlobalStateChange;
+        _notificationService.NotificationsChanged += OnGlobalStateChange;
 
         _ = GetProjectsAsync();
     }
@@ -392,19 +413,13 @@ public class ProjectViewModel : ObservableObject, IDisposable
 
         try
         {
-            int previousIndex = SelectedProject != null ? ListOfProjects.IndexOf(SelectedProject) : -1;
+            int? selectedProjectId = SelectedProject?.Id;
 
             await GetProjectsAsync();
 
-            if (previousIndex >= 0 && previousIndex < ListOfProjects.Count)
-            {
-                SelectedProject = ListOfProjects[previousIndex];
-            }
-            else
-            {
-                SelectedProject = null;
-                ClearTaskColumns();
-            }
+            SelectedProject = selectedProjectId is null
+                ? null
+                : ListOfProjects.FirstOrDefault(p => p.Id == selectedProjectId);
         }
         catch (Exception ex)
         {
@@ -420,6 +435,24 @@ public class ProjectViewModel : ObservableObject, IDisposable
     {
         _taskService.TasksChanged -= OnGlobalStateChange;
         _projectService.ProjectsChanged -= OnGlobalStateChange;
+        _notificationService.NotificationsChanged -= OnGlobalStateChange;
         GC.SuppressFinalize(this);
+    }
+
+    public async Task LoadProjectFeedAsync(int projectId)
+    {
+        try
+        {
+            var feedItems = await _notificationService.GetProjectFeedAsync(projectId, _userService.Id);
+            ProjectFeed.Clear();
+            foreach (var item in feedItems)
+            {
+                ProjectFeed.Add(item);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(LogLevel.ERROR, $"Failed to load project feed: {ex.Message}");
+        }
     }
 }

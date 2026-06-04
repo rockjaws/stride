@@ -14,12 +14,19 @@ public class ProjectTasksController : ControllerBase
     private readonly ITaskRepository _repository;
     private readonly INotificationRepository _notificationRepository;
     private readonly IUserRepository _userRepository;
+    private readonly IProjectRepository _projectRepository;
 
-    public ProjectTasksController(ITaskRepository repository, INotificationRepository notificationRepository, IUserRepository userRepository)
+    public ProjectTasksController(
+        ITaskRepository repository,
+        INotificationRepository notificationRepository,
+        IUserRepository userRepository,
+        IProjectRepository projectRepository
+    )
     {
         _repository = repository;
         _notificationRepository = notificationRepository;
         _userRepository = userRepository;
+        _projectRepository = projectRepository;
     }
 
     [HttpGet]
@@ -44,7 +51,6 @@ public class ProjectTasksController : ControllerBase
         }
 
         var dtos = projectTask.ToDto();
-
         return Ok(dtos);
     }
 
@@ -63,6 +69,8 @@ public class ProjectTasksController : ControllerBase
         await _repository.AddTaskAsync(projectTask);
         await _repository.SaveChangesAsync();
 
+        await LogProjectActivityAsync(projectTask.ProjectId, $"Task '{projectTask.Title}' was added to the backlog.", projectTask.Id);
+
         return CreatedAtAction(nameof(GetProjectTask), new { id = projectTask.Id }, projectTask.ToDto());
     }
 
@@ -74,6 +82,10 @@ public class ProjectTasksController : ControllerBase
         {
             return NotFound();
         }
+
+        // Track state before applying mutations to detect changes cleanly
+        var oldProgress = projectTask.Progress;
+        var oldPriority = projectTask.Priority;
 
         projectTask.Title = dto.Title;
         projectTask.Description = dto.Description;
@@ -94,7 +106,6 @@ public class ProjectTasksController : ControllerBase
 
         await _repository.UpdateTaskAsync(projectTask);
 
-        // Notify every assigned user in the same unit of work as the task update.
         foreach (var user in projectTask.Users)
         {
             await _notificationRepository.AddNotificationAsync(new Notification
@@ -107,8 +118,16 @@ public class ProjectTasksController : ControllerBase
             });
         }
 
-        await _repository.SaveChangesAsync();
+        if (oldProgress != projectTask.Progress)
+        {
+            await LogProjectActivityAsync(projectTask.ProjectId, $"Task '{projectTask.Title}' was moved to {projectTask.Progress}.", projectTask.Id);
+        }
 
+        if (oldPriority != projectTask.Priority)
+        {
+            await LogProjectActivityAsync(projectTask.ProjectId, $"Task '{projectTask.Title}' priority was changed to {projectTask.Priority}.", projectTask.Id);
+        }
+        await _repository.SaveChangesAsync();
         return NoContent();
     }
 
@@ -121,9 +140,34 @@ public class ProjectTasksController : ControllerBase
             return NotFound();
         }
 
+        int projectId = projectTask.ProjectId;
+        string taskTitle = projectTask.Title;
+
         await _repository.DeleteTaskAsync(projectTask);
         await _repository.SaveChangesAsync();
 
+        await LogProjectActivityAsync(projectId, $"Task '{taskTitle}' was removed.", null);
+
         return NoContent();
+    }
+
+    private async Task LogProjectActivityAsync(int projectId, string text, int? taskId)
+    {
+        var project = await _projectRepository.GetProjectByIdAsync(projectId);
+        if (project == null || project.Users == null) return;
+
+        foreach (var user in project.Users)
+        {
+            await _notificationRepository.AddNotificationAsync(new Notification
+            {
+                Text = text,
+                ProjectId = projectId,
+                UserId = user.Id,
+                TaskId = taskId,
+                Time = DateTime.Now,
+                IsRead = true // Your hack: true skips toast alerts but populates the persistent feed timelines!
+            });
+        }
+        await _notificationRepository.SaveChangesAsync();
     }
 }
