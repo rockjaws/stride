@@ -33,14 +33,16 @@ public partial class App : System.Windows.Application
             logger,
             projectService,
             taskService,
-            userService
+            userService,
+            notificationService
         );
 
         var projectViewModel = new ProjectViewModel(
             logger,
             projectService,
             taskService,
-            userService
+            userService,
+            notificationService
         );
 
         var taskViewModel = new TaskViewModel(logger, taskService, userService);

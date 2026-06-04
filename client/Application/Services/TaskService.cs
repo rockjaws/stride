@@ -133,7 +133,6 @@ public class TaskService : ITaskService
           dto.ProjectId
         )
         {
-            // ADD THIS HERE TOO:
             UsersAssigned = dto.Users.Select(u => new User(u.Id, u.FirstName, u.LastName, u.WorkMail)).ToList()
         };
     }

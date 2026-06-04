@@ -6,4 +6,7 @@ public interface INotificationService
 {
     Task<List<Notification>> GetNotificationsAsync(int userId);
     Task MarkAsReadAsync(int userId, int notificationId);
+    Task<List<Notification>> GetDashboardFeedAsync(int userId);
+    Task<List<Notification>> GetProjectFeedAsync(int projectId, int userId);
+    event EventHandler NotificationsChanged;
 }

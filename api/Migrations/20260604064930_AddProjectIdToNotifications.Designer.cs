@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using api.Data;
 
@@ -10,9 +11,11 @@ using api.Data;
 namespace api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260604064930_AddProjectIdToNotifications")]
+    partial class AddProjectIdToNotifications
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.7");
@@ -178,7 +181,7 @@ namespace api.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("ProjectId")
+                    b.Property<int?>("ProjectId")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("StartDate")
@@ -299,9 +302,7 @@ namespace api.Migrations
                 {
                     b.HasOne("api.Models.Project", "Project")
                         .WithMany("Tasks")
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProjectId");
 
                     b.Navigation("Project");
                 });

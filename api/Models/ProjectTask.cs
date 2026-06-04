@@ -12,7 +12,7 @@ public class ProjectTask
     public TaskProgress Progress { get; set; } = TaskProgress.Backlog;
     public TaskPriority Priority { get; set; } = TaskPriority.Normal;
 
-    public int? ProjectId { get; set; }
+    public int ProjectId { get; set; }
     public Project? Project { get; set; }
     public List<User> Users { get; set; } = new();
 }

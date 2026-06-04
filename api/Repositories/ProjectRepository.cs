@@ -38,7 +38,7 @@ public class ProjectRepository : IProjectRepository
             .ToListAsync();
     }
 
-    public async Task<Project?> GetProjectByIdAsync(int id)
+    public async Task<Project?> GetProjectByIdAsync(int? id)
     {
         return await _context
             .Projects.AsSplitQuery()

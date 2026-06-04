@@ -143,31 +143,35 @@
                            Foreground="#0F172A"
                            DockPanel.Dock="Top"
                            Margin="0,0,0,20"/>
-                <StackPanel>
-                    <Grid Margin="0,0,0,16">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Border Width="8" Height="8" CornerRadius="4" Background="#22C55E" Margin="0,5,12,0" VerticalAlignment="Top"/>
-                        <StackPanel Grid.Column="1">
-                            <TextBlock Text="Username completed 'Login API'" FontSize="13" FontWeight="SemiBold" Foreground="#334155" TextWrapping="Wrap"/>
-                            <TextBlock Text="10m ago" FontSize="11" Foreground="#94A3B8" Margin="0,2,0,0"/>
-                        </StackPanel>
-                    </Grid>
+                <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="400">
+                    <ItemsControl ItemsSource="{Binding Notifications}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="#FFEAEAEA" BorderThickness="0,0,0,1" Padding="8,6">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
 
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Border Width="8" Height="8" CornerRadius="4" Background="#3B82F6" Margin="0,5,12,0" VerticalAlignment="Top"/>
-                        <StackPanel Grid.Column="1">
-                            <TextBlock Text="Username commented on #102" FontSize="13" FontWeight="SemiBold" Foreground="#334155" TextWrapping="Wrap"/>
-                            <TextBlock Text="1h ago" FontSize="11" Foreground="#94A3B8" Margin="0,2,0,0"/>
-                        </StackPanel>
-                    </Grid>
-                </StackPanel>
+                                        <TextBlock Grid.Column="0" 
+                                   Text="{Binding Text}" 
+                                   TextWrapping="Wrap" 
+                                   Foreground="#FF333333" 
+                                   FontSize="12"/>
+
+                                        <TextBlock Grid.Column="1" 
+                                   Text="{Binding SentAt, StringFormat=\{0:HH:mm\}}" 
+                                   Foreground="#FF888888" 
+                                   FontSize="11" 
+                                   Margin="12,0,0,0" 
+                                   VerticalAlignment="Center"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
             </DockPanel>
         </Border>
 

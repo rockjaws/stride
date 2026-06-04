@@ -411,96 +411,50 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <DockPanel Margin="0 0 0 10">
-                    <TextBlock Text="Project Feed"
-                               FontSize="16"
-                               FontWeight="SemiBold"
-                               Foreground="#0F172A"
-                               VerticalAlignment="Center"/>
-                    <TextBlock Text="Recent changes in the selected project"
-                               Foreground="#64748B"
-                               HorizontalAlignment="Right"
-                               DockPanel.Dock="Right"
-                               VerticalAlignment="Center"/>
+                <DockPanel LastChildFill="True">
+
+                    <TextBlock DockPanel.Dock="Top" 
+               Text="Project Feed" 
+               FontSize="16" 
+               FontWeight="Bold" 
+               Margin="10,10,10,5" 
+               Foreground="#FF333333"/>
+
+                    <Border DockPanel.Dock="Top" 
+            Height="1" 
+            Background="#FFE0E0E0" 
+            Margin="10,0,10,10"/>
+
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{Binding ProjectFeed}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="#FFEAEAEA" BorderThickness="0,0,0,1" Padding="8,6">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBlock Grid.Column="0" 
+                                       Text="{Binding Text}" 
+                                       TextWrapping="Wrap" 
+                                       Foreground="#FF333333" 
+                                       FontSize="12"/>
+
+                                            <TextBlock Grid.Column="1" 
+                                       Text="{Binding SentAt, StringFormat=\{0:HH:mm\}}" 
+                                       Foreground="#FF888888" 
+                                       FontSize="11" 
+                                       Margin="12,0,0,0" 
+                                       VerticalAlignment="Center"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
                 </DockPanel>
-
-                <ScrollViewer Grid.Row="1"
-                              VerticalScrollBarVisibility="Auto">
-                    <StackPanel>
-                        <Border BorderBrush="#E2E8F0"
-                                BorderThickness="0 0 0 1"
-                                Padding="0 8">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="110"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="140"/>
-                                </Grid.ColumnDefinitions>
-
-                                <TextBlock Grid.Column="0"
-                                           Text="Task updated"
-                                           Foreground="#0F172A"
-                                           FontWeight="SemiBold"/>
-                                <TextBlock Grid.Column="1"
-                                           Text="A task title, priority, progress, or deadline changed."
-                                           Foreground="#334155"
-                                           TextTrimming="CharacterEllipsis"/>
-                                <TextBlock Grid.Column="2"
-                                           Text="Just now"
-                                           Foreground="#64748B"
-                                           HorizontalAlignment="Right"/>
-                            </Grid>
-                        </Border>
-
-                        <Border BorderBrush="#E2E8F0"
-                                BorderThickness="0 0 0 1"
-                                Padding="0 8">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="110"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="140"/>
-                                </Grid.ColumnDefinitions>
-
-                                <TextBlock Grid.Column="0"
-                                           Text="Task moved"
-                                           Foreground="#0F172A"
-                                           FontWeight="SemiBold"/>
-                                <TextBlock Grid.Column="1"
-                                           Text="A task moved between kanban columns."
-                                           Foreground="#334155"
-                                           TextTrimming="CharacterEllipsis"/>
-                                <TextBlock Grid.Column="2"
-                                           Text="Pending data"
-                                           Foreground="#64748B"
-                                           HorizontalAlignment="Right"/>
-                            </Grid>
-                        </Border>
-
-                        <Border Padding="0 8">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="110"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="140"/>
-                                </Grid.ColumnDefinitions>
-
-                                <TextBlock Grid.Column="0"
-                                           Text="Task deleted"
-                                           Foreground="#0F172A"
-                                           FontWeight="SemiBold"/>
-                                <TextBlock Grid.Column="1"
-                                           Text="Deleted tasks will appear here once feed data is wired."
-                                           Foreground="#334155"
-                                           TextTrimming="CharacterEllipsis"/>
-                                <TextBlock Grid.Column="2"
-                                           Text="Pending data"
-                                           Foreground="#64748B"
-                                           HorizontalAlignment="Right"/>
-                            </Grid>
-                        </Border>
-                    </StackPanel>
-                </ScrollViewer>
             </Grid>
         </Border>
 

@@ -1,6 +1,8 @@
 using api.DTOs;
 using api.Models;
 using api.Repositories;
+using api.Extensions;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
@@ -10,14 +12,17 @@ namespace api.Controllers;
 public class UsersController : ControllerBase
 {
     private readonly IUserRepository _repository;
+    private readonly IProjectRepository _projectRepository;
     private readonly INotificationRepository _notificationRepository;
 
     public UsersController(
         IUserRepository repository,
+        IProjectRepository projectRepository,
         INotificationRepository notificationRepository
     )
     {
         _repository = repository;
+        _projectRepository = projectRepository;
         _notificationRepository = notificationRepository;
     }
 
@@ -166,5 +171,18 @@ public class UsersController : ControllerBase
         await _repository.SaveChangesAsync();
 
         return NoContent();
+    }
+
+    [HttpGet("{userId}/project-feeds")]
+    public async Task<ActionResult> GetUserDashboardFeed(int userId)
+    {
+        var userProjects = await _projectRepository.GetProjectsByUserIdAsync(userId);
+        var projectIds = userProjects.Select(p => p.Id).ToList();
+
+        if (projectIds.Count == 0) return Ok(new List<NotificationDto>());
+
+        var notifications = await _notificationRepository.GetNotificationsByProjectIdsAsync(projectIds);
+        var filteredNotifications = notifications.Where(n => n.UserId == userId);
+        return Ok(filteredNotifications.Select(n => n.ToDto()));
     }
 }

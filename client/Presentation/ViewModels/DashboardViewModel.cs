@@ -2,7 +2,6 @@ using System.Collections.ObjectModel;
 
 using client.Application.Interfaces;
 using client.Domain.Enum;
-using client.Presentation.Algorithms;
 using client.Domain.Models;
 using client.Presentation.Common;
 using client.Presentation.Strategies;
@@ -15,6 +14,7 @@ public class DashboardViewModel : ObservableObject, IDisposable
     private readonly IProjectService _projectService;
     private readonly ITaskService _taskService;
     private readonly IUserService _userService;
+    private readonly INotificationService _notificationService;
 
     private ObservableCollection<ProjectTask> _upcomingTasks = [];
     private List<ITask> _tasks = [];
@@ -67,17 +67,19 @@ public class DashboardViewModel : ObservableObject, IDisposable
         get => _finishedCount;
         set => SetProperty(ref _finishedCount, value);
     }
-    public DashboardViewModel(ILogger logger, IProjectService projectService, ITaskService taskService, IUserService userService)
+    public DashboardViewModel(ILogger logger, IProjectService projectService, ITaskService taskService, IUserService userService, INotificationService notificationService)
     {
         _logger = logger;
         _projectService = projectService;
         _taskService = taskService;
         _userService = userService;
+        _notificationService = notificationService;
 
         _sortingStrategy = new SortByDeadline();
 
         _projectService.ProjectsChanged += OnGlobalStateChange;
         _taskService.TasksChanged += OnGlobalStateChange;
+        _notificationService.NotificationsChanged += OnGlobalStateChange;
 
         _ = GetDashboardMetricsAsync();
     }
@@ -90,22 +92,27 @@ public class DashboardViewModel : ObservableObject, IDisposable
             _logger.Log(LogLevel.INFO, $"Fetching dashboard metrics for user: {_userService.Id}");
 
             var currentUserId = _userService.Id;
+
+            var feedItems = await _notificationService.GetDashboardFeedAsync(currentUserId);
+            Notifications.Clear();
+            foreach (var feedItem in feedItems)
+            {
+                Notifications.Add(feedItem);
+            }
+
             var allProjects = await _projectService.GetProjectsAsync(_userService.Id);
 
-            // 1. Reset counters
             int backlogCount = 0;
             int inProgressCount = 0;
             int inReviewCount = 0;
             int finishedCount = 0;
 
-            // 2. Prepare target collections (Pre-allocating objects we actually need)
             var activeTasks = new List<ITask>();
             var deadlineDates = new HashSet<DateTime>();
 
-            // 3. Single-pass iteration across active projects and tasks
             foreach (var project in allProjects)
             {
-                if (project.IsArchived) continue; // Skip archived projects efficiently
+                if (project.IsArchived) continue;
 
                 foreach (var task in project.Tasks)
                 {
@@ -113,7 +120,6 @@ public class DashboardViewModel : ObservableObject, IDisposable
                     {
                         continue;
                     }
-                    // Increment counters based on progress
                     switch (task.Progress)
                     {
                         case TaskProgress.Backlog: backlogCount++; break;
@@ -122,7 +128,6 @@ public class DashboardViewModel : ObservableObject, IDisposable
                         case TaskProgress.Done: finishedCount++; break;
                     }
 
-                    // Gather incomplete task data
                     if (task.Progress != TaskProgress.Done)
                     {
                         activeTasks.Add(task);
@@ -167,7 +172,7 @@ public class DashboardViewModel : ObservableObject, IDisposable
 
     private void SortTasks()
     {
-        if (_tasks == null || !_tasks.Any()) return;
+        if (_tasks == null || _tasks.Count == 0) return;
 
         // Sorting strategies operate on ITask, then the UI list is rebuilt from the sorted result.
         SortingStrategy.SortTasks(_tasks);
@@ -183,5 +188,6 @@ public class DashboardViewModel : ObservableObject, IDisposable
     {
         _taskService.TasksChanged -= OnGlobalStateChange;
         _projectService.ProjectsChanged -= OnGlobalStateChange;
+        _notificationService.NotificationsChanged -= OnGlobalStateChange;
     }
 }
