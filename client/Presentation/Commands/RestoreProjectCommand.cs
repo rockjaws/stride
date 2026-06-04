@@ -1,4 +1,5 @@
 using client.Application.Interfaces;
+using client.Domain.Enum;
 using client.Domain.Models;
 
 namespace client.Presentation.Commands;
@@ -25,7 +26,13 @@ public class RestoreProjectCommand : IUndoableCommand
         var project = parameter as Project ?? _getProject();
 
         if (project != null)
+        {
+            _logger.Log(LogLevel.INFO, $"RestoreProjectCommand requested for project {project.Id}.");
             await _restoreAsync(project);
+            return;
+        }
+
+        _logger.Log(LogLevel.WARNING, "RestoreProjectCommand executed without a project.");
     }
 
     public bool CanExecute(object? parameter)

@@ -31,7 +31,10 @@ public class CreateNewTaskCommand : IUndoableCommand
     public async void Execute(object? param)
     {
         if (!CanExecute(param))
+        {
+            _logger.Log(client.Domain.Enum.LogLevel.WARNING, "CreateNewTaskCommand cannot execute.");
             return;
+        }
 
         try
         {
@@ -49,7 +52,10 @@ public class CreateNewTaskCommand : IUndoableCommand
                 // The command owns window flow; the view model/service owns the actual create behavior.
                 ProjectTask task = vm.CreateProjectTask(projectId);
                 await _createTaskAsync(task);
+                return;
             }
+
+            _logger.Log(client.Domain.Enum.LogLevel.INFO, "Create task dialog cancelled.");
         }
         catch (Exception ex)
         {

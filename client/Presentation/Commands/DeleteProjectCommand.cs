@@ -29,16 +29,20 @@ public class DeleteProjectCommand : IUndoableCommand
         {
             try
             {
+                _logger.Log(LogLevel.INFO, $"DeleteProjectCommand requested for project {project.Id}.");
                 await _deleteProject(project);
             }
             catch (Exception ex)
             {
                 _logger.Log(
                     LogLevel.ERROR,
-                    $"Failed to execute DeleteChannelCommand: {ex.Message}"
+                    $"Failed to execute DeleteProjectCommand: {ex.Message}"
                 );
             }
+            return;
         }
+
+        _logger.Log(LogLevel.WARNING, "DeleteProjectCommand executed without a project.");
     }
 
     public bool CanExecute(object? parameter) => _getProject != null;

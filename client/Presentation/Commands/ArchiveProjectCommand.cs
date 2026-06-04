@@ -1,4 +1,5 @@
 using client.Application.Interfaces;
+using client.Domain.Enum;
 using client.Domain.Models;
 
 namespace client.Presentation.Commands;
@@ -23,12 +24,19 @@ public class ArchiveProjectCommand : IUndoableCommand
     public async void Execute(object? param)
     {
         if (!CanExecute(param))
+        {
+            _logger.Log(LogLevel.WARNING, "ArchiveProjectCommand executed without a selected project.");
             return;
+        }
 
         var project = _getProject();
         if (project == null)
+        {
+            _logger.Log(LogLevel.WARNING, "ArchiveProjectCommand could not resolve a project.");
             return;
+        }
 
+        _logger.Log(LogLevel.INFO, $"ArchiveProjectCommand requested for project {project.Id}.");
         await _archiveAsync(project);
     }
 

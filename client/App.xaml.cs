@@ -14,12 +14,19 @@ namespace client;
 /// </summary>
 public partial class App : System.Windows.Application
 {
+    private ILogger? _logger;
+
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
 
         // Services
         ILogger logger = new Logger();
+        _logger = logger;
+        DispatcherUnhandledException += OnDispatcherUnhandledException;
+        AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
+        TaskScheduler.UnobservedTaskException += OnUnobservedTaskException;
+
         IProjectService projectService = new ProjectService();
         ITaskService taskService = new TaskService();
         INotificationService notificationService = new NotificationService();
@@ -70,6 +77,31 @@ public partial class App : System.Windows.Application
 
         MainWindow = mainWindow;
         mainWindow.Show();
+        logger.Log(LogLevel.INFO, "Main window shown.");
         viewModel.StartNotificationPolling();
+    }
+
+    protected override void OnExit(ExitEventArgs e)
+    {
+        _logger?.Log(LogLevel.INFO, $"Application exiting with code {e.ApplicationExitCode}.");
+        base.OnExit(e);
+    }
+
+    private void OnDispatcherUnhandledException(
+        object sender,
+        System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e
+    )
+    {
+        _logger?.Log(LogLevel.ERROR, $"Unhandled UI exception: {e.Exception}");
+    }
+
+    private void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+    {
+        _logger?.Log(LogLevel.ERROR, $"Unhandled app-domain exception: {e.ExceptionObject}");
+    }
+
+    private void OnUnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
+    {
+        _logger?.Log(LogLevel.ERROR, $"Unobserved task exception: {e.Exception}");
     }
 }

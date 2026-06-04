@@ -26,7 +26,10 @@ public class CreateChannelCommand : IUndoableCommand
     public async void Execute(object? param)
     {
         if (!CanExecute(param))
+        {
+            _logger.Log(LogLevel.WARNING, "CreateChannelCommand cannot execute without a selected project.");
             return;
+        }
 
         var vm = new NewChatViewModel(_logger);
         var window = new NewChannelWindow { DataContext = vm };
@@ -45,7 +48,10 @@ public class CreateChannelCommand : IUndoableCommand
             {
                 _logger.Log(LogLevel.ERROR, $"Failed to create channel: {ex.Message}");
             }
+            return;
         }
+
+        _logger.Log(LogLevel.INFO, "Create channel dialog cancelled.");
     }
 
     public void Undo() { }

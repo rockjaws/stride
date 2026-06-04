@@ -25,7 +25,10 @@ public class CreateNewProjectCommand : IUndoableCommand
     public async void Execute(object? param)
     {
         if (!CanExecute(param))
+        {
+            _logger.Log(client.Domain.Enum.LogLevel.WARNING, "CreateNewProjectCommand cannot execute.");
             return;
+        }
 
         var vm = new NewProjectViewModel(_logger, _userService);
         // The command handles dialog lifetime; the injected callback handles persistence.
@@ -42,7 +45,10 @@ public class CreateNewProjectCommand : IUndoableCommand
             {
                 _logger.Log(client.Domain.Enum.LogLevel.ERROR, $"Failed To Create Project: {ex.Message}");
             }
+            return;
         }
+
+        _logger.Log(client.Domain.Enum.LogLevel.INFO, "Create project dialog cancelled.");
     }
 
     public void Undo() { }

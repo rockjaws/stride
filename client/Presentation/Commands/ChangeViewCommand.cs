@@ -20,7 +20,10 @@ public class ChangeViewCommand : IUndoableCommand
     public void Execute(object? param)
     {
         if (param is null)
+        {
+            _logger.Log(LogLevel.WARNING, "ChangeViewCommand executed without a target view.");
             return;
+        }
 
         _previousView = _mainViewModel.CurrentView;
         _mainViewModel.SetCurrentView(param);
