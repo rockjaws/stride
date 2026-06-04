@@ -7,14 +7,15 @@ using client.Presentation.Common;
 
 namespace client.Presentation.ViewModels;
 
-public class NewProjectViewModel : ObservableObject
+public class EditProjectViewModel : ObservableObject
 {
     private readonly ILogger _logger;
+    private readonly Project _originalProject;
     private readonly IUserService _userService;
     private string _title = string.Empty;
     private string _description = string.Empty;
     private DateTime _startDate = DateTime.Today;
-    private DateTime _deadline = DateTime.Today.AddDays(14);
+    private DateTime _deadline = DateTime.Today;
     private ObservableCollection<AssignableMember> _assignableMembers = [];
 
     public ObservableCollection<AssignableMember> AssignableMembers
@@ -47,36 +48,46 @@ public class NewProjectViewModel : ObservableObject
         set => SetProperty(ref _deadline, value);
     }
 
-    public NewProjectViewModel(ILogger logger, IUserService userService)
+    public EditProjectViewModel(ILogger logger, Project project, IUserService userService)
     {
         _logger = logger;
+        _originalProject = project;
         _userService = userService;
+        _title = project.Title;
+        _description = project.Description;
+        _startDate = project.StartDate;
+        _deadline = project.Deadline;
         _ = GetUsersAsync();
     }
 
     private async Task GetUsersAsync()
     {
         var users = await _userService.GetUsersAsync();
-        _logger.Log(LogLevel.INFO, $"Got {users.Count} users for new project assignment");
+        _logger.Log(LogLevel.INFO, $"Got {users.Count} users for project assignment");
 
         AssignableMembers = new ObservableCollection<AssignableMember>(
-            users.Select(u => new AssignableMember(u, u.Id == _userService.Id))
+            users.Select(u => new AssignableMember(u, _originalProject))
         );
     }
 
-    public Project CreateProject()
+    public Project? UpdateProject()
     {
-        _logger.Log(LogLevel.INFO, $"Prepared New Project: {_title}");
+        if (_originalProject.Id == null)
+        {
+            _logger.Log(LogLevel.ERROR, "Cannot update a project before it has been saved.");
+            return null;
+        }
 
+        _logger.Log(LogLevel.INFO, $"Prepared Project Update: {_originalProject.Id}");
         return new Project(
-            null,
+            _originalProject.Id,
             _title,
             _description,
             _startDate,
             _deadline,
-            [],
-            false,
-            [],
+            _originalProject.ChatChannels,
+            _originalProject.IsArchived,
+            _originalProject.Tasks,
             AssignableMembers
                 .Where(member => member.IsAssigned)
                 .Select(member => member.User)

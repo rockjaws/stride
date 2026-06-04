@@ -7,4 +7,5 @@ public class ProjectCreateDto
     public DateTime StartDate { get; set; }
     public DateTime Deadline { get; set; }
     public int UserId { get; set; }
+    public List<int>? UserIds { get; set; }
 }

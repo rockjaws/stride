@@ -62,7 +62,10 @@ public class TaskService : ITaskService
           task.Progress,
           task.Priority,
           task.ProjectId
-        );
+        )
+        {
+            UsersAssigned = task.UsersAssigned
+        };
 
         // The create endpoint does not currently accept progress, so persist the full task immediately after creation.
         await UpdateTaskAsync(savedTask);

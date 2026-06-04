@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="Stride"
-        Height="455"
+        Height="540"
         Width="520"
-        MinHeight="455"
+        MinHeight="520"
         MinWidth="480"
         WindowStartupLocation="CenterOwner"
         Focusable="True"
@@ -167,6 +167,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
                     <!-- Title -->
@@ -211,10 +212,52 @@
                     <TextBlock Grid.Row="3" Grid.Column="0"
                                Text="Deadline"
                                Style="{StaticResource FormLabelStyle}"
-                               Margin="0 0 12 0"/>
+                               Margin="0 0 12 12"/>
                     <DatePicker Grid.Row="3" Grid.Column="1"
                                 SelectedDate="{Binding Deadline, Mode=TwoWay}"
-                                Height="36"/>
+                                Height="36"
+                                Margin="0 0 0 12"/>
+
+                    <!-- Assign -->
+                    <TextBlock Grid.Row="4" Grid.Column="0"
+                               Text="Assign"
+                               Style="{StaticResource FormLabelStyle}"
+                               VerticalAlignment="Top"
+                               Margin="0 6 12 0"/>
+                    <Border Grid.Row="4" Grid.Column="1"
+                            BorderBrush="#CBD5E1"
+                            BorderThickness="1"
+                            CornerRadius="6"
+                            Background="#FFFFFF">
+                        <ListBox ItemsSource="{Binding AssignableMembers}"
+                                 BorderThickness="0"
+                                 MaxHeight="120"
+                                 Background="Transparent"
+                                 ScrollViewer.VerticalScrollBarVisibility="Auto">
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="ListBoxItem">
+                                                <ContentPresenter/>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <CheckBox Content="{Binding User.FullName}"
+                                              IsChecked="{Binding IsAssigned, Mode=TwoWay}"
+                                              Foreground="#0F172A"
+                                              FontSize="13"
+                                              Margin="10 6"/>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Border>
 
                 </Grid>
             </Border>

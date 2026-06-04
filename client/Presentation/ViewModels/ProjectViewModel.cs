@@ -55,6 +55,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
             SetProperty(ref _selectedProject, value);
             CreateNewTaskCommand.RaiseCanExecuteChanged();
             ArchiveProjectCommand.RaiseCanExecuteChanged();
+            EditProjectCommand.RaiseCanExecuteChanged();
             // The board columns are derived from the selected project's task list.
             ClearTaskColumns();
 
@@ -80,6 +81,8 @@ public class ProjectViewModel : ObservableObject, IDisposable
 
     public ArchiveProjectCommand ArchiveProjectCommand { get; }
 
+    public EditProjectCommand EditProjectCommand { get; }
+
     public ProjectViewModel(
         ILogger logger,
         IProjectService projectService,
@@ -99,6 +102,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
         // Commands receive callbacks so service calls stay in the view model, not in the command.
         CreateNewTaskCommand = new CreateNewTaskCommand(
             _logger,
+            _userService,
             CreateTaskAsync,
             () => _selectedProject != null,
             () => _selectedProject?.Id
@@ -113,6 +117,12 @@ public class ProjectViewModel : ObservableObject, IDisposable
             _logger,
             () => SelectedProject,
             ArchiveProjectAsync
+        );
+        EditProjectCommand = new EditProjectCommand(
+            _logger,
+            _userService,
+            () => SelectedProject,
+            UpdateProjectAsync
         );
 
         _taskService.TasksChanged += OnGlobalStateChange;
@@ -226,6 +236,36 @@ public class ProjectViewModel : ObservableObject, IDisposable
             project.UnArchive(); // Rollback
             _logger.Log(LogLevel.ERROR, $"Failed To Archive Project {id}: {ex.Message}");
         }
+    }
+
+    public async Task UpdateProjectAsync(Project project)
+    {
+        if (project.Id is not int id)
+            return;
+
+        try
+        {
+            Project savedProject = await _projectService.UpdateProjectAsync(project);
+            ReplaceProject(savedProject);
+            _logger.Log(LogLevel.INFO, $"Updated Project {id}: {savedProject.Title}");
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(LogLevel.ERROR, $"Failed To Update Project {id}: {ex.Message}");
+        }
+    }
+
+    private void ReplaceProject(Project project)
+    {
+        int projectIndex = ListOfProjects
+            .Select((existingProject, index) => new { existingProject, index })
+            .FirstOrDefault(x => x.existingProject.Id == project.Id)
+            ?.index ?? -1;
+
+        if (projectIndex >= 0)
+            ListOfProjects[projectIndex] = project;
+
+        SelectedProject = project;
     }
 
     public async Task DeleteTaskAsync(ProjectTask task)
