@@ -15,6 +15,12 @@ namespace client.Presentation.Views
 
         private void onCreateTask(object sender, RoutedEventArgs e)
         {
+            if (DataContext is NewTaskViewModel viewModel && !viewModel.Validate(out var message))
+            {
+                MessageBox.Show(message, "Missing title", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             DialogResult = true;
         }
 
