@@ -29,8 +29,14 @@ namespace client.Presentation.ViewModels
         public string Title
         {
             get => _title;
-            set => SetProperty(ref _title, value);
+            set
+            {
+                if (SetProperty(ref _title, value))
+                    OnPropertyChanged(nameof(CanCreate));
+            }
         }
+
+        public bool CanCreate => !string.IsNullOrWhiteSpace(_title);
 
         public string Description
         {
@@ -84,13 +90,26 @@ namespace client.Presentation.ViewModels
             );
         }
 
+        public bool Validate(out string validationMessage)
+        {
+            if (string.IsNullOrWhiteSpace(_title))
+            {
+                validationMessage = "Task title is required.";
+                _logger.Log(LogLevel.WARNING, "New task validation failed: title is required.");
+                return false;
+            }
+
+            validationMessage = string.Empty;
+            return true;
+        }
+
         public ProjectTask CreateProjectTask(int projectId)
         {
             _logger.Log(LogLevel.INFO, $"Prepared New Task For Project {projectId}: {_title}");
 
             ProjectTask task = new ProjectTask(
                 null,
-                _title,
+                _title.Trim(),
                 _description,
                 _startDate,
                 _deadline,

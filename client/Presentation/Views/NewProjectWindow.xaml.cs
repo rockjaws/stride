@@ -1,5 +1,7 @@
 using System.Windows;
 
+using client.Presentation.ViewModels;
+
 namespace client.Presentation.Views;
 
 /// <summary>
@@ -14,6 +16,12 @@ public partial class NewProjectWindow : Window
 
     private void onCreateProject(object sender, RoutedEventArgs e)
     {
+        if (DataContext is NewProjectViewModel viewModel && !viewModel.Validate(out var message))
+        {
+            MessageBox.Show(message, "Missing title", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+
         DialogResult = true;
     }
 
