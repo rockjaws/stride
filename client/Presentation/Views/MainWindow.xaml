@@ -157,31 +157,35 @@
 							 GroupName="SideMenu"
 							 Command="{Binding ChangeViewCommand}"
 							 CommandParameter="{Binding DashboardViewModel}"
-							 IsChecked="True"
+							 IsChecked="{Binding IsDashboardSelected, Mode=OneWay}"
 							 Style="{StaticResource NavRadioButtonStyle}"/>
                 <RadioButton x:Name="ProjectButton"
 							 Content="Projects"
 							 GroupName="SideMenu"
 							 Command="{Binding ChangeViewCommand}"
 							 CommandParameter="{Binding ProjectViewModel}"
+                             IsChecked="{Binding IsProjectsSelected, Mode=OneWay}"
 							 Style="{StaticResource NavRadioButtonStyle}"/>
                 <RadioButton x:Name="TaskButton"
 							 Content="Tasks"
 							 GroupName="SideMenu"
 							 Command="{Binding ChangeViewCommand}"
 							 CommandParameter="{Binding TaskViewModel}"
+                             IsChecked="{Binding IsTasksSelected, Mode=OneWay}"
 							 Style="{StaticResource NavRadioButtonStyle}"/>
                 <RadioButton x:Name="ChatButton"
 							 Content="Chats"
 							 GroupName="SideMenu"
 							 Command="{Binding ChangeViewCommand}"
 							 CommandParameter="{Binding ChatViewModel}"
+                             IsChecked="{Binding IsChatsSelected, Mode=OneWay}"
 							 Style="{StaticResource NavRadioButtonStyle}"/>
                 <RadioButton x:Name="ArchiveButton"
 						     Content="Archive"
 						     GroupName="SideMenu"
 						     Command="{Binding ChangeViewCommand}"
 						     CommandParameter="{Binding ArchiveViewModel}"
+                             IsChecked="{Binding IsArchiveSelected, Mode=OneWay}"
 						     Style="{StaticResource NavRadioButtonStyle}"/>
                 </StackPanel>
 

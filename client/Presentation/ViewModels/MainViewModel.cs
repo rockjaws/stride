@@ -14,8 +14,6 @@ public class MainViewModel : ObservableObject
     private readonly ILogger _logger;
     private readonly INotificationService _notificationService;
     private readonly IUserService _userService;
-    private readonly IProjectService _projectService;
-    private readonly ITaskService _taskService;
 
     private readonly DispatcherTimer _notificationTimer;
     private object _currentView;
@@ -47,8 +45,23 @@ public class MainViewModel : ObservableObject
     public object CurrentView
     {
         get => _currentView;
-        set => SetProperty(ref _currentView, value);
+        set
+        {
+            if (SetProperty(ref _currentView, value))
+            {
+                OnPropertyChanged(nameof(IsDashboardSelected));
+                OnPropertyChanged(nameof(IsProjectsSelected));
+                OnPropertyChanged(nameof(IsTasksSelected));
+                OnPropertyChanged(nameof(IsChatsSelected));
+                OnPropertyChanged(nameof(IsArchiveSelected));
+            }
+        }
     }
+    public bool IsDashboardSelected => CurrentView == DashboardViewModel;
+    public bool IsProjectsSelected => CurrentView == ProjectViewModel;
+    public bool IsTasksSelected => CurrentView == TaskViewModel;
+    public bool IsChatsSelected => CurrentView == ChatViewModel;
+    public bool IsArchiveSelected => CurrentView == ArchiveViewModel;
 
     public MainViewModel(
         ILogger logger,
@@ -58,16 +71,12 @@ public class MainViewModel : ObservableObject
         ChatViewModel chatViewModel,
         ArchiveViewModel archiveViewModel,
         INotificationService notificationService,
-        IUserService userService,
-        ITaskService taskService,
-        IProjectService projectService
+        IUserService userService
     )
     {
         _logger = logger;
         _notificationService = notificationService;
         _userService = userService;
-        _taskService = taskService;
-        _projectService = projectService;
 
         DashboardViewModel = dashboardViewModel;
         ProjectViewModel = projectViewModel;
