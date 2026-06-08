@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Nicolai and Oliver
+// =============================================================================
+
 using client.Application.Interfaces;
 using client.Domain.Enum;
 using client.Domain.Models;
@@ -12,6 +16,7 @@ public class CreateChannelCommand : IUndoableCommand
     private readonly Func<ChatChannel, Task> _createChannelAsync;
     private readonly Func<int?> _getProjectId;
 
+    // Author: Nicolai
     public CreateChannelCommand(
         ILogger logger,
         Func<ChatChannel, Task> createChannelAsync,
@@ -23,6 +28,7 @@ public class CreateChannelCommand : IUndoableCommand
         _getProjectId = getProjectId;
     }
 
+    // Author: Nicolai and Oliver
     public async void Execute(object? param)
     {
         if (!CanExecute(param))
@@ -54,12 +60,15 @@ public class CreateChannelCommand : IUndoableCommand
         _logger.Log(LogLevel.INFO, "Create channel dialog cancelled.");
     }
 
+    // Author: Nicolai
     public void Undo() { }
 
+    // Author: Nicolai
     public bool CanExecute(object? param) => _getProjectId() != null;
 
     public event EventHandler? CanExecuteChanged;
 
+    // Author: Nicolai
     public void RaiseCanExecuteChanged()
     {
         CanExecuteChanged?.Invoke(this, EventArgs.Empty);

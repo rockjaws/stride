@@ -1,4 +1,4 @@
-﻿namespace api.Models.Enums;
+namespace api.Models.Enums;
 
 public enum TaskProgress
 {

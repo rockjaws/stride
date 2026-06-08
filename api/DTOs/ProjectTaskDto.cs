@@ -1,4 +1,4 @@
-﻿using api.Models.Enums;
+using api.Models.Enums;
 
 namespace api.DTOs;
 
@@ -13,5 +13,6 @@ public class ProjectTaskDto
   public TaskPriority Priority { get; set; } = TaskPriority.Normal;
 
   public int? ProjectId { get; set; }
+  // Author: Nicolai and Oliver
   public List<UserDto> Users { get; set; } = new();
 }

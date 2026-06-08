@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Nicolai and Oliver
+// =============================================================================
+
 using System.Collections.ObjectModel;
 using client.Application.Interfaces;
 using client.Domain.Enum;
@@ -24,6 +28,7 @@ public class ArchiveViewModel : ObservableObject
         set => SetProperty(ref _selectedProject, value);
     }
 
+    // Author: Nicolai and Oliver
     public ArchiveViewModel(
         ILogger logger,
         IProjectService projectService,
@@ -48,6 +53,7 @@ public class ArchiveViewModel : ObservableObject
         _ = GetProjectsAsync();
     }
 
+    // Author: Nicolai and Oliver
     private async Task UnarchiveProjectAsync(Project project)
     {
         if (project.Id is not int id)
@@ -67,6 +73,7 @@ public class ArchiveViewModel : ObservableObject
         }
     }
 
+    // Author: Oliver
     private async Task DeleteProjectAsync(Project project)
     {
         if (project.Id is not int id)
@@ -84,6 +91,7 @@ public class ArchiveViewModel : ObservableObject
         }
     }
 
+    // Author: Oliver
     private async Task GetProjectsAsync()
     {
         try

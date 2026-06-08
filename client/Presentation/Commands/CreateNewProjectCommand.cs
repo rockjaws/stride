@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Oliver
+// =============================================================================
+
 using client.Application.Interfaces;
 using client.Domain.Models;
 using client.Presentation.ViewModels;
@@ -11,6 +15,7 @@ public class CreateNewProjectCommand : IUndoableCommand
     private readonly IUserService _userService;
     private readonly Func<Project, Task> _createProjectAsync;
 
+    // Author: Oliver
     public CreateNewProjectCommand(
         ILogger logger,
         IUserService userService,
@@ -22,6 +27,7 @@ public class CreateNewProjectCommand : IUndoableCommand
         _createProjectAsync = createProjectAsync;
     }
 
+    // Author: Oliver
     public async void Execute(object? param)
     {
         if (!CanExecute(param))
@@ -51,12 +57,15 @@ public class CreateNewProjectCommand : IUndoableCommand
         _logger.Log(client.Domain.Enum.LogLevel.INFO, "Create project dialog cancelled.");
     }
 
+    // Author: Oliver
     public void Undo() { }
 
+    // Author: Oliver
     public bool CanExecute(object? param) => true;
 
     public event EventHandler? CanExecuteChanged;
 
+    // Author: Oliver
     public void RaiseCanExecuteChanged()
     {
         CanExecuteChanged?.Invoke(this, EventArgs.Empty);

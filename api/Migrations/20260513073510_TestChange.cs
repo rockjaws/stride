@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -8,6 +8,7 @@ namespace api.Migrations
     public partial class TestChange : Migration
     {
         /// <inheritdoc />
+        // Author: Nicolai and Oliver
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
@@ -57,6 +58,7 @@ namespace api.Migrations
         }
 
         /// <inheritdoc />
+        // Author: Nicolai and Oliver
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(

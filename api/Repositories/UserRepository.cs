@@ -8,21 +8,25 @@ public class UserRepository : IUserRepository
 {
     private readonly AppDbContext _context;
 
+    // Author: Nicolai and Oliver
     public UserRepository(AppDbContext context)
     {
         _context = context;
     }
 
+    // Author: Nicolai and Oliver
     public async Task<IEnumerable<User>> GetAllUsersAsync()
     {
         return await _context.Users.ToListAsync();
     }
 
+    // Author: Nicolai and Oliver
     public async Task<User?> GetUserByIdAsync(int id)
     {
         return await _context.Users.FindAsync(id);
     }
 
+    // Author: Nicolai and Oliver
     public async Task<IEnumerable<User>> GetUsersByProjectIdAsync(int projectId)
     {
         return await _context
@@ -30,23 +34,27 @@ public class UserRepository : IUserRepository
             .ToListAsync();
     }
 
+    // Author: Nicolai and Oliver
     public async Task AddUserAsync(User user)
     {
         await _context.Users.AddAsync(user);
     }
 
+    // Author: Nicolai and Oliver
     public async Task UpdateUserAsync(User user)
     {
         _context.Users.Update(user);
         await Task.CompletedTask;
     }
 
+    // Author: Nicolai and Oliver
     public async Task DeleteUserAsync(User user)
     {
         _context.Users.Remove(user);
         await Task.CompletedTask;
     }
 
+    // Author: Nicolai and Oliver
     public async Task SaveChangesAsync()
     {
         await _context.SaveChangesAsync();

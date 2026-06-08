@@ -16,6 +16,7 @@ public class ProjectController : ControllerBase
     private readonly IUserRepository _userRepository;
     private readonly INotificationRepository _notificationRepository;
 
+    // Author: Nicolai and Oliver
     public ProjectController(
         IProjectRepository repository,
         IChannelRepository channelRepository,
@@ -30,6 +31,7 @@ public class ProjectController : ControllerBase
     }
 
     [HttpGet]
+    // Author: Nicolai and Oliver
     public async Task<ActionResult<IEnumerable<ProjectDto>>> GetProjects([FromQuery] int? userId)
     {
         var projects = userId.HasValue
@@ -41,6 +43,7 @@ public class ProjectController : ControllerBase
     }
 
     [HttpPatch("{id}/archive")]
+    // Author: Nicolai and Oliver
     public async Task<ActionResult> SetArchived(int id, ProjectArchiveDto dto)
     {
         var project = await _repository.GetProjectByIdAsync(id);
@@ -57,6 +60,7 @@ public class ProjectController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    // Author: Nicolai and Oliver
     public async Task<ActionResult<ProjectDto?>> GetProject(int id)
     {
         var project = await _repository.GetProjectByIdAsync(id);
@@ -65,6 +69,7 @@ public class ProjectController : ControllerBase
     }
 
     [HttpPost]
+    // Author: Nicolai and Oliver
     public async Task<ActionResult> CreateProject(ProjectCreateDto dto)
     {
         var project = new Project
@@ -98,6 +103,7 @@ public class ProjectController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    // Author: Nicolai and Oliver
     public async Task<ActionResult> UpdateProject(int id, ProjectUpdateDto dto)
     {
         var project = await _repository.GetProjectByIdAsync(id);
@@ -129,6 +135,7 @@ public class ProjectController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    // Author: Nicolai and Oliver
     public async Task<ActionResult> DeleteProject(int id)
     {
         var project = await _repository.GetProjectByIdAsync(id);
@@ -141,6 +148,7 @@ public class ProjectController : ControllerBase
     }
 
     [HttpGet("{id}/channels/{channelId}")]
+    // Author: Nicolai and Oliver
     public async Task<ActionResult<ChannelDto>> GetChannel(int id, int channelId)
     {
         var channel = await _channelRepository.GetChannelByIdAsync(channelId);
@@ -155,6 +163,7 @@ public class ProjectController : ControllerBase
     }
 
     [HttpDelete("{projectId}/channels/{channelId}")]
+    // Author: Nicolai and Oliver
     public async Task<ActionResult> DeleteChannel(int projectId, int channelId)
     {
         var channel = await _channelRepository.GetChannelByIdAsync(channelId);
@@ -170,6 +179,7 @@ public class ProjectController : ControllerBase
     }
 
     [HttpPost("{id}/channels")]
+    // Author: Nicolai and Oliver
     public async Task<ActionResult> CreateNewChannel(int id, ChannelCreateDto dto)
     {
         var project = await _repository.GetProjectByIdAsync(id);
@@ -192,6 +202,7 @@ public class ProjectController : ControllerBase
     }
 
     [HttpGet("{id}/notifications")]
+    // Author: Nicolai and Oliver
     public async Task<ActionResult> GetProjectNotificatons(int id, [FromQuery] int? userId)
     {
         var notifications = await _notificationRepository.GetNotificationsByProjectIdAsync(id);
@@ -204,6 +215,7 @@ public class ProjectController : ControllerBase
         return Ok(notifications.Select(n => n.ToDto()));
     }
 
+    // Author: Nicolai and Oliver
     private async Task LogProjectActivityAsync(int projectId, string text)
     {
         var project = await _repository.GetProjectByIdAsync(projectId);

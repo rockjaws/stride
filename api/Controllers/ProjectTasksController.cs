@@ -16,6 +16,7 @@ public class ProjectTasksController : ControllerBase
     private readonly IUserRepository _userRepository;
     private readonly IProjectRepository _projectRepository;
 
+    // Author: Nicolai and Oliver
     public ProjectTasksController(
         ITaskRepository repository,
         INotificationRepository notificationRepository,
@@ -30,6 +31,7 @@ public class ProjectTasksController : ControllerBase
     }
 
     [HttpGet]
+    // Author: Nicolai and Oliver
     public async Task<ActionResult<IEnumerable<ProjectTaskDto>>> GetProjectTasks([FromQuery] int? userId)
     {
         // When a user id is supplied, only return tasks assigned directly to that user.
@@ -42,6 +44,7 @@ public class ProjectTasksController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    // Author: Nicolai and Oliver
     public async Task<ActionResult<ProjectTaskDto?>> GetProjectTask(int id)
     {
         var projectTask = await _repository.GetTaskByIdAsync(id);
@@ -55,6 +58,7 @@ public class ProjectTasksController : ControllerBase
     }
 
     [HttpPost]
+    // Author: Nicolai and Oliver
     public async Task<ActionResult> CreateTask(ProjectTaskCreateDto dto)
     {
         var projectTask = new ProjectTask
@@ -75,6 +79,7 @@ public class ProjectTasksController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    // Author: Nicolai and Oliver
     public async Task<IActionResult> UpdateTask(int id, ProjectTaskUpdateDto dto)
     {
         var projectTask = await _repository.GetTaskByIdAsync(id);
@@ -132,6 +137,7 @@ public class ProjectTasksController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    // Author: Nicolai and Oliver
     public async Task<IActionResult> DeleteTask(int id)
     {
         var projectTask = await _repository.GetTaskByIdAsync(id);
@@ -151,6 +157,7 @@ public class ProjectTasksController : ControllerBase
         return NoContent();
     }
 
+    // Author: Nicolai and Oliver
     private async Task LogProjectActivityAsync(int projectId, string text, int? taskId)
     {
         var project = await _projectRepository.GetProjectByIdAsync(projectId);

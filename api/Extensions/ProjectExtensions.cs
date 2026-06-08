@@ -5,6 +5,7 @@ namespace api.Extensions;
 
 public static class ProjectExtensions
 {
+    // Author: Nicolai and Oliver
     public static ProjectDto ToDto(this Project p)
     {
         return new ProjectDto

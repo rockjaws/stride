@@ -1,4 +1,8 @@
-﻿namespace client.Domain.Enum;
+// =============================================================================
+// Author: Nicolai and Oliver
+// =============================================================================
+
+namespace client.Domain.Enum;
 
 public enum TaskPriority
 {

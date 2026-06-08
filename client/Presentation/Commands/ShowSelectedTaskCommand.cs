@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Oliver
+// =============================================================================
+
 using client.Application.Interfaces;
 using client.Domain.Models;
 using client.Presentation.ViewModels;
@@ -12,6 +16,7 @@ public class ShowSelectedTaskCommand : IUndoableCommand
     private readonly Func<ProjectTask, Task> _updateTaskAsync;
     private readonly Func<ProjectTask, Task> _deleteTaskAsync;
 
+    // Author: Oliver
     public ShowSelectedTaskCommand(
         ILogger logger,
         IUserService userService,
@@ -25,6 +30,7 @@ public class ShowSelectedTaskCommand : IUndoableCommand
         _deleteTaskAsync = deleteTaskAsync;
     }
 
+    // Author: Oliver
     public async void Execute(object? param)
     {
         if (!CanExecute(param))
@@ -69,12 +75,15 @@ public class ShowSelectedTaskCommand : IUndoableCommand
         _logger.Log(client.Domain.Enum.LogLevel.INFO, $"Task details dialog cancelled for task {task.Id}.");
     }
 
+    // Author: Oliver
     public void Undo() { }
 
+    // Author: Oliver
     public bool CanExecute(object? param) => param is ProjectTask;
 
     public event EventHandler? CanExecuteChanged;
 
+    // Author: Oliver
     public void RaiseCanExecuteChanged()
     {
         CanExecuteChanged?.Invoke(this, EventArgs.Empty);

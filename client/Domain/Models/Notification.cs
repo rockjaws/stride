@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Nicolai and Oliver
+// =============================================================================
+
 using client.Application.Interfaces;
 
 namespace client.Domain.Models;
@@ -12,6 +16,7 @@ public class Notification : INotification
     public int? TaskId { get; }
     public IUser? User { get; }
 
+    // Author: Nicolai and Oliver
     public Notification(
       int id,
       string text,

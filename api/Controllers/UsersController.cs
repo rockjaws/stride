@@ -15,6 +15,7 @@ public class UsersController : ControllerBase
     private readonly IProjectRepository _projectRepository;
     private readonly INotificationRepository _notificationRepository;
 
+    // Author: Nicolai and Oliver
     public UsersController(
         IUserRepository repository,
         IProjectRepository projectRepository,
@@ -27,6 +28,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet]
+    // Author: Nicolai and Oliver
     public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers([FromQuery] int? projectId)
     {
         var users = projectId.HasValue
@@ -44,6 +46,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    // Author: Nicolai and Oliver
     public async Task<ActionResult<UserDto?>> GetUser(int id)
     {
         var user = await _repository.GetUserByIdAsync(id);
@@ -63,6 +66,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost]
+    // Author: Nicolai and Oliver
     public async Task<ActionResult> CreateUser(UserCreateDto dto)
     {
         var user = new User
@@ -87,6 +91,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    // Author: Nicolai and Oliver
     public async Task<ActionResult> UpdateUser(int id, UserUpdateDto dto)
     {
         var user = await _repository.GetUserByIdAsync(id);
@@ -106,6 +111,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("{id}/notifications")]
+    // Author: Nicolai and Oliver
     public async Task<ActionResult<IEnumerable<NotificationDto>>> GetNotifications(int id)
     {
         var user = await _repository.GetUserByIdAsync(id);
@@ -133,6 +139,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPut("{id}/notifications/{notificationId}")]
+    // Author: Nicolai and Oliver
     public async Task<ActionResult> UpdateNotification(
         int id,
         int notificationId,
@@ -159,6 +166,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    // Author: Nicolai and Oliver
     public async Task<ActionResult> DeleteUser(int id)
     {
         var user = await _repository.GetUserByIdAsync(id);
@@ -174,6 +182,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("{userId}/project-feeds")]
+    // Author: Nicolai and Oliver
     public async Task<ActionResult> GetUserDashboardFeed(int userId)
     {
         var userProjects = await _projectRepository.GetProjectsByUserIdAsync(userId);

@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Nicolai and Oliver
+// =============================================================================
+
 using System.Collections.ObjectModel;
 
 using client.Application.Interfaces;
@@ -23,6 +27,7 @@ public class TaskViewModel : ObservableObject, IDisposable
 
     public ShowSelectedTaskCommand ShowSelectedTaskCommand { get; }
 
+    // Author: Nicolai and Oliver
     public TaskViewModel(ILogger logger, ITaskService taskService, IUserService userService)
     {
         _logger = logger;
@@ -41,6 +46,7 @@ public class TaskViewModel : ObservableObject, IDisposable
         _ = LoadTasksAsync();
     }
 
+    // Author: Oliver
     public async Task LoadTasksAsync()
     {
         try
@@ -62,6 +68,7 @@ public class TaskViewModel : ObservableObject, IDisposable
         }
     }
 
+    // Author: Nicolai and Oliver
     private async Task UpdateTaskAsync(ProjectTask task)
     {
         try
@@ -76,6 +83,7 @@ public class TaskViewModel : ObservableObject, IDisposable
         }
     }
 
+    // Author: Nicolai and Oliver
     private async Task DeleteTaskAsync(ProjectTask task)
     {
         if (task.Id is not int id)
@@ -93,6 +101,7 @@ public class TaskViewModel : ObservableObject, IDisposable
         }
     }
 
+    // Author: Oliver
     private void ReplaceTask(ProjectTask task)
     {
         var existingTask = Tasks.FirstOrDefault(t => t.Id == task.Id);
@@ -104,6 +113,7 @@ public class TaskViewModel : ObservableObject, IDisposable
         Tasks[taskIndex] = task;
     }
 
+    // Author: Oliver
     private void RemoveTask(ProjectTask task)
     {
         var existingTask = Tasks.FirstOrDefault(t => t.Id == task.Id);
@@ -111,11 +121,13 @@ public class TaskViewModel : ObservableObject, IDisposable
             Tasks.Remove(existingTask);
     }
 
+    // Author: Nicolai
     public void OnGlobalStateChange(object? sender, EventArgs e)
     {
         _ = LoadTasksAsync();
     }
 
+    // Author: Nicolai
     public void Dispose()
     {
         _taskService.TasksChanged -= OnGlobalStateChange;

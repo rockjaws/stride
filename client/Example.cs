@@ -1,12 +1,6 @@
 // =============================================================================
-// Author: Oliver
+// Author: Nicolai and Oliver
 // =============================================================================
 
-namespace client.Domain.Enum;
-
-public enum LogLevel
-{
-    INFO,
-    WARNING,
-    ERROR,
-}
+// Author: Nicolai and Oliver
+void Example() { }

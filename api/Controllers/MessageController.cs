@@ -14,6 +14,7 @@ public class MessageController : ControllerBase
     private readonly IChannelRepository _channelRepository;
     private readonly IUserRepository _userRepository;
 
+    // Author: Nicolai and Oliver
     public MessageController(IMessageRepository messageRepo, IChannelRepository channelRepo, IUserRepository userRepo)
     {
         _messageRepository = messageRepo;
@@ -22,6 +23,7 @@ public class MessageController : ControllerBase
     }
 
     [HttpGet]
+    // Author: Nicolai and Oliver
     public async Task<ActionResult<IEnumerable<MessageDto>>> GetMessages(int channelId)
     {
         var channel = await _channelRepository.GetChannelByIdAsync(channelId);
@@ -45,6 +47,7 @@ public class MessageController : ControllerBase
     }
 
     [HttpPost]
+    // Author: Nicolai and Oliver
     public async Task<ActionResult> SendMessage(int channelId, MessageCreateDto dto)
     {
         var channel = await _channelRepository.GetChannelByIdAsync(channelId);

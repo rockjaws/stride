@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Oliver
+// =============================================================================
+
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
@@ -7,6 +11,7 @@ namespace client.Presentation.Converters;
 
 public class TaskBadgeBrushConverter : IValueConverter
 {
+    // Author: Oliver
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         // XAML passes "background", "border", or "foreground" to reuse the same status palette.
@@ -25,11 +30,13 @@ public class TaskBadgeBrushConverter : IValueConverter
         };
     }
 
+    // Author: Oliver
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
         throw new NotSupportedException();
     }
 
+    // Author: Oliver
     private static Brush BrushFor(string tone, string background, string border, string foreground)
     {
         var color = tone switch

@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Nicolai and Oliver
+// =============================================================================
+
 namespace client.Application.Interfaces;
 
 public interface IProject
@@ -10,6 +14,8 @@ public interface IProject
     DateTime Deadline { get; }
     List<IChatChannel> ChatChannels { get; }
     List<ITask> Tasks { get; }
+    // Author: Nicolai and Oliver
     void Archive();
+    // Author: Nicolai and Oliver
     void UnArchive();
 }

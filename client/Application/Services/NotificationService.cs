@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Nicolai and Oliver
+// =============================================================================
+
 using System.Net.Http;
 using System.Net.Http.Json;
 
@@ -12,6 +16,7 @@ public class NotificationService : INotificationService
 
     public event EventHandler? NotificationsChanged;
 
+    // Author: Nicolai and Oliver
     public NotificationService()
     {
         _httpClient = new HttpClient
@@ -20,8 +25,10 @@ public class NotificationService : INotificationService
         };
     }
 
+    // Author: Nicolai and Oliver
     private void NotifyNotificationsChanged() => NotificationsChanged?.Invoke(this, EventArgs.Empty);
 
+    // Author: Nicolai and Oliver
     public async Task<List<Notification>> GetNotificationsAsync(int userId)
     {
         var notificationDtos =
@@ -34,6 +41,7 @@ public class NotificationService : INotificationService
         return notifications;
     }
 
+    // Author: Nicolai and Oliver
     public async Task MarkAsReadAsync(int userId, int notificationId)
     {
         // Marking read is scoped by user so one user's toast state does not hide another user's notification.
@@ -46,6 +54,7 @@ public class NotificationService : INotificationService
 
 
 
+    // Author: Nicolai and Oliver
     private static Notification ToNotification(NotificationDto dto)
     {
         // The client does not need the full related task yet, only the optional task id.
@@ -59,12 +68,14 @@ public class NotificationService : INotificationService
         );
     }
 
+    // Author: Nicolai and Oliver
     public async Task<List<Notification>> GetDashboardFeedAsync(int userId)
     {
         var dtos = await _httpClient.GetFromJsonAsync<List<NotificationDto>>($"api/users/{userId}/project-feeds") ?? [];
         return [.. dtos.Select(ToNotification)];
     }
 
+    // Author: Nicolai and Oliver
     public async Task<List<Notification>> GetProjectFeedAsync(int projectId, int userId)
     {
         var dtos = await _httpClient.GetFromJsonAsync<List<NotificationDto>>($"api/projects/{projectId}/notifications?userId={userId}") ?? [];

@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Oliver
+// =============================================================================
+
 using System.Collections.ObjectModel;
 
 using client.Application.Interfaces;
@@ -72,6 +76,7 @@ namespace client.Presentation.ViewModels
 
         public TaskPriority[] PriorityOptions { get; } = Enum.GetValues<TaskPriority>();
 
+        // Author: Oliver
         public NewTaskViewModel(ILogger logger, IUserService userService, int projectId)
         {
             _logger = logger;
@@ -80,6 +85,7 @@ namespace client.Presentation.ViewModels
             _ = GetUsersAsync();
         }
 
+        // Author: Oliver
         private async Task GetUsersAsync()
         {
             var users = await _userService.GetUsersAsync(_projectId);
@@ -90,6 +96,7 @@ namespace client.Presentation.ViewModels
             );
         }
 
+        // Author: Oliver
         public bool Validate(out string validationMessage)
         {
             if (string.IsNullOrWhiteSpace(_title))
@@ -103,6 +110,7 @@ namespace client.Presentation.ViewModels
             return true;
         }
 
+        // Author: Oliver
         public ProjectTask CreateProjectTask(int projectId)
         {
             _logger.Log(LogLevel.INFO, $"Prepared New Task For Project {projectId}: {_title}");

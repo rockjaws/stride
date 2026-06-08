@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Nicolai and Oliver
+// =============================================================================
+
 using System.Collections.ObjectModel;
 
 using client.Presentation.Commands;
@@ -26,6 +30,7 @@ public class ProjectCalendarViewModel : ObservableObject
     public static IReadOnlyList<string> DayHeaders { get; } =
         ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
 
+    // Author: Nicolai
     public ProjectCalendarViewModel()
     {
         _displayMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
@@ -36,18 +41,21 @@ public class ProjectCalendarViewModel : ObservableObject
         Rebuild();
     }
 
+    // Author: Nicolai
     public void UpdateDeadlines(HashSet<DateTime> dates)
     {
         _deadlineDates = dates;
         Rebuild();
     }
 
+    // Author: Nicolai
     internal void ShiftMonth(int direction)
     {
         _displayMonth = _displayMonth.AddMonths(direction);
         Rebuild();
     }
 
+    // Author: Nicolai and Oliver
     private void Rebuild()
     {
         OnPropertyChanged(nameof(MonthLabel));
@@ -73,6 +81,7 @@ public class ProjectCalendarViewModel : ObservableObject
         Days = new ObservableCollection<CalendarDayViewModel>(cells);
     }
 
+    // Author: Nicolai and Oliver
     private CalendarDayViewModel MakeDay(DateTime date, bool isCurrentMonth) => new()
     {
         Date = date,

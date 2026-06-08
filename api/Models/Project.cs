@@ -9,7 +9,10 @@ public class Project
     public DateTime Deadline { get; set; }
     public bool IsArchived { get; set; } = false;
 
+    // Author: Nicolai and Oliver
     public List<ChatChannel> ChatChannels { get; set; } = new();
+    // Author: Nicolai and Oliver
     public List<ProjectTask> Tasks { get; set; } = new();
+    // Author: Nicolai and Oliver
     public List<User> Users { get; set; } = new();
 }

@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Oliver
+// =============================================================================
+
 using client.Application.Interfaces;
 using client.Domain.Enum;
 using client.Domain.Models;
@@ -10,6 +14,7 @@ public class RestoreProjectCommand : IUndoableCommand
     private readonly Func<Project?> _getProject;
     private readonly Func<Project, Task> _restoreAsync;
 
+    // Author: Oliver
     public RestoreProjectCommand(
         ILogger logger,
         Func<Project?> getProject,
@@ -21,6 +26,7 @@ public class RestoreProjectCommand : IUndoableCommand
         _restoreAsync = restoreAsync;
     }
 
+    // Author: Oliver
     public async void Execute(object? parameter)
     {
         var project = parameter as Project ?? _getProject();
@@ -35,11 +41,13 @@ public class RestoreProjectCommand : IUndoableCommand
         _logger.Log(LogLevel.WARNING, "RestoreProjectCommand executed without a project.");
     }
 
+    // Author: Oliver
     public bool CanExecute(object? parameter)
     {
         return parameter is Project || _getProject() != null;
     }
 
+    // Author: Oliver
     public void Undo() { }
 
     public event EventHandler? CanExecuteChanged;

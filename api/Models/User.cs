@@ -7,6 +7,8 @@ public class User
     public string LastName { get; set; } = string.Empty;
     public string WorkMail { get; set; } = string.Empty;
 
+    // Author: Nicolai and Oliver
     public List<Project> Projects { get; set; } = new();
+    // Author: Nicolai and Oliver
     public List<ProjectTask> ProjectTasks { get; set; } = new();
 }

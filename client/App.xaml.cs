@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Nicolai and Oliver
+// =============================================================================
+
 using System.Windows;
 
 using client.Application.Interfaces;
@@ -16,6 +20,7 @@ public partial class App : System.Windows.Application
 {
     private ILogger? _logger;
 
+    // Author: Nicolai and Oliver
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
@@ -79,12 +84,14 @@ public partial class App : System.Windows.Application
         viewModel.StartNotificationPolling();
     }
 
+    // Author: Oliver
     protected override void OnExit(ExitEventArgs e)
     {
         _logger?.Log(LogLevel.INFO, $"Application exiting with code {e.ApplicationExitCode}.");
         base.OnExit(e);
     }
 
+    // Author: Oliver
     private void OnDispatcherUnhandledException(
         object sender,
         System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e
@@ -93,11 +100,13 @@ public partial class App : System.Windows.Application
         _logger?.Log(LogLevel.ERROR, $"Unhandled UI exception: {e.Exception}");
     }
 
+    // Author: Oliver
     private void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
     {
         _logger?.Log(LogLevel.ERROR, $"Unhandled app-domain exception: {e.ExceptionObject}");
     }
 
+    // Author: Oliver
     private void OnUnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
     {
         _logger?.Log(LogLevel.ERROR, $"Unobserved task exception: {e.Exception}");

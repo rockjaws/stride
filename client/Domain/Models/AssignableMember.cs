@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Nicolai and Oliver
+// =============================================================================
+
 using client.Presentation.Common;
 
 namespace client.Domain.Models;
@@ -12,18 +16,21 @@ public class AssignableMember : ObservableObject
         set => SetProperty(ref _isAssigned, value);
     }
 
+    // Author: Nicolai and Oliver
     public AssignableMember(User user, ProjectTask task)
     {
         User = user;
         IsAssigned = task.UsersAssigned?.Any(x => x.Id == user.Id) == true;
     }
 
+    // Author: Oliver
     public AssignableMember(User user, bool isAssigned)
     {
         User = user;
         IsAssigned = isAssigned;
     }
 
+    // Author: Oliver
     public AssignableMember(User user, Project project)
     {
         User = user;
