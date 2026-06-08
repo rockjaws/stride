@@ -6,6 +6,7 @@ using System.IO;
 using System.Net.Http;
 using System.Text.Json;
 using System.Windows;
+
 using client.Application.Interfaces;
 using client.Application.Services;
 using client.Domain.Enum;
@@ -27,9 +28,9 @@ public partial class App : System.Windows.Application
     {
         base.OnStartup(e);
 
-        // api
         string serverUrl = "http:localhost:5189";
         string apiKey = "DEVELOPMENT_LOCAL_KEY";
+        int currentUserId = 1;
 
         string configPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.json");
         if (File.Exists(configPath))
@@ -42,6 +43,7 @@ public partial class App : System.Windows.Application
                     var root = doc.RootElement;
                     if (root.TryGetProperty("ServerUrl", out var urlProp)) serverUrl = urlProp.GetString();
                     if (root.TryGetProperty("ApiKey", out var keyProp)) apiKey = keyProp.GetString();
+                    if (root.TryGetProperty("CurrentUserId", out JsonElement userElement)) currentUserId = userElement.GetInt32();
                 }
             }
             catch { }
@@ -62,7 +64,7 @@ public partial class App : System.Windows.Application
         INotificationService notificationService = new NotificationService(httpClient);
         IMessageService messageService = new MessageService(httpClient);
         // Temporary active user selection until proper login/session handling exists.
-        IUserService userService = new UserService(1, httpClient);
+        IUserService userService = new UserService(currentUserId, httpClient);
         logger.Log(LogLevel.INFO, "Application Starting..");
 
         // Child viewmodels
