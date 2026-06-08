@@ -1,5 +1,5 @@
 // =============================================================================
-// Author: Nicolai
+// Author: Nicolaj
 // =============================================================================
 
 using System.Windows.Controls;
@@ -8,7 +8,7 @@ namespace client.Presentation.UserControls;
 
 public partial class ProjectCalendarUserControl : UserControl
 {
-    // Author: Nicolai
+    // Author: Nicolaj
     public ProjectCalendarUserControl()
     {
         InitializeComponent();

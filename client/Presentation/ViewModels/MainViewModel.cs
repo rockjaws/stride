@@ -1,5 +1,5 @@
 // =============================================================================
-// Author: Nicolai and Oliver
+// Author: Nicolaj and Oliver
 // =============================================================================
 
 using System.Windows.Input;
@@ -67,7 +67,7 @@ public class MainViewModel : ObservableObject
     public bool IsChatsSelected => CurrentView == ChatViewModel;
     public bool IsArchiveSelected => CurrentView == ArchiveViewModel;
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     public MainViewModel(
         ILogger logger,
         DashboardViewModel dashboardViewModel,
@@ -116,7 +116,7 @@ public class MainViewModel : ObservableObject
         _ = CheckNotificationsAsync();
     }
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     public void SetCurrentView(object viewModel)
     {
         CurrentView = viewModel;
@@ -127,7 +127,7 @@ public class MainViewModel : ObservableObject
             _ = TaskViewModel.LoadTasksAsync();
     }
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     private async Task CreateProjectAsync(Project project)
     {
         _logger.Log(LogLevel.INFO, $"MainViewModel creating project: {project.Title}");

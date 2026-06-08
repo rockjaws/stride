@@ -1,5 +1,5 @@
 // =============================================================================
-// Author: Nicolai and Oliver
+// Author: Nicolaj and Oliver
 // =============================================================================
 
 using System.Collections.ObjectModel;
@@ -104,7 +104,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
 
     public EditProjectCommand EditProjectCommand { get; }
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     public ProjectViewModel(
         ILogger logger,
         IProjectService projectService,
@@ -250,7 +250,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
         _logger.Log(LogLevel.INFO, $"Deleted Project {project.Id}");
     }
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     public async Task ArchiveProjectAsync(Project project)
     {
         if (project.Id is not int id)
@@ -454,7 +454,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
         }
     }
 
-    // Author: Nicolai
+    // Author: Nicolaj
     public async Task CreateProjectAsync(Project project)
     {
         try
@@ -469,7 +469,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
         }
     }
 
-    // Author: Nicolai
+    // Author: Nicolaj
     private async void OnGlobalStateChange(object? sender, EventArgs e)
     {
         if (_isUpdatingGlobalState) return;
@@ -495,7 +495,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
         }
     }
 
-    // Author: Nicolai
+    // Author: Nicolaj
     public void Dispose()
     {
         _taskService.TasksChanged -= OnGlobalStateChange;
@@ -504,7 +504,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
         GC.SuppressFinalize(this);
     }
 
-    // Author: Nicolai
+    // Author: Nicolaj
     public async Task LoadProjectFeedAsync(int projectId)
     {
         try

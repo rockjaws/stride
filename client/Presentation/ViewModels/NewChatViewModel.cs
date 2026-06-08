@@ -1,5 +1,5 @@
 // =============================================================================
-// Author: Nicolai and Oliver
+// Author: Nicolaj and Oliver
 // =============================================================================
 
 using client.Application.Interfaces;
@@ -20,13 +20,13 @@ public class NewChatViewModel : ObservableObject
         set => SetProperty(ref _name, value);
     }
 
-    // Author: Nicolai
+    // Author: Nicolaj
     public NewChatViewModel(ILogger logger)
     {
         _logger = logger;
     }
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     public ChatChannel CreateChannel(int projectId)
     {
         _logger.Log(LogLevel.INFO, $"Prepared New Channel For Project {projectId}: {Name}");

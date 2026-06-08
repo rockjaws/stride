@@ -1,5 +1,5 @@
 // =============================================================================
-// Author: Nicolai and Oliver
+// Author: Nicolaj and Oliver
 // =============================================================================
 
 using client.Application.Interfaces;
@@ -16,7 +16,7 @@ public class Notification : INotification
     public int? TaskId { get; }
     public IUser? User { get; }
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     public Notification(
       int id,
       string text,

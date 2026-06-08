@@ -1,5 +1,5 @@
 // =============================================================================
-// Author: Nicolai and Oliver
+// Author: Nicolaj and Oliver
 // =============================================================================
 
 using System.Net.Http;
@@ -17,13 +17,13 @@ public class ProjectService : IProjectService
 
     public event EventHandler? ProjectsChanged;
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     public ProjectService()
     {
         _httpclient = new HttpClient { BaseAddress = new Uri("http://localhost:5189") };
     }
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     public async Task<List<Project>> GetProjectsAsync()
     {
         var projectDtos =
@@ -42,7 +42,7 @@ public class ProjectService : IProjectService
         return [.. projectDtos.Select(ToProject)];
     }
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     public async Task<Project> CreateProjectAsync(Project project, int userId)
     {
         var response = await _httpclient.PostAsJsonAsync(
@@ -94,7 +94,7 @@ public class ProjectService : IProjectService
         return ToProject(updatedProject);
     }
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     public async Task<ChatChannel> CreateChannelAsync(int projectId, string name)
     {
         var response = await _httpclient.PostAsJsonAsync(
@@ -119,7 +119,7 @@ public class ProjectService : IProjectService
         response.EnsureSuccessStatusCode();
     }
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     public async Task DeleteProjectAsync(int id)
     {
         var response = await _httpclient.DeleteAsync($"api/projects/{id}");
@@ -127,7 +127,7 @@ public class ProjectService : IProjectService
         NotifyProjectsChanged();
     }
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     public async Task SetProjectArchivedAsync(int id, bool isArchived)
     {
         var payload = new { isArchived };
@@ -138,7 +138,7 @@ public class ProjectService : IProjectService
         NotifyProjectsChanged();
     }
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     private static TaskProgress ParseProgress(string progress)
     {
         if (Enum.TryParse<TaskProgress>(progress, ignoreCase: true, out var parsed))
@@ -147,7 +147,7 @@ public class ProjectService : IProjectService
         return TaskProgress.Backlog;
     }
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     private static TaskPriority ParsePriority(string priority)
     {
         if (Enum.TryParse<TaskPriority>(priority, ignoreCase: true, out var parsed))
@@ -156,7 +156,7 @@ public class ProjectService : IProjectService
         return TaskPriority.Normal;
     }
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     private static Project ToProject(ProjectDto dto)
     {
         var members = dto
@@ -195,7 +195,7 @@ public class ProjectService : IProjectService
         );
     }
 
-    // Author: Nicolai
+    // Author: Nicolaj
     private void NotifyProjectsChanged() => ProjectsChanged?.Invoke(this, EventArgs.Empty);
 
     private sealed class ProjectCreateDto

@@ -1,5 +1,5 @@
 // =============================================================================
-// Author: Nicolai and Oliver
+// Author: Nicolaj and Oliver
 // =============================================================================
 
 using client.Application.Interfaces;
@@ -15,7 +15,7 @@ public class Message : IMessage
     public int UserId { get; }
     public string SenderName { get; } = "Unknown";
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     public Message(int id, string text, DateTime time, int channelId, int userId, string senderName)
     {
         Id = id;

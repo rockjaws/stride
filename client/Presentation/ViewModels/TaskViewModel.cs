@@ -1,5 +1,5 @@
 // =============================================================================
-// Author: Nicolai and Oliver
+// Author: Nicolaj and Oliver
 // =============================================================================
 
 using System.Collections.ObjectModel;
@@ -27,7 +27,7 @@ public class TaskViewModel : ObservableObject, IDisposable
 
     public ShowSelectedTaskCommand ShowSelectedTaskCommand { get; }
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     public TaskViewModel(ILogger logger, ITaskService taskService, IUserService userService)
     {
         _logger = logger;
@@ -68,7 +68,7 @@ public class TaskViewModel : ObservableObject, IDisposable
         }
     }
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     private async Task UpdateTaskAsync(ProjectTask task)
     {
         try
@@ -83,7 +83,7 @@ public class TaskViewModel : ObservableObject, IDisposable
         }
     }
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     private async Task DeleteTaskAsync(ProjectTask task)
     {
         if (task.Id is not int id)
@@ -121,13 +121,13 @@ public class TaskViewModel : ObservableObject, IDisposable
             Tasks.Remove(existingTask);
     }
 
-    // Author: Nicolai
+    // Author: Nicolaj
     public void OnGlobalStateChange(object? sender, EventArgs e)
     {
         _ = LoadTasksAsync();
     }
 
-    // Author: Nicolai
+    // Author: Nicolaj
     public void Dispose()
     {
         _taskService.TasksChanged -= OnGlobalStateChange;

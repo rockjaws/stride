@@ -1,5 +1,5 @@
 // =============================================================================
-// Author: Nicolai and Oliver
+// Author: Nicolaj and Oliver
 // =============================================================================
 
 using client.Application.Interfaces;
@@ -9,7 +9,7 @@ namespace client.Presentation.Strategies;
 
 public class SortByPriority : ITaskSortStrategy
 {
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     public void SortTasks(List<ITask> tasks)
     {
         if (tasks == null || tasks.Count <= 1) return;

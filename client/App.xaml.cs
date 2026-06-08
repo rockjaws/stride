@@ -1,9 +1,8 @@
 // =============================================================================
-// Author: Nicolai and Oliver
+// Author: Nicolaj and Oliver
 // =============================================================================
 
 using System.Windows;
-
 using client.Application.Interfaces;
 using client.Application.Services;
 using client.Domain.Enum;
@@ -20,7 +19,7 @@ public partial class App : System.Windows.Application
 {
     private ILogger? _logger;
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
@@ -37,7 +36,7 @@ public partial class App : System.Windows.Application
         INotificationService notificationService = new NotificationService();
         IMessageService messageService = new MessageService();
         // Temporary active user selection until proper login/session handling exists.
-        IUserService userService = new UserService(2);
+        IUserService userService = new UserService(1);
         logger.Log(LogLevel.INFO, "Application Starting..");
 
         // Child viewmodels

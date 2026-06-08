@@ -1,5 +1,5 @@
 // =============================================================================
-// Author: Nicolai and Oliver
+// Author: Nicolaj and Oliver
 // =============================================================================
 
 using client.Application.Interfaces;
@@ -19,7 +19,7 @@ public class Project : IProject
 
     public List<User> Members { get; private set; }
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     public Project(
         int? id,
         string title,

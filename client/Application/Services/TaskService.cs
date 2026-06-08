@@ -1,5 +1,5 @@
 // =============================================================================
-// Author: Nicolai and Oliver
+// Author: Nicolaj and Oliver
 // =============================================================================
 
 using System.Net.Http;
@@ -16,7 +16,7 @@ public class TaskService : ITaskService
     private readonly HttpClient _httpclient;
 
     public event EventHandler? TasksChanged;
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     public TaskService()
     {
         _httpclient = new HttpClient
@@ -26,14 +26,14 @@ public class TaskService : ITaskService
     }
 
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     public async Task<List<ProjectTask>> GetTasksAsync()
     {
         var taskDtos = await _httpclient.GetFromJsonAsync<List<ProjectTaskDto>>("api/tasks") ?? [];
         return [.. taskDtos.Select(ToProjectTask)];
     }
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     public async Task<List<ProjectTask>> GetTasksAsync(int userId)
     {
         // The API applies the user filter; the client only passes the active UserService id.
@@ -41,7 +41,7 @@ public class TaskService : ITaskService
         return [.. taskDtos.Select(ToProjectTask)];
     }
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     public async Task<ProjectTask> CreateTaskAsync(ProjectTask task)
     {
         if (task.ProjectId == null)
@@ -80,7 +80,7 @@ public class TaskService : ITaskService
         return savedTask;
     }
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     public async Task UpdateTaskAsync(ProjectTask task)
     {
         if (task.Id == null)
@@ -101,7 +101,7 @@ public class TaskService : ITaskService
         NotifyTasksChanged();
     }
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     public async Task<ProjectTask> MoveTaskAsync(ProjectTask task, TaskProgress progress)
     {
         // Return a new instance so callers can replace bound collection items cleanly.
@@ -120,20 +120,20 @@ public class TaskService : ITaskService
         return movedTask;
     }
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     public async Task DeleteTaskAsync(int id)
     {
         var response = await _httpclient.DeleteAsync($"api/tasks/{id}");
         response.EnsureSuccessStatusCode();
     }
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     public void SortTasks() { }
 
-    // Author: Nicolai
+    // Author: Nicolaj
     private void NotifyTasksChanged() => TasksChanged?.Invoke(this, EventArgs.Empty);
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     private static ProjectTask ToProjectTask(ProjectTaskDto dto)
     {
         return new ProjectTask(
@@ -151,7 +151,7 @@ public class TaskService : ITaskService
         };
     }
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     private static TaskProgress ParseProgress(string progress)
     {
         if (Enum.TryParse<TaskProgress>(progress, ignoreCase: true, out var parsed))
@@ -161,7 +161,7 @@ public class TaskService : ITaskService
         return TaskProgress.Backlog;
     }
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     private static TaskPriority ParsePriority(string priority)
     {
         if (Enum.TryParse<TaskPriority>(priority, ignoreCase: true, out var parsed))

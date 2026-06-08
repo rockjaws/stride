@@ -1,5 +1,5 @@
 // =============================================================================
-// Author: Nicolai and Oliver
+// Author: Nicolaj and Oliver
 // =============================================================================
 
 using System;
@@ -31,7 +31,7 @@ namespace client.Presentation.UserControls
             InitializeComponent();
         }
 
-        // Author: Nicolai
+        // Author: Nicolaj
         private void DataGrid_OnSorting(object sender, DataGridSortingEventArgs e)
         {
             if (DataContext is not DashboardViewModel viewModel) return;
