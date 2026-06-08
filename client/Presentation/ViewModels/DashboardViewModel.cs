@@ -1,5 +1,5 @@
 // =============================================================================
-// Author: Nicolai and Oliver
+// Author: Nicolaj and Oliver
 // =============================================================================
 
 using System.Collections.ObjectModel;
@@ -71,7 +71,7 @@ public class DashboardViewModel : ObservableObject, IDisposable
         get => _finishedCount;
         set => SetProperty(ref _finishedCount, value);
     }
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     public DashboardViewModel(ILogger logger, IProjectService projectService, ITaskService taskService, IUserService userService, INotificationService notificationService)
     {
         _logger = logger;
@@ -90,7 +90,7 @@ public class DashboardViewModel : ObservableObject, IDisposable
     }
 
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     public async Task GetDashboardMetricsAsync()
     {
         try
@@ -166,7 +166,7 @@ public class DashboardViewModel : ObservableObject, IDisposable
         }
     }
 
-    // Author: Nicolai
+    // Author: Nicolaj
     public void ChangeSortingStrategy(ITaskSortStrategy newStrategy)
     {
         if (newStrategy == null || SortingStrategy.GetType() == newStrategy.GetType()) return;
@@ -177,7 +177,7 @@ public class DashboardViewModel : ObservableObject, IDisposable
         SortTasks();
     }
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     private void SortTasks()
     {
         if (_tasks == null || _tasks.Count == 0) return;
@@ -187,13 +187,13 @@ public class DashboardViewModel : ObservableObject, IDisposable
         UpcomingTasks = new ObservableCollection<ProjectTask>(_tasks.Cast<ProjectTask>());
     }
 
-    // Author: Nicolai
+    // Author: Nicolaj
     private void OnGlobalStateChange(object? sender, EventArgs e)
     {
         _ = GetDashboardMetricsAsync();
     }
 
-    // Author: Nicolai
+    // Author: Nicolaj
     public void Dispose()
     {
         _taskService.TasksChanged -= OnGlobalStateChange;

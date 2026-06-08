@@ -1,5 +1,5 @@
 // =============================================================================
-// Author: Nicolai and Oliver
+// Author: Nicolaj and Oliver
 // =============================================================================
 
 using System;
@@ -21,15 +21,15 @@ namespace client.Presentation.Views
     /// </summary>
     public partial class NewChannelWindow : Window
     {
-        // Author: Nicolai
+        // Author: Nicolaj
         public NewChannelWindow()
         {
             InitializeComponent();
         }
 
-        // Author: Nicolai
+        // Author: Nicolaj
         private void OnCreate(object sender, RoutedEventArgs e) => DialogResult = true;
-        // Author: Nicolai
+        // Author: Nicolaj
         private void OnCancel(object sender, RoutedEventArgs e) => DialogResult = false;
     }
 }

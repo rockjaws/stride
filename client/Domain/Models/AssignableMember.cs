@@ -1,5 +1,5 @@
 // =============================================================================
-// Author: Nicolai and Oliver
+// Author: Nicolaj and Oliver
 // =============================================================================
 
 using client.Presentation.Common;
@@ -16,7 +16,7 @@ public class AssignableMember : ObservableObject
         set => SetProperty(ref _isAssigned, value);
     }
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     public AssignableMember(User user, ProjectTask task)
     {
         User = user;

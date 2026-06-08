@@ -1,5 +1,5 @@
 // =============================================================================
-// Author: Nicolai and Oliver
+// Author: Nicolaj and Oliver
 // =============================================================================
 
 using client.Application.Interfaces;
@@ -13,7 +13,7 @@ public class ChatChannel : IChatChannel
     public int ProjectId { get; }
     public List<IMessage> Messages { get; private set; }
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     public ChatChannel(int id, string name, int projectId)
     {
         Id = id;

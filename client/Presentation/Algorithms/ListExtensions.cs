@@ -1,12 +1,12 @@
 // =============================================================================
-// Author: Nicolai and Oliver
+// Author: Nicolaj and Oliver
 // =============================================================================
 
 namespace client.Presentation.Algorithms;
 
 public static class ListExtensions
 {
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     private static void Merge<T>(List<T> arr, int l, int m, int r, Comparison<T> comparison)
     {
         int n1 = m - l + 1;
@@ -59,7 +59,7 @@ public static class ListExtensions
         }
     }
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     public static void MergeSort<T>(this List<T> arr, int l, int r, Comparison<T> comparison)
     {
         if (l < r)

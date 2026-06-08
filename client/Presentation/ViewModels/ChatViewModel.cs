@@ -1,5 +1,5 @@
 // =============================================================================
-// Author: Nicolai and Oliver
+// Author: Nicolaj and Oliver
 // =============================================================================
 
 using System.Collections.ObjectModel;
@@ -63,7 +63,7 @@ public class ChatViewModel : ObservableObject, IDisposable
     public ICommand CreateChannelCommand { get; }
     public DeleteChannelCommand DeleteChannelCommand { get; }
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     public ChatViewModel(
         ILogger logger,
         IProjectService projectService,
@@ -95,7 +95,7 @@ public class ChatViewModel : ObservableObject, IDisposable
         _ = LoadDataAsync();
     }
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     private async Task LoadDataAsync()
     {
         try
@@ -145,7 +145,7 @@ public class ChatViewModel : ObservableObject, IDisposable
         }
     }
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     private async Task LoadChannelsForSelectedProjectAsync()
     {
         ChatChannels.Clear();
@@ -179,7 +179,7 @@ public class ChatViewModel : ObservableObject, IDisposable
         }
     }
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     public async Task LoadMessagesForSelectedChannelAsync()
     {
         if (SelectedChannel == null)
@@ -206,7 +206,7 @@ public class ChatViewModel : ObservableObject, IDisposable
         }
     }
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     public async Task SendMessageAsync()
     {
         _logger.Log(
@@ -237,7 +237,7 @@ public class ChatViewModel : ObservableObject, IDisposable
         }
     }
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     private async Task PollLatestMessageAsync()
     {
         if (SelectedChannel == null)
@@ -293,7 +293,7 @@ public class ChatViewModel : ObservableObject, IDisposable
         }
     }
 
-    // Author: Nicolai
+    // Author: Nicolaj
     public void AddProject(IProject project)
     {
         Projects.Add(project);
@@ -317,7 +317,7 @@ public class ChatViewModel : ObservableObject, IDisposable
         }
     }
 
-    // Author: Nicolai
+    // Author: Nicolaj
     private async Task CreateChannelAsync(IChatChannel channel)
     {
         try
@@ -333,7 +333,7 @@ public class ChatViewModel : ObservableObject, IDisposable
         }
     }
 
-    // Author: Nicolai
+    // Author: Nicolaj
     public void Dispose()
     {
         _refreshTimer.Stop();

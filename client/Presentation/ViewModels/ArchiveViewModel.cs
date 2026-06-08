@@ -1,5 +1,5 @@
 // =============================================================================
-// Author: Nicolai and Oliver
+// Author: Nicolaj and Oliver
 // =============================================================================
 
 using System.Collections.ObjectModel;
@@ -28,7 +28,7 @@ public class ArchiveViewModel : ObservableObject
         set => SetProperty(ref _selectedProject, value);
     }
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     public ArchiveViewModel(
         ILogger logger,
         IProjectService projectService,
@@ -53,7 +53,7 @@ public class ArchiveViewModel : ObservableObject
         _ = GetProjectsAsync();
     }
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     private async Task UnarchiveProjectAsync(Project project)
     {
         if (project.Id is not int id)

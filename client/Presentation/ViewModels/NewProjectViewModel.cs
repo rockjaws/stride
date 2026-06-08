@@ -1,5 +1,5 @@
 // =============================================================================
-// Author: Nicolai and Oliver
+// Author: Nicolaj and Oliver
 // =============================================================================
 
 using System.Collections.ObjectModel;
@@ -90,7 +90,7 @@ public class NewProjectViewModel : ObservableObject
         return true;
     }
 
-    // Author: Nicolai and Oliver
+    // Author: Nicolaj and Oliver
     public Project CreateProject()
     {
         _logger.Log(LogLevel.INFO, $"Prepared New Project: {_title}");
