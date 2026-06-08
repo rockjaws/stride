@@ -13,9 +13,9 @@ public class ProjectService : IProjectService
 
     public event EventHandler? ProjectsChanged;
 
-    public ProjectService()
+    public ProjectService(HttpClient httpClient)
     {
-        _httpclient = new HttpClient { BaseAddress = new Uri("http://localhost:5189") };
+        _httpclient = httpClient;
     }
 
     public async Task<List<Project>> GetProjectsAsync()

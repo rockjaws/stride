@@ -10,12 +10,9 @@ public class MessageService : IMessageService
 {
     private readonly HttpClient _httpClient;
 
-    public MessageService()
+    public MessageService(HttpClient httpClient)
     {
-        _httpClient = new HttpClient
-        {
-            BaseAddress = new Uri("http://localhost:5189")
-        };
+        _httpClient = httpClient;
     }
 
     public async Task<List<Message>> GetMessagesAsync(int id)

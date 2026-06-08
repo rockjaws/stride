@@ -12,12 +12,9 @@ public class NotificationService : INotificationService
 
     public event EventHandler? NotificationsChanged;
 
-    public NotificationService()
+    public NotificationService(HttpClient httpClient)
     {
-        _httpClient = new HttpClient
-        {
-            BaseAddress = new Uri("http://localhost:5189")
-        };
+        _httpClient = httpClient;
     }
 
     private void NotifyNotificationsChanged() => NotificationsChanged?.Invoke(this, EventArgs.Empty);
