@@ -1,7 +1,9 @@
-# SQLite Database
 db/stride.db
 db/stride.db-shm
 db/stride.db-wal
-
-
+publish/
+stride-api.zip
+client/config.json
+client/client.csproj.user
+*.csproj.user
 .vs/
