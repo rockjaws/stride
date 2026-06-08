@@ -16,13 +16,11 @@ public class TaskService : ITaskService
     private readonly HttpClient _httpclient;
 
     public event EventHandler? TasksChanged;
+
     // Author: Nicolaj and Oliver
-    public TaskService()
+    public TaskService(HttpClient httpClient)
     {
-        _httpclient = new HttpClient
-        {
-            BaseAddress = new Uri("http://localhost:5189")
-        };
+        _httpclient = httpClient;
     }
 
 

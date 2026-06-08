@@ -17,12 +17,9 @@ public class NotificationService : INotificationService
     public event EventHandler? NotificationsChanged;
 
     // Author: Nicolaj and Oliver
-    public NotificationService()
+    public NotificationService(HttpClient httpClient)
     {
-        _httpClient = new HttpClient
-        {
-            BaseAddress = new Uri("http://localhost:5189")
-        };
+        _httpClient = httpClient;
     }
 
     // Author: Nicolaj and Oliver

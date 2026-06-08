@@ -2,6 +2,9 @@
 // Author: Nicolaj and Oliver
 // =============================================================================
 
+using System.IO;
+using System.Net.Http;
+using System.Text.Json;
 using System.Windows;
 using client.Application.Interfaces;
 using client.Application.Services;
@@ -24,6 +27,29 @@ public partial class App : System.Windows.Application
     {
         base.OnStartup(e);
 
+        // api
+        string serverUrl = "http:localhost:5189";
+        string apiKey = "DEVELOPMENT_LOCAL_KEY";
+
+        string configPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.json");
+        if (File.Exists(configPath))
+        {
+            try
+            {
+                string jsonString = File.ReadAllText(configPath);
+                using (JsonDocument doc = JsonDocument.Parse(jsonString))
+                {
+                    var root = doc.RootElement;
+                    if (root.TryGetProperty("ServerUrl", out var urlProp)) serverUrl = urlProp.GetString();
+                    if (root.TryGetProperty("ApiKey", out var keyProp)) apiKey = keyProp.GetString();
+                }
+            }
+            catch { }
+        }
+
+        var httpClient = new HttpClient { BaseAddress = new Uri(serverUrl) };
+        httpClient.DefaultRequestHeaders.Add("X-Stride-API-Key", apiKey);
+
         // Services
         ILogger logger = new Logger();
         _logger = logger;
@@ -31,12 +57,12 @@ public partial class App : System.Windows.Application
         AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
         TaskScheduler.UnobservedTaskException += OnUnobservedTaskException;
 
-        IProjectService projectService = new ProjectService();
-        ITaskService taskService = new TaskService();
-        INotificationService notificationService = new NotificationService();
-        IMessageService messageService = new MessageService();
+        IProjectService projectService = new ProjectService(httpClient);
+        TaskService taskService = new TaskService(httpClient);
+        INotificationService notificationService = new NotificationService(httpClient);
+        IMessageService messageService = new MessageService(httpClient);
         // Temporary active user selection until proper login/session handling exists.
-        IUserService userService = new UserService(1);
+        IUserService userService = new UserService(1, httpClient);
         logger.Log(LogLevel.INFO, "Application Starting..");
 
         // Child viewmodels

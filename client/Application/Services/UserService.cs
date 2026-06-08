@@ -4,6 +4,7 @@
 
 using System.Net.Http;
 using System.Net.Http.Json;
+
 using client.Application.Interfaces;
 using client.Domain.Models;
 
@@ -15,10 +16,10 @@ public class UserService : IUserService
     public int Id { get; }
 
     // Author: Oliver
-    public UserService(int id)
+    public UserService(int id, HttpClient httpClient)
     {
         Id = id;
-        _httpClient = new HttpClient { BaseAddress = new Uri("http://localhost:5189") };
+        _httpClient = httpClient;
     }
 
     // Author: Oliver

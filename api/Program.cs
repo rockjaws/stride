@@ -56,6 +56,28 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+app.Use(async (context, next) =>
+        {
+            if (!context.Request.Headers.TryGetValue("X-Stride-API-Key", out var requestApiKey))
+            {
+                context.Response.StatusCode = 401;
+                await context.Response.WriteAsync("API Key missing.");
+                return;
+            }
+
+            var configuration = context.RequestServices.GetRequiredService<IConfiguration>();
+            var apiKey = configuration["ApiSettings:ApiKey"];
+
+            if (string.IsNullOrEmpty(apiKey) || !apiKey.Equals(requestApiKey))
+            {
+                context.Response.StatusCode = 401;
+                await context.Response.WriteAsync("Unauthorized client.");
+                return;
+            }
+
+            await next();
+        });
+
 app.MapControllers();
 
 app.Run();
