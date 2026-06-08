@@ -1,4 +1,8 @@
-﻿using System.Windows;
+// =============================================================================
+// Author: Oliver
+// =============================================================================
+
+using System.Windows;
 using client.Presentation.ViewModels;
 
 namespace client.Presentation.Views;
@@ -8,6 +12,7 @@ namespace client.Presentation.Views;
 /// </summary>
 public partial class MainWindow : Window
 {
+    // Author: Oliver
     public MainWindow(MainViewModel viewModel)
     {
         InitializeComponent();

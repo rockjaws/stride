@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Oliver
+// =============================================================================
+
 using client.Application.Interfaces;
 using client.Domain.Enum;
 using client.Presentation.ViewModels;
@@ -11,12 +15,14 @@ public class ChangeViewCommand : IUndoableCommand
     private readonly MainViewModel _mainViewModel;
     private object? _previousView;
 
+    // Author: Oliver
     public ChangeViewCommand(ILogger logger, MainViewModel mainViewModel)
     {
         _logger = logger;
         _mainViewModel = mainViewModel;
     }
 
+    // Author: Oliver
     public void Execute(object? param)
     {
         if (param is null)
@@ -30,6 +36,7 @@ public class ChangeViewCommand : IUndoableCommand
         _logger.Log(LogLevel.INFO, $"Changed View To {param.GetType().Name}");
     }
 
+    // Author: Oliver
     public void Undo()
     {
         if (_previousView is not null)
@@ -39,6 +46,7 @@ public class ChangeViewCommand : IUndoableCommand
         }
     }
 
+    // Author: Oliver
     public bool CanExecute(object? param) => param is not null;
 
     public event EventHandler? CanExecuteChanged

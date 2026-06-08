@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Nicolai
+// =============================================================================
+
 namespace client.Presentation.ViewModels;
 
 public class CalendarDayViewModel

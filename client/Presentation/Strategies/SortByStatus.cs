@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Nicolai and Oliver
+// =============================================================================
+
 using client.Application.Interfaces;
 using client.Presentation.Algorithms;
 
@@ -5,6 +9,7 @@ namespace client.Presentation.Strategies;
 
 public class SortByStatus : ITaskSortStrategy
 {
+    // Author: Nicolai and Oliver
     public void SortTasks(List<ITask> tasks)
     {
         if (tasks == null || tasks.Count <= 1) return;

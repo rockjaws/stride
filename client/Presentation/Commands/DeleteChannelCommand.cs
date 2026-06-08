@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Oliver
+// =============================================================================
+
 using client.Application.Interfaces;
 using client.Domain.Enum;
 using client.Domain.Models;
@@ -12,6 +16,7 @@ public class DeleteChannelCommand : IUndoableCommand
 
     private readonly Func<ChatChannel, Task> _deleteChannel;
 
+    // Author: Oliver
     public DeleteChannelCommand(
         ILogger logger,
         Func<bool>? canExecute,
@@ -25,6 +30,7 @@ public class DeleteChannelCommand : IUndoableCommand
         _deleteChannel = deleteChannel;
     }
 
+    // Author: Oliver
     public async void Execute(object? parameter)
     {
         var channel = parameter as ChatChannel ?? _getChannel?.Invoke();
@@ -49,6 +55,7 @@ public class DeleteChannelCommand : IUndoableCommand
         _logger.Log(LogLevel.WARNING, "DeleteChannelCommand executed without a channel.");
     }
 
+    // Author: Oliver
     public bool CanExecute(object? parameter)
     {
         bool canExecute = _canExecute?.Invoke() ?? true;
@@ -56,10 +63,12 @@ public class DeleteChannelCommand : IUndoableCommand
         return parameter is ChatChannel || canExecute;
     }
 
+    // Author: Oliver
     public void Undo() { }
 
     public event EventHandler? CanExecuteChanged;
 
+    // Author: Oliver
     public void RaiseCanExecuteChanged()
     {
         CanExecuteChanged?.Invoke(this, EventArgs.Empty);

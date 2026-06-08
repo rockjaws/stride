@@ -20,6 +20,7 @@ public class MockTask : ITask
     public int? ProjectId { get; }
     public List<User>? UsersAssigned { get; set; }
 
+    // Author: Nicolai and Oliver
     public MockTask(string title, DateTime deadline, TaskPriority priority, TaskProgress progress)
     {
         Title = title;
@@ -31,6 +32,7 @@ public class MockTask : ITask
 public class MergeSortTests
 {
     [Fact]
+    // Author: Nicolai and Oliver
     public void MergeSort_CorrectlySortElements()
     {
         var list = new List<int> { 5, 1, 7, 3, 9, 2 };
@@ -40,6 +42,7 @@ public class MergeSortTests
     }
 
     [Fact]
+    // Author: Nicolai and Oliver
     public void MergeSort_IsStable()
     {
         var today = DateTime.Today;
@@ -63,6 +66,7 @@ public class MergeSortTests
     }
 
     [Fact]
+    // Author: Nicolai and Oliver
     public void MergeSort_Benchmark()
     {
         int datasize = 15000;
@@ -101,6 +105,7 @@ public class MergeSortTests
         Assert.True(mergeSortTime < bubbleSortTime);
     }
     // Quick Sort baseline implementation
+    // Author: Nicolai and Oliver
     private void QuickSort(List<int> arr, int low, int high)
     {
         if (low < high)
@@ -111,6 +116,7 @@ public class MergeSortTests
         }
     }
 
+    // Author: Nicolai and Oliver
     private int Partition(List<int> arr, int low, int high)
     {
         int pivot = arr[high];
@@ -129,6 +135,7 @@ public class MergeSortTests
     }
 
     // Bubble Sort baseline implementation
+    // Author: Nicolai and Oliver
     private void BubbleSort(List<int> arr)
     {
         int n = arr.Count;

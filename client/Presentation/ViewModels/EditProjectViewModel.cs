@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Oliver
+// =============================================================================
+
 using System.Collections.ObjectModel;
 
 using client.Application.Interfaces;
@@ -48,6 +52,7 @@ public class EditProjectViewModel : ObservableObject
         set => SetProperty(ref _deadline, value);
     }
 
+    // Author: Oliver
     public EditProjectViewModel(ILogger logger, Project project, IUserService userService)
     {
         _logger = logger;
@@ -60,6 +65,7 @@ public class EditProjectViewModel : ObservableObject
         _ = GetUsersAsync();
     }
 
+    // Author: Oliver
     private async Task GetUsersAsync()
     {
         var users = await _userService.GetUsersAsync();
@@ -70,6 +76,7 @@ public class EditProjectViewModel : ObservableObject
         );
     }
 
+    // Author: Oliver
     public Project? UpdateProject()
     {
         if (_originalProject.Id == null)

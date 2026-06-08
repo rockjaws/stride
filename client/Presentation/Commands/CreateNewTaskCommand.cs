@@ -1,4 +1,8 @@
-﻿using client.Application.Interfaces;
+// =============================================================================
+// Author: Oliver
+// =============================================================================
+
+using client.Application.Interfaces;
 using client.Domain.Models;
 using client.Presentation.ViewModels;
 using client.Presentation.Views;
@@ -13,6 +17,7 @@ public class CreateNewTaskCommand : IUndoableCommand
     private readonly Func<bool> _canCreateTask;
     private readonly Func<int?> _getProjectId;
 
+    // Author: Oliver
     public CreateNewTaskCommand(
         ILogger logger,
         IUserService userService,
@@ -28,6 +33,7 @@ public class CreateNewTaskCommand : IUndoableCommand
         _getProjectId = getProjectId;
     }
 
+    // Author: Oliver
     public async void Execute(object? param)
     {
         if (!CanExecute(param))
@@ -63,12 +69,15 @@ public class CreateNewTaskCommand : IUndoableCommand
         }
     }
 
+    // Author: Oliver
     public void Undo() { } // No undoing for now.
 
+    // Author: Oliver
     public bool CanExecute(object? param) => _canCreateTask();
 
     public event EventHandler? CanExecuteChanged;
 
+    // Author: Oliver
     public void RaiseCanExecuteChanged()
     {
         CanExecuteChanged?.Invoke(this, EventArgs.Empty);

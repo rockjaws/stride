@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Oliver
+// =============================================================================
+
 using client.Application.Interfaces;
 using client.Domain.Enum;
 using client.Domain.Models;
@@ -10,6 +14,7 @@ public class ArchiveProjectCommand : IUndoableCommand
     private readonly Func<Project?> _getProject;
     private readonly Func<Project, Task> _archiveAsync;
 
+    // Author: Oliver
     public ArchiveProjectCommand(
         ILogger logger,
         Func<Project?> getProject,
@@ -21,6 +26,7 @@ public class ArchiveProjectCommand : IUndoableCommand
         _archiveAsync = archiveAsync;
     }
 
+    // Author: Oliver
     public async void Execute(object? param)
     {
         if (!CanExecute(param))
@@ -40,12 +46,15 @@ public class ArchiveProjectCommand : IUndoableCommand
         await _archiveAsync(project);
     }
 
+    // Author: Oliver
     public void Undo() { }
 
+    // Author: Oliver
     public bool CanExecute(object? param) => _getProject() != null;
 
     public event EventHandler? CanExecuteChanged;
 
+    // Author: Oliver
     public void RaiseCanExecuteChanged()
     {
         CanExecuteChanged?.Invoke(this, EventArgs.Empty);

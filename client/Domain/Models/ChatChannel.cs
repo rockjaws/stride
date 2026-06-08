@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Nicolai and Oliver
+// =============================================================================
+
 using client.Application.Interfaces;
 
 namespace client.Domain.Models;
@@ -9,6 +13,7 @@ public class ChatChannel : IChatChannel
     public int ProjectId { get; }
     public List<IMessage> Messages { get; private set; }
 
+    // Author: Nicolai and Oliver
     public ChatChannel(int id, string name, int projectId)
     {
         Id = id;

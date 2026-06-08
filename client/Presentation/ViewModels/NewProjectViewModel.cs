@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Nicolai and Oliver
+// =============================================================================
+
 using System.Collections.ObjectModel;
 
 using client.Application.Interfaces;
@@ -53,6 +57,7 @@ public class NewProjectViewModel : ObservableObject
         set => SetProperty(ref _deadline, value);
     }
 
+    // Author: Oliver
     public NewProjectViewModel(ILogger logger, IUserService userService)
     {
         _logger = logger;
@@ -60,6 +65,7 @@ public class NewProjectViewModel : ObservableObject
         _ = GetUsersAsync();
     }
 
+    // Author: Oliver
     private async Task GetUsersAsync()
     {
         var users = await _userService.GetUsersAsync();
@@ -70,6 +76,7 @@ public class NewProjectViewModel : ObservableObject
         );
     }
 
+    // Author: Oliver
     public bool Validate(out string validationMessage)
     {
         if (string.IsNullOrWhiteSpace(_title))
@@ -83,6 +90,7 @@ public class NewProjectViewModel : ObservableObject
         return true;
     }
 
+    // Author: Nicolai and Oliver
     public Project CreateProject()
     {
         _logger.Log(LogLevel.INFO, $"Prepared New Project: {_title}");

@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Nicolai and Oliver
+// =============================================================================
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -21,11 +25,13 @@ namespace client.Presentation.UserControls
     /// </summary>
     public partial class DashboardUserControl : UserControl
     {
+        // Author: Oliver
         public DashboardUserControl()
         {
             InitializeComponent();
         }
 
+        // Author: Nicolai
         private void DataGrid_OnSorting(object sender, DataGridSortingEventArgs e)
         {
             if (DataContext is not DashboardViewModel viewModel) return;

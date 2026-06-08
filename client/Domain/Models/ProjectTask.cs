@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Nicolai and Oliver
+// =============================================================================
+
 using client.Application.Interfaces;
 using client.Domain.Enum;
 
@@ -15,6 +19,7 @@ public class ProjectTask : ITask
     public int? ProjectId { get; }
     public List<User>? UsersAssigned { get; set; } = [];
 
+    // Author: Oliver
     public ProjectTask(
         int? id,
         string title,

@@ -1,4 +1,8 @@
-﻿namespace client.Application.Interfaces;
+// =============================================================================
+// Author: Oliver
+// =============================================================================
+
+namespace client.Application.Interfaces;
 
 public interface IUser
 {

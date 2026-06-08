@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Oliver
+// =============================================================================
+
 using client.Application.Interfaces;
 using client.Domain.Enum;
 using client.Domain.Models;
@@ -10,6 +14,7 @@ public class DeleteProjectCommand : IUndoableCommand
     private readonly Func<Project> _getProject;
     private readonly Func<Project, Task> _deleteProject;
 
+    // Author: Oliver
     public DeleteProjectCommand(
         ILogger logger,
         Func<Project> getProject,
@@ -21,6 +26,7 @@ public class DeleteProjectCommand : IUndoableCommand
         _getProject = getProject;
     }
 
+    // Author: Oliver
     public async void Execute(object? parameter)
     {
         var project = parameter as Project ?? _getProject?.Invoke();
@@ -45,12 +51,15 @@ public class DeleteProjectCommand : IUndoableCommand
         _logger.Log(LogLevel.WARNING, "DeleteProjectCommand executed without a project.");
     }
 
+    // Author: Oliver
     public bool CanExecute(object? parameter) => _getProject != null;
 
+    // Author: Oliver
     public void Undo() { }
 
     public event EventHandler? CanExecuteChanged;
 
+    // Author: Oliver
     public void RaiseCanExecuteChanged()
     {
         CanExecuteChanged?.Invoke(this, EventArgs.Empty);

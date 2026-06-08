@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Oliver
+// =============================================================================
+
 using client.Application.Interfaces;
 
 namespace client.Domain.Models;
@@ -11,6 +15,7 @@ public class User : IUser
 
     public string FullName => $"{FirstName} {LastName}";
 
+    // Author: Oliver
     public User(int id, string firstName, string lastName, string workMail)
     {
         Id = id;

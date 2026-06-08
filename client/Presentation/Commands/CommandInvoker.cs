@@ -1,4 +1,8 @@
-﻿using client.Application.Interfaces;
+// =============================================================================
+// Author: Oliver
+// =============================================================================
+
+using client.Application.Interfaces;
 
 namespace client.Presentation.Commands
 {
@@ -7,6 +11,7 @@ namespace client.Presentation.Commands
         private readonly Stack<IUndoableCommand> _history = new();
         private readonly Stack<IUndoableCommand> _redoStack = new();
 
+        // Author: Oliver
         public void Execute(IUndoableCommand command)
         {
             command.Execute(null);
@@ -14,6 +19,7 @@ namespace client.Presentation.Commands
             _redoStack.Clear();
         }
 
+        // Author: Oliver
         public void Undo()
         {
             if (_history.TryPop(out var command))
@@ -23,6 +29,7 @@ namespace client.Presentation.Commands
             }
         }
 
+        // Author: Oliver
         public void Redo()
         {
             if (_redoStack.TryPop(out var command))

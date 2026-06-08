@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Nicolai and Oliver
+// =============================================================================
+
 namespace client.Application.Interfaces;
 
 public interface IChatChannel

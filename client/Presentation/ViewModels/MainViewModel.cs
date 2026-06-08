@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Nicolai and Oliver
+// =============================================================================
+
 using System.Windows.Input;
 using System.Windows.Threading;
 
@@ -63,6 +67,7 @@ public class MainViewModel : ObservableObject
     public bool IsChatsSelected => CurrentView == ChatViewModel;
     public bool IsArchiveSelected => CurrentView == ArchiveViewModel;
 
+    // Author: Nicolai and Oliver
     public MainViewModel(
         ILogger logger,
         DashboardViewModel dashboardViewModel,
@@ -96,6 +101,7 @@ public class MainViewModel : ObservableObject
     }
 
 
+    // Author: Oliver
     public void StartNotificationPolling()
     {
         if (_notificationTimer.IsEnabled)
@@ -110,6 +116,7 @@ public class MainViewModel : ObservableObject
         _ = CheckNotificationsAsync();
     }
 
+    // Author: Nicolai and Oliver
     public void SetCurrentView(object viewModel)
     {
         CurrentView = viewModel;
@@ -120,6 +127,7 @@ public class MainViewModel : ObservableObject
             _ = TaskViewModel.LoadTasksAsync();
     }
 
+    // Author: Nicolai and Oliver
     private async Task CreateProjectAsync(Project project)
     {
         _logger.Log(LogLevel.INFO, $"MainViewModel creating project: {project.Title}");
@@ -129,6 +137,7 @@ public class MainViewModel : ObservableObject
         _logger.Log(LogLevel.INFO, "Created project added to chat view and project view selected.");
     }
 
+    // Author: Oliver
     private async Task CheckNotificationsAsync()
     {
         // DispatcherTimer can tick again while a slow API call is still running.
@@ -162,6 +171,7 @@ public class MainViewModel : ObservableObject
         }
     }
 
+    // Author: Oliver
     private async Task ShowToastAsync(string text)
     {
         ToastText = text;

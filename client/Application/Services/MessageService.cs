@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Nicolai
+// =============================================================================
+
 using System.Net.Http;
 using System.Net.Http.Json;
 
@@ -10,6 +14,7 @@ public class MessageService : IMessageService
 {
     private readonly HttpClient _httpClient;
 
+    // Author: Nicolai
     public MessageService()
     {
         _httpClient = new HttpClient
@@ -18,6 +23,7 @@ public class MessageService : IMessageService
         };
     }
 
+    // Author: Nicolai
     public async Task<List<Message>> GetMessagesAsync(int id)
     {
         var dtos = await _httpClient.GetFromJsonAsync<List<MessageDto>>($"api/channels/{id}/messages") ?? [];
@@ -32,6 +38,7 @@ public class MessageService : IMessageService
                     ))];
     }
 
+    // Author: Nicolai
     public async Task<Message> SendMessageAsync(int id, string text, int userId)
     {
         var response = await _httpClient.PostAsJsonAsync($"api/channels/{id}/messages", new MessageCreateDto
