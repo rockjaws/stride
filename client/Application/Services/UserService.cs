@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Oliver
+// =============================================================================
+
 using System.Net.Http;
 using System.Net.Http.Json;
 
@@ -11,18 +15,21 @@ public class UserService : IUserService
     private readonly HttpClient _httpClient;
     public int Id { get; }
 
+    // Author: Oliver
     public UserService(int id, HttpClient httpClient)
     {
         Id = id;
         _httpClient = httpClient;
     }
 
+    // Author: Oliver
     public async Task<List<User>> GetUsersAsync()
     {
         var userDtos = await _httpClient.GetFromJsonAsync<List<UserDto>>("api/users") ?? [];
         return [.. userDtos.Select(ToUser)];
     }
 
+    // Author: Oliver
     public async Task<List<User>> GetUsersAsync(int projectId)
     {
         var userDtos =
@@ -31,6 +38,7 @@ public class UserService : IUserService
         return [.. userDtos.Select(ToUser)];
     }
 
+    // Author: Oliver
     private static User ToUser(UserDto dto)
     {
         return new User(dto.Id, dto.FirstName, dto.LastName, dto.WorkMail);

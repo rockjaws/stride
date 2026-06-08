@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Nicolaj and Oliver
+// =============================================================================
+
 using System.Net.Http;
 using System.Net.Http.Json;
 
@@ -12,18 +16,22 @@ public class TaskService : ITaskService
     private readonly HttpClient _httpclient;
 
     public event EventHandler? TasksChanged;
+
+    // Author: Nicolaj and Oliver
     public TaskService(HttpClient httpClient)
     {
         _httpclient = httpClient;
     }
 
 
+    // Author: Nicolaj and Oliver
     public async Task<List<ProjectTask>> GetTasksAsync()
     {
         var taskDtos = await _httpclient.GetFromJsonAsync<List<ProjectTaskDto>>("api/tasks") ?? [];
         return [.. taskDtos.Select(ToProjectTask)];
     }
 
+    // Author: Nicolaj and Oliver
     public async Task<List<ProjectTask>> GetTasksAsync(int userId)
     {
         // The API applies the user filter; the client only passes the active UserService id.
@@ -31,6 +39,7 @@ public class TaskService : ITaskService
         return [.. taskDtos.Select(ToProjectTask)];
     }
 
+    // Author: Nicolaj and Oliver
     public async Task<ProjectTask> CreateTaskAsync(ProjectTask task)
     {
         if (task.ProjectId == null)
@@ -69,6 +78,7 @@ public class TaskService : ITaskService
         return savedTask;
     }
 
+    // Author: Nicolaj and Oliver
     public async Task UpdateTaskAsync(ProjectTask task)
     {
         if (task.Id == null)
@@ -89,6 +99,7 @@ public class TaskService : ITaskService
         NotifyTasksChanged();
     }
 
+    // Author: Nicolaj and Oliver
     public async Task<ProjectTask> MoveTaskAsync(ProjectTask task, TaskProgress progress)
     {
         // Return a new instance so callers can replace bound collection items cleanly.
@@ -107,16 +118,20 @@ public class TaskService : ITaskService
         return movedTask;
     }
 
+    // Author: Nicolaj and Oliver
     public async Task DeleteTaskAsync(int id)
     {
         var response = await _httpclient.DeleteAsync($"api/tasks/{id}");
         response.EnsureSuccessStatusCode();
     }
 
+    // Author: Nicolaj and Oliver
     public void SortTasks() { }
 
+    // Author: Nicolaj
     private void NotifyTasksChanged() => TasksChanged?.Invoke(this, EventArgs.Empty);
 
+    // Author: Nicolaj and Oliver
     private static ProjectTask ToProjectTask(ProjectTaskDto dto)
     {
         return new ProjectTask(
@@ -134,6 +149,7 @@ public class TaskService : ITaskService
         };
     }
 
+    // Author: Nicolaj and Oliver
     private static TaskProgress ParseProgress(string progress)
     {
         if (Enum.TryParse<TaskProgress>(progress, ignoreCase: true, out var parsed))
@@ -143,6 +159,7 @@ public class TaskService : ITaskService
         return TaskProgress.Backlog;
     }
 
+    // Author: Nicolaj and Oliver
     private static TaskPriority ParsePriority(string priority)
     {
         if (Enum.TryParse<TaskPriority>(priority, ignoreCase: true, out var parsed))

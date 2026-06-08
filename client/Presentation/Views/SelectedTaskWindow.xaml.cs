@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Oliver
+// =============================================================================
+
 using System.Windows;
 
 namespace client.Presentation.Views
@@ -9,15 +13,19 @@ namespace client.Presentation.Views
     {
         public bool DeleteRequested { get; private set; }
 
+        // Author: Oliver
         public SelectedTaskWindow()
         {
             InitializeComponent();
         }
 
+        // Author: Oliver
         private void onUpdateTask(object sender, RoutedEventArgs e) => DialogResult = true;
 
+        // Author: Oliver
         private void onCancel(object sender, RoutedEventArgs e) => DialogResult = false;
 
+        // Author: Oliver
         private void onDeleteTask(object sender, RoutedEventArgs e)
         {
             var msgBox = MessageBox.Show(

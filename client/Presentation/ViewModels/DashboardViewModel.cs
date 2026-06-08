@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Nicolaj and Oliver
+// =============================================================================
+
 using System.Collections.ObjectModel;
 
 using client.Application.Interfaces;
@@ -67,6 +71,7 @@ public class DashboardViewModel : ObservableObject, IDisposable
         get => _finishedCount;
         set => SetProperty(ref _finishedCount, value);
     }
+    // Author: Nicolaj and Oliver
     public DashboardViewModel(ILogger logger, IProjectService projectService, ITaskService taskService, IUserService userService, INotificationService notificationService)
     {
         _logger = logger;
@@ -85,6 +90,7 @@ public class DashboardViewModel : ObservableObject, IDisposable
     }
 
 
+    // Author: Nicolaj and Oliver
     public async Task GetDashboardMetricsAsync()
     {
         try
@@ -160,6 +166,7 @@ public class DashboardViewModel : ObservableObject, IDisposable
         }
     }
 
+    // Author: Nicolaj
     public void ChangeSortingStrategy(ITaskSortStrategy newStrategy)
     {
         if (newStrategy == null || SortingStrategy.GetType() == newStrategy.GetType()) return;
@@ -170,6 +177,7 @@ public class DashboardViewModel : ObservableObject, IDisposable
         SortTasks();
     }
 
+    // Author: Nicolaj and Oliver
     private void SortTasks()
     {
         if (_tasks == null || _tasks.Count == 0) return;
@@ -179,11 +187,13 @@ public class DashboardViewModel : ObservableObject, IDisposable
         UpcomingTasks = new ObservableCollection<ProjectTask>(_tasks.Cast<ProjectTask>());
     }
 
+    // Author: Nicolaj
     private void OnGlobalStateChange(object? sender, EventArgs e)
     {
         _ = GetDashboardMetricsAsync();
     }
 
+    // Author: Nicolaj
     public void Dispose()
     {
         _taskService.TasksChanged -= OnGlobalStateChange;

@@ -1,4 +1,8 @@
-﻿namespace client.Application.Interfaces;
+// =============================================================================
+// Author: Nicolaj and Oliver
+// =============================================================================
+
+namespace client.Application.Interfaces;
 
 public interface INotification
 {

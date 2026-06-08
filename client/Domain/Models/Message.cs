@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Nicolaj and Oliver
+// =============================================================================
+
 using client.Application.Interfaces;
 
 namespace client.Domain.Models;
@@ -11,6 +15,7 @@ public class Message : IMessage
     public int UserId { get; }
     public string SenderName { get; } = "Unknown";
 
+    // Author: Nicolaj and Oliver
     public Message(int id, string text, DateTime time, int channelId, int userId, string senderName)
     {
         Id = id;

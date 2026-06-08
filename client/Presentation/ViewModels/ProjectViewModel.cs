@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Nicolaj and Oliver
+// =============================================================================
+
 using System.Collections.ObjectModel;
 
 using client.Application.Interfaces;
@@ -100,6 +104,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
 
     public EditProjectCommand EditProjectCommand { get; }
 
+    // Author: Nicolaj and Oliver
     public ProjectViewModel(
         ILogger logger,
         IProjectService projectService,
@@ -152,6 +157,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
         _ = GetProjectsAsync();
     }
 
+    // Author: Oliver
     private void LoadTasks(Project currentProject)
     {
         // Projects are loaded with their tasks, so selecting a project only needs local grouping.
@@ -162,6 +168,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
         }
     }
 
+    // Author: Oliver
     private void ClearTaskColumns()
     {
         BacklogTasks.Clear();
@@ -170,6 +177,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
         FinishedTasks.Clear();
     }
 
+    // Author: Oliver
     private void AddCreatedTask(ProjectTask task)
     {
         if (task == null)
@@ -181,6 +189,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
         _logger.Log(LogLevel.INFO, $"Added Created Task To Board: {task.Id}");
     }
 
+    // Author: Oliver
     public async Task CreateTaskAsync(ProjectTask task)
     {
         if (task == null)
@@ -198,6 +207,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
         }
     }
 
+    // Author: Oliver
     private void UpdateTask(ProjectTask task)
     {
         if (task == null)
@@ -216,6 +226,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
         _logger.Log(LogLevel.INFO, $"Updated Task On Board: {task.Id}");
     }
 
+    // Author: Oliver
     public async Task DeleteProjectAsync(Project project)
     {
         if (SelectedProject == null)
@@ -239,6 +250,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
         _logger.Log(LogLevel.INFO, $"Deleted Project {project.Id}");
     }
 
+    // Author: Nicolaj and Oliver
     public async Task ArchiveProjectAsync(Project project)
     {
         if (project.Id is not int id)
@@ -259,6 +271,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
         }
     }
 
+    // Author: Oliver
     public async Task UpdateProjectAsync(Project project)
     {
         if (project.Id is not int id)
@@ -276,6 +289,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
         }
     }
 
+    // Author: Oliver
     private void ReplaceProject(Project project)
     {
         int projectIndex = ListOfProjects
@@ -289,6 +303,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
         SelectedProject = project;
     }
 
+    // Author: Oliver
     public async Task DeleteTaskAsync(ProjectTask task)
     {
         if (task.Id is not int id)
@@ -309,6 +324,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
         _logger.Log(LogLevel.INFO, $"Deleted Task {id}");
     }
 
+    // Author: Oliver
     private void RemoveDeletedTask(ProjectTask task)
     {
         var existingTask = SelectedProject?.Tasks.FirstOrDefault(t => t.Id == task.Id);
@@ -331,6 +347,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
         _logger.Log(LogLevel.INFO, $"Removed Task From Board: {task.Id}");
     }
 
+    // Author: Oliver
     public async Task UpdateTaskAsync(ProjectTask task)
     {
         if (task == null)
@@ -348,6 +365,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
         }
     }
 
+    // Author: Oliver
     public async Task MoveTaskAsync(ProjectTask task, TaskProgress progress)
     {
         if (task.Progress == progress)
@@ -370,6 +388,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
         }
     }
 
+    // Author: Oliver
     private ObservableCollection<ProjectTask> GetTaskCollection(TaskProgress progress)
     {
         // Centralize progress-to-column mapping so drag/drop, create, update, and delete stay consistent.
@@ -383,6 +402,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
         };
     }
 
+    // Author: Oliver
     private void ReplaceSelectedProjectTask(ProjectTask originalTask, ProjectTask movedTask)
     {
         if (SelectedProject == null)
@@ -399,6 +419,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
         SelectedProject.Tasks.Add(movedTask);
     }
 
+    // Author: Oliver
     public void AddCreatedProject(Project project)
     {
         if (project == null)
@@ -409,6 +430,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
         _logger.Log(LogLevel.INFO, $"Added Created Project To Project List: {project.Id}");
     }
 
+    // Author: Oliver
     private async Task GetProjectsAsync()
     {
         try
@@ -432,6 +454,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
         }
     }
 
+    // Author: Nicolaj
     public async Task CreateProjectAsync(Project project)
     {
         try
@@ -446,6 +469,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
         }
     }
 
+    // Author: Nicolaj
     private async void OnGlobalStateChange(object? sender, EventArgs e)
     {
         if (_isUpdatingGlobalState) return;
@@ -471,6 +495,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
         }
     }
 
+    // Author: Nicolaj
     public void Dispose()
     {
         _taskService.TasksChanged -= OnGlobalStateChange;
@@ -479,6 +504,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
         GC.SuppressFinalize(this);
     }
 
+    // Author: Nicolaj
     public async Task LoadProjectFeedAsync(int projectId)
     {
         try

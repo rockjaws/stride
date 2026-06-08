@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Nicolaj and Oliver
+// =============================================================================
+
 using client.Application.Interfaces;
 using client.Domain.Enum;
 using client.Domain.Models;
@@ -16,11 +20,13 @@ public class NewChatViewModel : ObservableObject
         set => SetProperty(ref _name, value);
     }
 
+    // Author: Nicolaj
     public NewChatViewModel(ILogger logger)
     {
         _logger = logger;
     }
 
+    // Author: Nicolaj and Oliver
     public ChatChannel CreateChannel(int projectId)
     {
         _logger.Log(LogLevel.INFO, $"Prepared New Channel For Project {projectId}: {Name}");

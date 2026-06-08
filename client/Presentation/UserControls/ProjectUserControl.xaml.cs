@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Oliver
+// =============================================================================
+
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,11 +21,13 @@ namespace client.Presentation.UserControls
     {
         private ProjectTask? _selectedPriorityTask;
 
+        // Author: Oliver
         public ProjectUserControl()
         {
             InitializeComponent();
         }
 
+        // Author: Oliver
         private void TaskCard_PreviewMouseMove(object sender, MouseEventArgs e)
         {
             if (e.LeftButton != MouseButtonState.Pressed)
@@ -34,6 +40,7 @@ namespace client.Presentation.UserControls
             DragDrop.DoDragDrop(taskCard, task, DragDropEffects.Move);
         }
 
+        // Author: Oliver
         private async void DeleteTask_Click(object sender, MouseButtonEventArgs e)
         {
             if (e.LeftButton != MouseButtonState.Pressed)
@@ -57,6 +64,7 @@ namespace client.Presentation.UserControls
             await viewModel.DeleteTaskAsync(task);
         }
 
+        // Author: Oliver
         private void TaskCard_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ClickCount != 2)
@@ -77,6 +85,7 @@ namespace client.Presentation.UserControls
             }
         }
 
+        // Author: Oliver
         private void ChangePriority_Click(object sender, RoutedEventArgs e)
         {
             if (sender is not Button { Tag: ProjectTask task } button)
@@ -97,24 +106,28 @@ namespace client.Presentation.UserControls
             e.Handled = true;
         }
 
+        // Author: Oliver
         private async void Priority_Low_Click(object sender, RoutedEventArgs e)
         {
             await UpdateTaskPriorityAsync(TaskPriority.Low);
             e.Handled = true;
         }
 
+        // Author: Oliver
         private async void Priority_Medium_Click(object sender, RoutedEventArgs e)
         {
             await UpdateTaskPriorityAsync(TaskPriority.Normal);
             e.Handled = true;
         }
 
+        // Author: Oliver
         private async void Priority_High_Click(object sender, RoutedEventArgs e)
         {
             await UpdateTaskPriorityAsync(TaskPriority.High);
             e.Handled = true;
         }
 
+        // Author: Oliver
         private async Task UpdateTaskPriorityAsync(TaskPriority priority)
         {
             var task = _selectedPriorityTask;
@@ -160,6 +173,7 @@ namespace client.Presentation.UserControls
             }
         }
 
+        // Author: Oliver
         private void ProjectRoot_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             if (PriorityPicker.Visibility != Visibility.Visible)
@@ -173,11 +187,13 @@ namespace client.Presentation.UserControls
             RestoreApplicationFocus();
         }
 
+        // Author: Oliver
         private void HidePriorityPicker()
         {
             PriorityPicker.Visibility = Visibility.Collapsed;
         }
 
+        // Author: Oliver
         private void RestoreApplicationFocus()
         {
             // The inline priority picker can leave mouse/keyboard focus captured after a click.
@@ -196,6 +212,7 @@ namespace client.Presentation.UserControls
             }, DispatcherPriority.ApplicationIdle);
         }
 
+        // Author: Oliver
         private static bool IsElementInside(DependencyObject child, DependencyObject parent)
         {
             var current = child;
@@ -212,6 +229,7 @@ namespace client.Presentation.UserControls
             return false;
         }
 
+        // Author: Oliver
         private void Column_DragOver(object sender, DragEventArgs e)
         {
             e.Effects = e.Data.GetDataPresent(typeof(ProjectTask))
@@ -220,6 +238,7 @@ namespace client.Presentation.UserControls
             e.Handled = true;
         }
 
+        // Author: Oliver
         private async void Column_Drop(object sender, DragEventArgs e)
         {
             if (sender is not FrameworkElement { Tag: TaskProgress progress })

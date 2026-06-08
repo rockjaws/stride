@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Nicolaj and Oliver
+// =============================================================================
+
 using System.Collections.ObjectModel;
 
 using client.Application.Interfaces;
@@ -26,8 +30,14 @@ public class NewProjectViewModel : ObservableObject
     public string Title
     {
         get => _title;
-        set => SetProperty(ref _title, value);
+        set
+        {
+            if (SetProperty(ref _title, value))
+                OnPropertyChanged(nameof(CanCreate));
+        }
     }
+
+    public bool CanCreate => !string.IsNullOrWhiteSpace(_title);
 
     public string Description
     {
@@ -47,6 +57,7 @@ public class NewProjectViewModel : ObservableObject
         set => SetProperty(ref _deadline, value);
     }
 
+    // Author: Oliver
     public NewProjectViewModel(ILogger logger, IUserService userService)
     {
         _logger = logger;
@@ -54,6 +65,7 @@ public class NewProjectViewModel : ObservableObject
         _ = GetUsersAsync();
     }
 
+    // Author: Oliver
     private async Task GetUsersAsync()
     {
         var users = await _userService.GetUsersAsync();
@@ -64,13 +76,28 @@ public class NewProjectViewModel : ObservableObject
         );
     }
 
+    // Author: Oliver
+    public bool Validate(out string validationMessage)
+    {
+        if (string.IsNullOrWhiteSpace(_title))
+        {
+            validationMessage = "Project title is required.";
+            _logger.Log(LogLevel.WARNING, "New project validation failed: title is required.");
+            return false;
+        }
+
+        validationMessage = string.Empty;
+        return true;
+    }
+
+    // Author: Nicolaj and Oliver
     public Project CreateProject()
     {
         _logger.Log(LogLevel.INFO, $"Prepared New Project: {_title}");
 
         return new Project(
             null,
-            _title,
+            _title.Trim(),
             _description,
             _startDate,
             _deadline,

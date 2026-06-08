@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Nicolaj and Oliver
+// =============================================================================
+
 using System.Collections.ObjectModel;
 
 using client.Application.Interfaces;
@@ -64,6 +68,7 @@ public class SelectedTaskViewModel : ObservableObject
     public TaskProgress[] ProgressOptions { get; } = Enum.GetValues<TaskProgress>();
     public TaskPriority[] PriorityOptions { get; } = Enum.GetValues<TaskPriority>();
 
+    // Author: Oliver
     public SelectedTaskViewModel(ILogger logger, ProjectTask task, IUserService userService)
     {
         _logger = logger;
@@ -78,6 +83,7 @@ public class SelectedTaskViewModel : ObservableObject
         _ = GetUsersAsync(task.ProjectId);
     }
 
+    // Author: Oliver
     private async Task GetUsersAsync(int? projectId)
     {
         _logger.Log(
@@ -96,6 +102,7 @@ public class SelectedTaskViewModel : ObservableObject
         _logger.Log(LogLevel.INFO, $"AssignableMembers set: {AssignableMembers.Count}");
     }
 
+    // Author: Oliver
     public ProjectTask? UpdateTask()
     {
         if (_originalTask.Id == null)

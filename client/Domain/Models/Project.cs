@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Nicolaj and Oliver
+// =============================================================================
+
 using client.Application.Interfaces;
 
 namespace client.Domain.Models;
@@ -15,6 +19,7 @@ public class Project : IProject
 
     public List<User> Members { get; private set; }
 
+    // Author: Nicolaj and Oliver
     public Project(
         int? id,
         string title,
@@ -38,11 +43,13 @@ public class Project : IProject
         Members = members ?? [];
     }
 
+    // Author: Oliver
     public void Archive()
     {
         IsArchived = true;
     }
 
+    // Author: Oliver
     public void UnArchive()
     {
         IsArchived = false;

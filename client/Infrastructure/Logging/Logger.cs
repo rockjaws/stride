@@ -1,6 +1,9 @@
+// =============================================================================
+// Author: Oliver
+// =============================================================================
+
 using System.Diagnostics;
 using System.IO;
-
 using client.Application.Interfaces;
 using client.Domain.Enum;
 
@@ -12,6 +15,7 @@ public class Logger : ILogger
 
     public string LogFilePath { get; }
 
+    // Author: Oliver
     public Logger(string? logFilePath = null)
     {
         LogFilePath = logFilePath ?? GetDefaultLogFilePath();
@@ -21,6 +25,7 @@ public class Logger : ILogger
         Log(LogLevel.INFO, $"Logger initialized. Log file: {LogFilePath}");
     }
 
+    // Author: Oliver
     public void Log(LogLevel level, string msg)
     {
         var entry = $"{DateTimeOffset.Now:yyyy-MM-dd HH:mm:ss.fff zzz} [{level}] {msg}";
@@ -46,9 +51,12 @@ public class Logger : ILogger
         }
     }
 
+    // Author: Oliver
     private static string GetDefaultLogFilePath()
     {
-        var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        var localAppData = Environment.GetFolderPath(
+            Environment.SpecialFolder.LocalApplicationData
+        );
         return Path.Combine(localAppData, "Stride", "logs", "stride.log");
     }
 }

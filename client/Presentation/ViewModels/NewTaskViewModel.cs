@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Oliver
+// =============================================================================
+
 using System.Collections.ObjectModel;
 
 using client.Application.Interfaces;
@@ -29,8 +33,14 @@ namespace client.Presentation.ViewModels
         public string Title
         {
             get => _title;
-            set => SetProperty(ref _title, value);
+            set
+            {
+                if (SetProperty(ref _title, value))
+                    OnPropertyChanged(nameof(CanCreate));
+            }
         }
+
+        public bool CanCreate => !string.IsNullOrWhiteSpace(_title);
 
         public string Description
         {
@@ -66,6 +76,7 @@ namespace client.Presentation.ViewModels
 
         public TaskPriority[] PriorityOptions { get; } = Enum.GetValues<TaskPriority>();
 
+        // Author: Oliver
         public NewTaskViewModel(ILogger logger, IUserService userService, int projectId)
         {
             _logger = logger;
@@ -74,6 +85,7 @@ namespace client.Presentation.ViewModels
             _ = GetUsersAsync();
         }
 
+        // Author: Oliver
         private async Task GetUsersAsync()
         {
             var users = await _userService.GetUsersAsync(_projectId);
@@ -84,13 +96,28 @@ namespace client.Presentation.ViewModels
             );
         }
 
+        // Author: Oliver
+        public bool Validate(out string validationMessage)
+        {
+            if (string.IsNullOrWhiteSpace(_title))
+            {
+                validationMessage = "Task title is required.";
+                _logger.Log(LogLevel.WARNING, "New task validation failed: title is required.");
+                return false;
+            }
+
+            validationMessage = string.Empty;
+            return true;
+        }
+
+        // Author: Oliver
         public ProjectTask CreateProjectTask(int projectId)
         {
             _logger.Log(LogLevel.INFO, $"Prepared New Task For Project {projectId}: {_title}");
 
             ProjectTask task = new ProjectTask(
                 null,
-                _title,
+                _title.Trim(),
                 _description,
                 _startDate,
                 _deadline,

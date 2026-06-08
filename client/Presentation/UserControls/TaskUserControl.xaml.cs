@@ -1,4 +1,8 @@
-﻿using System;
+// =============================================================================
+// Author: Oliver
+// =============================================================================
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -18,6 +22,7 @@ namespace client.Presentation.UserControls
     /// </summary>
     public partial class TaskUserControl : UserControl
     {
+        // Author: Oliver
         public TaskUserControl()
         {
             InitializeComponent();

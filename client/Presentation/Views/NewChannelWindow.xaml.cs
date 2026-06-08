@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Nicolaj and Oliver
+// =============================================================================
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,12 +21,15 @@ namespace client.Presentation.Views
     /// </summary>
     public partial class NewChannelWindow : Window
     {
+        // Author: Nicolaj
         public NewChannelWindow()
         {
             InitializeComponent();
         }
 
+        // Author: Nicolaj
         private void OnCreate(object sender, RoutedEventArgs e) => DialogResult = true;
+        // Author: Nicolaj
         private void OnCancel(object sender, RoutedEventArgs e) => DialogResult = false;
     }
 }

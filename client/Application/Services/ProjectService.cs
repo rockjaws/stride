@@ -1,3 +1,7 @@
+// =============================================================================
+// Author: Nicolaj and Oliver
+// =============================================================================
+
 using System.Net.Http;
 using System.Net.Http.Json;
 
@@ -13,11 +17,13 @@ public class ProjectService : IProjectService
 
     public event EventHandler? ProjectsChanged;
 
+    // Author: Nicolaj and Oliver
     public ProjectService(HttpClient httpClient)
     {
         _httpclient = httpClient;
     }
 
+    // Author: Nicolaj and Oliver
     public async Task<List<Project>> GetProjectsAsync()
     {
         var projectDtos =
@@ -25,6 +31,7 @@ public class ProjectService : IProjectService
         return [.. projectDtos.Where(p => !p.IsArchived).Select(ToProject)];
     }
 
+    // Author: Oliver
     public async Task<List<Project>> GetProjectsAsync(int userId)
     {
         // User membership filtering is handled by the API endpoint.
@@ -35,6 +42,7 @@ public class ProjectService : IProjectService
         return [.. projectDtos.Select(ToProject)];
     }
 
+    // Author: Nicolaj and Oliver
     public async Task<Project> CreateProjectAsync(Project project, int userId)
     {
         var response = await _httpclient.PostAsJsonAsync(
@@ -59,6 +67,7 @@ public class ProjectService : IProjectService
         return ToProject(createdProject);
     }
 
+    // Author: Oliver
     public async Task<Project> UpdateProjectAsync(Project project)
     {
         if (project.Id == null)
@@ -85,6 +94,7 @@ public class ProjectService : IProjectService
         return ToProject(updatedProject);
     }
 
+    // Author: Nicolaj and Oliver
     public async Task<ChatChannel> CreateChannelAsync(int projectId, string name)
     {
         var response = await _httpclient.PostAsJsonAsync(
@@ -100,6 +110,7 @@ public class ProjectService : IProjectService
         return new ChatChannel(dto.Id, dto.Name, dto.ProjectId);
     }
 
+    // Author: Oliver
     public async Task DeleteChannelAsync(int projectId, int channelId)
     {
         var response = await _httpclient.DeleteAsync(
@@ -108,6 +119,7 @@ public class ProjectService : IProjectService
         response.EnsureSuccessStatusCode();
     }
 
+    // Author: Nicolaj and Oliver
     public async Task DeleteProjectAsync(int id)
     {
         var response = await _httpclient.DeleteAsync($"api/projects/{id}");
@@ -115,6 +127,7 @@ public class ProjectService : IProjectService
         NotifyProjectsChanged();
     }
 
+    // Author: Nicolaj and Oliver
     public async Task SetProjectArchivedAsync(int id, bool isArchived)
     {
         var payload = new { isArchived };
@@ -125,6 +138,7 @@ public class ProjectService : IProjectService
         NotifyProjectsChanged();
     }
 
+    // Author: Nicolaj and Oliver
     private static TaskProgress ParseProgress(string progress)
     {
         if (Enum.TryParse<TaskProgress>(progress, ignoreCase: true, out var parsed))
@@ -133,6 +147,7 @@ public class ProjectService : IProjectService
         return TaskProgress.Backlog;
     }
 
+    // Author: Nicolaj and Oliver
     private static TaskPriority ParsePriority(string priority)
     {
         if (Enum.TryParse<TaskPriority>(priority, ignoreCase: true, out var parsed))
@@ -141,6 +156,7 @@ public class ProjectService : IProjectService
         return TaskPriority.Normal;
     }
 
+    // Author: Nicolaj and Oliver
     private static Project ToProject(ProjectDto dto)
     {
         var members = dto
@@ -179,6 +195,7 @@ public class ProjectService : IProjectService
         );
     }
 
+    // Author: Nicolaj
     private void NotifyProjectsChanged() => ProjectsChanged?.Invoke(this, EventArgs.Empty);
 
     private sealed class ProjectCreateDto
