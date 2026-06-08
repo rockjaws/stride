@@ -15,7 +15,6 @@ namespace api.Migrations
     partial class AddProjectIdToNotifications
     {
         /// <inheritdoc />
-        // Author: Nicolai and Oliver
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618

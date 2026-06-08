@@ -4,11 +4,9 @@ namespace api.Infrastructure.Logging;
 
 public sealed class FileLoggerProvider : ILoggerProvider
 {
-    // Author: Nicolai and Oliver
     private readonly object _fileLock = new();
     private readonly string _logFilePath;
 
-    // Author: Nicolai and Oliver
     public FileLoggerProvider(string? logFilePath = null)
     {
         _logFilePath = logFilePath ?? GetDefaultLogFilePath();
@@ -16,16 +14,13 @@ public sealed class FileLoggerProvider : ILoggerProvider
         File.WriteAllText(_logFilePath, string.Empty);
     }
 
-    // Author: Nicolai and Oliver
     public ILogger CreateLogger(string categoryName)
     {
         return new FileLogger(categoryName, _logFilePath, _fileLock);
     }
 
-    // Author: Nicolai and Oliver
     public void Dispose() { }
 
-    // Author: Nicolai and Oliver
     public static string GetDefaultLogFilePath()
     {
         var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
@@ -43,7 +38,6 @@ public sealed class FileLoggerProvider : ILoggerProvider
         private readonly object _fileLock;
         private readonly string _logFilePath;
 
-        // Author: Nicolai and Oliver
         public FileLogger(string categoryName, string logFilePath, object fileLock)
         {
             _categoryName = categoryName;
@@ -51,14 +45,12 @@ public sealed class FileLoggerProvider : ILoggerProvider
             _fileLock = fileLock;
         }
 
-        // Author: Nicolai and Oliver
         public IDisposable? BeginScope<TState>(TState state)
             where TState : notnull
         {
             return NullScope.Instance;
         }
 
-        // Author: Nicolai and Oliver
         public bool IsEnabled(Microsoft.Extensions.Logging.LogLevel logLevel)
         {
             if (ExcludedCategories.Any(category => _categoryName.StartsWith(category)))
@@ -67,7 +59,6 @@ public sealed class FileLoggerProvider : ILoggerProvider
             return logLevel != Microsoft.Extensions.Logging.LogLevel.None;
         }
 
-        // Author: Nicolai and Oliver
         public void Log<TState>(
             Microsoft.Extensions.Logging.LogLevel logLevel,
             EventId eventId,
@@ -105,10 +96,8 @@ public sealed class FileLoggerProvider : ILoggerProvider
 
     private sealed class NullScope : IDisposable
     {
-        // Author: Nicolai and Oliver
         public static NullScope Instance { get; } = new();
 
-        // Author: Nicolai and Oliver
         public void Dispose() { }
     }
 }

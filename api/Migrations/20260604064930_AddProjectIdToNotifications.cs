@@ -8,7 +8,6 @@ namespace api.Migrations
     public partial class AddProjectIdToNotifications : Migration
     {
         /// <inheritdoc />
-        // Author: Nicolai and Oliver
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<int>(
@@ -20,7 +19,6 @@ namespace api.Migrations
         }
 
         /// <inheritdoc />
-        // Author: Nicolai and Oliver
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(

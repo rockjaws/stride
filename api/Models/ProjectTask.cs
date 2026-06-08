@@ -14,6 +14,5 @@ public class ProjectTask
 
     public int ProjectId { get; set; }
     public Project? Project { get; set; }
-    // Author: Nicolai and Oliver
     public List<User> Users { get; set; } = new();
 }

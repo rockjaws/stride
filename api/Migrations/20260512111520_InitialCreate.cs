@@ -9,7 +9,6 @@ namespace api.Migrations
     public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
-        // Author: Nicolai and Oliver
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -61,7 +60,6 @@ namespace api.Migrations
         }
 
         /// <inheritdoc />
-        // Author: Nicolai and Oliver
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(

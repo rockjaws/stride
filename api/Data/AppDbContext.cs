@@ -7,7 +7,6 @@ namespace api.Data;
 public class AppDbContext : DbContext
 {
     // The constructor accepts configuration options (like our SQLite connection string)
-    // Author: Nicolai and Oliver
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options) { }
 
@@ -18,7 +17,6 @@ public class AppDbContext : DbContext
     public DbSet<Message> Messages { get; set; }
     public DbSet<Notification> Notifications { get; set; }
 
-    // Author: Nicolai and Oliver
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

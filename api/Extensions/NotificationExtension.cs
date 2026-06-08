@@ -5,7 +5,6 @@ namespace api.Extensions;
 
 public static class NotificationExtensions
 {
-    // Author: Nicolai and Oliver
     public static NotificationDto ToDto(this Notification n)
     {
         return new NotificationDto

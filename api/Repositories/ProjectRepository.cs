@@ -9,13 +9,11 @@ public class ProjectRepository : IProjectRepository
 {
     private readonly AppDbContext _context;
 
-    // Author: Nicolai and Oliver
     public ProjectRepository(AppDbContext context)
     {
         _context = context;
     }
 
-    // Author: Nicolai and Oliver
     public async Task<IEnumerable<Project>> GetAllProjectsAsync()
     {
         return await _context
@@ -28,7 +26,6 @@ public class ProjectRepository : IProjectRepository
             .ToListAsync();
     }
 
-    // Author: Nicolai and Oliver
     public async Task<IEnumerable<Project>> GetProjectsByUserIdAsync(int userId)
     {
         return await _context
@@ -41,7 +38,6 @@ public class ProjectRepository : IProjectRepository
             .ToListAsync();
     }
 
-    // Author: Nicolai and Oliver
     public async Task<Project?> GetProjectByIdAsync(int? id)
     {
         return await _context
@@ -53,27 +49,23 @@ public class ProjectRepository : IProjectRepository
             .FirstOrDefaultAsync(p => p.Id == id);
     }
 
-    // Author: Nicolai and Oliver
     public async Task AddProjectAsync(Project project)
     {
         await _context.Projects.AddAsync(project);
     }
 
-    // Author: Nicolai and Oliver
     public async Task UpdateProjectAsync(Project project)
     {
         _context.Projects.Update(project);
         await Task.CompletedTask;
     }
 
-    // Author: Nicolai and Oliver
     public async Task DeleteProjectAsync(Project project)
     {
         _context.Projects.Remove(project);
         await Task.CompletedTask;
     }
 
-    // Author: Nicolai and Oliver
     public async Task SaveChangesAsync()
     {
         await _context.SaveChangesAsync();

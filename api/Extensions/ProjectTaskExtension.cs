@@ -5,7 +5,6 @@ namespace api.Extensions;
 
 public static class ProjectTaskExtensions
 {
-    // Author: Nicolai and Oliver
     public static ProjectTaskDto ToDto(this ProjectTask t)
     {
         return new ProjectTaskDto

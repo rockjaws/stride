@@ -8,7 +8,6 @@ namespace api.Migrations
     public partial class NewMigration : Migration
     {
         /// <inheritdoc />
-        // Author: Nicolai and Oliver
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
@@ -37,7 +36,6 @@ namespace api.Migrations
         }
 
         /// <inheritdoc />
-        // Author: Nicolai and Oliver
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(

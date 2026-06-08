@@ -10,6 +10,5 @@ public class ProjectTaskUpdateDto
     public DateTime Deadline { get; set; }
     public TaskProgress Progress { get; set; } = TaskProgress.Backlog;
     public TaskPriority Priority { get; set; } = TaskPriority.Normal;
-    // Author: Nicolai and Oliver
     public List<int> AssignedUserIds { get; set; } = new();
 }
