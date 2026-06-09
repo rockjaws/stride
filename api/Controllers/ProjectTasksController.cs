@@ -94,6 +94,7 @@ public class ProjectTasksController : ControllerBase
         projectTask.Progress = dto.Progress;
         projectTask.Priority = dto.Priority;
 
+        // Assignment updates replace the complete relationship set supplied by the client.
         projectTask.Users.Clear();
         foreach (var userId in dto.AssignedUserIds)
         {
@@ -106,6 +107,7 @@ public class ProjectTasksController : ControllerBase
 
         await _repository.UpdateTaskAsync(projectTask);
 
+        // Direct assignees receive unread notifications; project activity is logged separately below.
         foreach (var user in projectTask.Users)
         {
             await _notificationRepository.AddNotificationAsync(new Notification
@@ -165,7 +167,8 @@ public class ProjectTasksController : ControllerBase
                 UserId = user.Id,
                 TaskId = taskId,
                 Time = DateTime.Now,
-                IsRead = true // Your hack: true skips toast alerts but populates the persistent feed timelines!
+                // Feed activity is pre-read so polling only shows direct assignment updates as toasts.
+                IsRead = true
             });
         }
         await _notificationRepository.SaveChangesAsync();

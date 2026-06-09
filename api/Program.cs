@@ -38,14 +38,14 @@ using (var scope = app.Services.CreateScope())
     {
         var context = services.GetRequiredService<AppDbContext>();
 
-        // 1. Ensure the '../db' directory exists so SQLite doesn't crash
+        // SQLite cannot create the database file when its parent directory is missing.
         var dbDirectory = Path.GetFullPath(Path.Combine(app.Environment.ContentRootPath, "..", "db"));
         if (!Directory.Exists(dbDirectory))
         {
             Directory.CreateDirectory(dbDirectory);
         }
 
-        // 2. Apply pending migrations (this will also create the stride.db file if missing)
+        // Migrate also creates the database file on first startup.
         context.Database.Migrate();
         app.Logger.LogInformation("Database migration check completed.");
     }
@@ -56,6 +56,7 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+// Authenticate every mapped controller endpoint with the shared client key.
 app.Use(async (context, next) =>
         {
             if (!context.Request.Headers.TryGetValue("X-Stride-API-Key", out var requestApiKey))

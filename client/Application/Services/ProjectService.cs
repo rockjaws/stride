@@ -184,8 +184,7 @@ public class ProjectService : IProjectService
                     t.ProjectId
                 )
                 {
-                    // ADD THIS EXACT LINE:
-                    // This is what actually takes the JSON users and hands them to the checkboxes!
+                    // Preserve assignments so task edit dialogs can initialize their member checkboxes.
                     UsersAssigned = t
                         .Users.Select(u => new User(u.Id, u.FirstName, u.LastName, u.WorkMail))
                         .ToList(),

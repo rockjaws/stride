@@ -95,6 +95,7 @@ public class SelectedTaskViewModel : ObservableObject
             ? await _userService.GetUsersAsync(projectId.Value)
             : await _userService.GetUsersAsync();
         _logger.Log(LogLevel.INFO, $"Got {users.Count} users");
+        // Wrap each user with checkbox state derived from the task's current assignments.
         AssignableMembers = new ObservableCollection<AssignableMember>(
             users.Select(u => new AssignableMember(u, _originalTask))
         );

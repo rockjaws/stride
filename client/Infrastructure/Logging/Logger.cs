@@ -33,6 +33,7 @@ public class Logger : ILogger
 
         try
         {
+            // Logging can occur concurrently, so serialize file appends process-wide.
             lock (FileLock)
             {
                 using var stream = new FileStream(

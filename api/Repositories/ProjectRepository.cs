@@ -18,6 +18,7 @@ public class ProjectRepository : IProjectRepository
     {
         return await _context
             .Projects
+            // Multiple included collections would otherwise produce a large Cartesian result set.
             .AsSplitQuery()
             .Include(p => p.Tasks)
             .ThenInclude(p => p.Users)

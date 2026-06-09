@@ -109,6 +109,7 @@ public class ChatViewModel : ObservableObject, IDisposable
 
             if (Projects.Count > 0)
             {
+                // Set the backing field directly to avoid triggering a duplicate asynchronous load.
                 _selectedProject = Projects[0];
                 OnPropertyChanged(nameof(SelectedProject));
 
@@ -247,8 +248,10 @@ public class ChatViewModel : ObservableObject, IDisposable
 
         try
         {
+            // Prevent overlapping timer ticks while the current request is in flight.
             _refreshTimer.Stop();
 
+            // Discard the response if the user changes channels before the request completes.
             var currentChannelId = SelectedChannel.Id;
             var serverMessages = await _messageService.GetMessagesAsync(currentChannelId);
 
@@ -259,6 +262,7 @@ public class ChatViewModel : ObservableObject, IDisposable
 
             if (serverMessages.Count != Messages.Count)
             {
+                // Polling uses count as a cheap change detector; a mismatch requires a full refresh.
                 Messages.Clear();
                 foreach (var message in serverMessages)
                 {

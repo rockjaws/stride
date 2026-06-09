@@ -116,6 +116,7 @@ public class DashboardViewModel : ObservableObject, IDisposable
             var activeTasks = new List<ITask>();
             var deadlineDates = new HashSet<DateTime>();
 
+            // Build counts, the upcoming list, and calendar markers in one pass over assigned tasks.
             foreach (var project in allProjects)
             {
                 if (project.IsArchived) continue;
@@ -146,7 +147,7 @@ public class DashboardViewModel : ObservableObject, IDisposable
                 }
             }
 
-            // 4. Assign values to properties all at once
+            // Publish the completed snapshot together to avoid showing partially updated metrics.
             BacklogCount = backlogCount;
             InProgressCount = inProgressCount;
             InReviewCount = inReviewCount;
@@ -154,7 +155,6 @@ public class DashboardViewModel : ObservableObject, IDisposable
 
             _tasks = activeTasks;
 
-            // Update the UI/ViewModel
             CalendarViewModel.UpdateDeadlines(deadlineDates);
             SortTasks();
 

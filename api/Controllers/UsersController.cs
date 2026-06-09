@@ -176,6 +176,7 @@ public class UsersController : ControllerBase
     [HttpGet("{userId}/project-feeds")]
     public async Task<ActionResult> GetUserDashboardFeed(int userId)
     {
+        // A dashboard feed spans all projects the user belongs to, then narrows entries to that user.
         var userProjects = await _projectRepository.GetProjectsByUserIdAsync(userId);
         var projectIds = userProjects.Select(p => p.Id).ToList();
 

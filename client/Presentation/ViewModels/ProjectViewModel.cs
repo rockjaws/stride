@@ -472,11 +472,13 @@ public class ProjectViewModel : ObservableObject, IDisposable
     // Author: Nicolaj
     private async void OnGlobalStateChange(object? sender, EventArgs e)
     {
+        // Service events can cascade while a reload is already replacing the observable state.
         if (_isUpdatingGlobalState) return;
         _isUpdatingGlobalState = true;
 
         try
         {
+            // Reload creates new project instances, so preserve selection by id rather than reference.
             int? selectedProjectId = SelectedProject?.Id;
 
             await GetProjectsAsync();

@@ -32,6 +32,7 @@ public partial class App : System.Windows.Application
         string apiKey = "DEVELOPMENT_LOCAL_KEY";
         int currentUserId = 1;
 
+        // Deployed builds can override the local defaults without recompiling the client.
         string configPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.json");
         if (File.Exists(configPath))
         {
@@ -46,7 +47,10 @@ public partial class App : System.Windows.Application
                     if (root.TryGetProperty("CurrentUserId", out JsonElement userElement)) currentUserId = userElement.GetInt32();
                 }
             }
-            catch { }
+            catch
+            {
+                // Ignore optional config errors and continue with the available/default values.
+            }
         }
 
         var httpClient = new HttpClient { BaseAddress = new Uri(serverUrl) };
