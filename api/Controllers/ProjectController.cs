@@ -75,6 +75,7 @@ public class ProjectController : ControllerBase
             Deadline = dto.Deadline,
         };
 
+        // Include the creator even if the client omitted them from the explicit member selection.
         var userIds = (dto.UserIds ?? []).Append(dto.UserId).Distinct();
         foreach (var userId in userIds)
         {
@@ -88,6 +89,7 @@ public class ProjectController : ControllerBase
         await _repository.AddProjectAsync(project);
         await _repository.SaveChangesAsync();
 
+        // Every project starts with a predictable channel so chat is immediately usable.
         var generalChannel = new ChatChannel { Name = "general", ProjectId = project.Id };
         await _channelRepository.CreateChannelAsync(generalChannel);
         await _channelRepository.SaveChangesAsync();
@@ -109,6 +111,7 @@ public class ProjectController : ControllerBase
         project.Deadline = dto.Deadline;
         if (dto.UserIds != null)
         {
+            // The update DTO represents the complete desired membership, not an incremental change.
             project.Users.Clear();
             foreach (var userId in dto.UserIds)
             {
@@ -217,6 +220,7 @@ public class ProjectController : ControllerBase
                 ProjectId = projectId,
                 UserId = user.Id,
                 Time = DateTime.Now,
+                // Activity entries belong in feeds but should not also produce toast notifications.
                 IsRead = true
             });
         }

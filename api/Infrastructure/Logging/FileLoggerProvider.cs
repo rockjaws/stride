@@ -53,6 +53,7 @@ public sealed class FileLoggerProvider : ILoggerProvider
 
         public bool IsEnabled(Microsoft.Extensions.Logging.LogLevel logLevel)
         {
+            // EF command logging is intentionally excluded because it dominates the application log.
             if (ExcludedCategories.Any(category => _categoryName.StartsWith(category)))
                 return false;
 
@@ -80,6 +81,7 @@ public sealed class FileLoggerProvider : ILoggerProvider
             if (exception != null)
                 entry += Environment.NewLine + exception;
 
+            // All category loggers share this lock because they append to the same file.
             lock (_fileLock)
             {
                 using var stream = new FileStream(

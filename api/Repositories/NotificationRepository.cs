@@ -40,6 +40,7 @@ public class NotificationRepository : INotificationRepository
         return await _context.Notifications
             .Where(n => projectIds.Contains(n.ProjectId))
             .OrderByDescending(n => n.Time)
+            // Bound the cross-project dashboard feed so it cannot grow without limit.
             .Take(50)
             .ToListAsync();
     }

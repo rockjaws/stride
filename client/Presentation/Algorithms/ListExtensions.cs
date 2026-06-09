@@ -12,6 +12,7 @@ public static class ListExtensions
         int n1 = m - l + 1;
         int n2 = r - m;
 
+        // Copy both halves because merging writes back into the source list in place.
         List<T> L = new List<T>(n1);
         List<T> R = new List<T>(n2);
         int i, j;
@@ -31,6 +32,7 @@ public static class ListExtensions
 
         while (i < n1 && j < n2)
         {
+            // Prefer the left item on equality to keep the sort stable.
             if (comparison(L[i], R[j]) <= 0)
             {
                 arr[k] = L[i];
@@ -64,6 +66,7 @@ public static class ListExtensions
     {
         if (l < r)
         {
+            // This form avoids overflowing if the index range is ever very large.
             int m = l + (r - l) / 2;
 
             MergeSort(arr, l, m, comparison);

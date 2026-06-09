@@ -16,6 +16,7 @@ namespace client.Presentation.Commands
         {
             command.Execute(null);
             _history.Push(command);
+            // A new command creates a new history branch, so previous redo entries are invalid.
             _redoStack.Clear();
         }
 
@@ -25,6 +26,7 @@ namespace client.Presentation.Commands
             if (_history.TryPop(out var command))
             {
                 command.Undo();
+                // Keep the same command instance so Redo can replay its captured state.
                 _redoStack.Push(command);
             }
         }

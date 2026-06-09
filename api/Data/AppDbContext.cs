@@ -26,7 +26,7 @@ public class AppDbContext : DbContext
 
         modelBuilder.Entity<ProjectTask>().Property(t => t.Priority).HasConversion<string>();
 
-        // index for chat
+        // Chat reads are scoped by project/channel, so index the corresponding foreign keys.
         modelBuilder.Entity<ChatChannel>().HasIndex(c => c.ProjectId);
 
         modelBuilder.Entity<Message>().HasIndex(m => m.ChannelId);

@@ -36,6 +36,7 @@ namespace client.Presentation.UserControls
         {
             if (DataContext is not DashboardViewModel viewModel) return;
 
+            // Disable DataGrid sorting for columns whose order is owned by a view-model strategy.
             switch (e.Column.SortMemberPath)
             {
                 case "Deadline":

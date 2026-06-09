@@ -71,6 +71,7 @@ public class NewProjectViewModel : ObservableObject
         var users = await _userService.GetUsersAsync();
         _logger.Log(LogLevel.INFO, $"Got {users.Count} users for new project assignment");
 
+        // The creator is selected by default so new projects remain visible in their own project list.
         AssignableMembers = new ObservableCollection<AssignableMember>(
             users.Select(u => new AssignableMember(u, u.Id == _userService.Id))
         );

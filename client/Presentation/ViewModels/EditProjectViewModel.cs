@@ -86,6 +86,7 @@ public class EditProjectViewModel : ObservableObject
         }
 
         _logger.Log(LogLevel.INFO, $"Prepared Project Update: {_originalProject.Id}");
+        // Preserve child collections while replacing only the editable project fields and membership.
         return new Project(
             _originalProject.Id,
             _title,
