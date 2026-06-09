@@ -102,6 +102,7 @@ public class MainViewModel : ObservableObject
 
 
     // Author: Oliver
+    // Starts the application-wide toast poller once and performs an immediate initial check.
     public void StartNotificationPolling()
     {
         if (_notificationTimer.IsEnabled)
@@ -117,6 +118,7 @@ public class MainViewModel : ObservableObject
     }
 
     // Author: Nicolaj and Oliver
+    // Changes the active content view and refreshes views that require entry-time synchronization.
     public void SetCurrentView(object viewModel)
     {
         CurrentView = viewModel;
@@ -128,6 +130,7 @@ public class MainViewModel : ObservableObject
     }
 
     // Author: Nicolaj and Oliver
+    // Coordinates project creation across the Projects and Chat view models.
     private async Task CreateProjectAsync(Project project)
     {
         _logger.Log(LogLevel.INFO, $"MainViewModel creating project: {project.Title}");
@@ -138,6 +141,7 @@ public class MainViewModel : ObservableObject
     }
 
     // Author: Oliver
+    // Shows the oldest unread notification while preventing overlapping timer requests.
     private async Task CheckNotificationsAsync()
     {
         // DispatcherTimer can tick again while a slow API call is still running.
@@ -172,6 +176,7 @@ public class MainViewModel : ObservableObject
     }
 
     // Author: Oliver
+    // Exposes a notification through bound toast properties for a fixed display period.
     private async Task ShowToastAsync(string text)
     {
         ToastText = text;

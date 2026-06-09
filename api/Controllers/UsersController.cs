@@ -106,6 +106,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("{id}/notifications")]
+    // Returns the per-user notification stream consumed by the client's toast poller.
     public async Task<ActionResult<IEnumerable<NotificationDto>>> GetNotifications(int id)
     {
         var user = await _repository.GetUserByIdAsync(id);
@@ -133,6 +134,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPut("{id}/notifications/{notificationId}")]
+    // Updates read state after the client has displayed or acknowledged a notification.
     public async Task<ActionResult> UpdateNotification(
         int id,
         int notificationId,
@@ -174,6 +176,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("{userId}/project-feeds")]
+    // Combines recent activity from all projects visible to one dashboard user.
     public async Task<ActionResult> GetUserDashboardFeed(int userId)
     {
         // A dashboard feed spans all projects the user belongs to, then narrows entries to that user.

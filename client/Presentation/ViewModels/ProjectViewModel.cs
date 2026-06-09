@@ -158,6 +158,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
     }
 
     // Author: Oliver
+    // Groups a project's nested tasks into the four observable kanban columns.
     private void LoadTasks(Project currentProject)
     {
         // Projects are loaded with their tasks, so selecting a project only needs local grouping.
@@ -178,6 +179,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
     }
 
     // Author: Oliver
+    // Adds a server-created task to both representations maintained by the project view.
     private void AddCreatedTask(ProjectTask task)
     {
         if (task == null)
@@ -208,6 +210,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
     }
 
     // Author: Oliver
+    // Replaces a task across its kanban column and the selected project's backing task list.
     private void UpdateTask(ProjectTask task)
     {
         if (task == null)
@@ -290,6 +293,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
     }
 
     // Author: Oliver
+    // Replaces a project returned by the API while preserving it as the current selection.
     private void ReplaceProject(Project project)
     {
         int projectIndex = ListOfProjects
@@ -325,6 +329,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
     }
 
     // Author: Oliver
+    // Removes a deleted task from every local reference that can still display it.
     private void RemoveDeletedTask(ProjectTask task)
     {
         var existingTask = SelectedProject?.Tasks.FirstOrDefault(t => t.Id == task.Id);
@@ -366,6 +371,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
     }
 
     // Author: Oliver
+    // Persists a progress transition before moving the card between observable columns.
     public async Task MoveTaskAsync(ProjectTask task, TaskProgress progress)
     {
         if (task.Progress == progress)
@@ -431,6 +437,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
     }
 
     // Author: Oliver
+    // Loads active projects for the current user and rebuilds the project navigation list.
     private async Task GetProjectsAsync()
     {
         try
@@ -470,6 +477,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
     }
 
     // Author: Nicolaj
+    // Reloads shared project state after a service mutation while restoring selection by id.
     private async void OnGlobalStateChange(object? sender, EventArgs e)
     {
         // Service events can cascade while a reload is already replacing the observable state.
@@ -507,6 +515,7 @@ public class ProjectViewModel : ObservableObject, IDisposable
     }
 
     // Author: Nicolaj
+    // Replaces the selected project's persistent activity feed with the latest server entries.
     public async Task LoadProjectFeedAsync(int projectId)
     {
         try

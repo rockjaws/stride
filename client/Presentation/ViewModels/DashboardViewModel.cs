@@ -91,6 +91,7 @@ public class DashboardViewModel : ObservableObject, IDisposable
 
 
     // Author: Nicolaj and Oliver
+    // Rebuilds the dashboard feed, task counts, upcoming tasks, and calendar from one server snapshot.
     public async Task GetDashboardMetricsAsync()
     {
         try
@@ -167,6 +168,7 @@ public class DashboardViewModel : ObservableObject, IDisposable
     }
 
     // Author: Nicolaj
+    // Replaces the active ordering policy and immediately reapplies it to the cached task list.
     public void ChangeSortingStrategy(ITaskSortStrategy newStrategy)
     {
         if (newStrategy == null || SortingStrategy.GetType() == newStrategy.GetType()) return;
@@ -178,6 +180,7 @@ public class DashboardViewModel : ObservableObject, IDisposable
     }
 
     // Author: Nicolaj and Oliver
+    // Sorts the cached interface list and publishes concrete task objects for WPF binding.
     private void SortTasks()
     {
         if (_tasks == null || _tasks.Count == 0) return;
@@ -188,6 +191,7 @@ public class DashboardViewModel : ObservableObject, IDisposable
     }
 
     // Author: Nicolaj
+    // Service change events request a fresh aggregate rather than mutating individual counters.
     private void OnGlobalStateChange(object? sender, EventArgs e)
     {
         _ = GetDashboardMetricsAsync();
