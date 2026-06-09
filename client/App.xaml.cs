@@ -28,7 +28,7 @@ public partial class App : System.Windows.Application
     {
         base.OnStartup(e);
 
-        string serverUrl = "http:localhost:5189";
+        string serverUrl = "http://localhost:5189";
         string apiKey = "DEVELOPMENT_LOCAL_KEY";
         int currentUserId = 1;
 
@@ -38,13 +38,11 @@ public partial class App : System.Windows.Application
             try
             {
                 string jsonString = File.ReadAllText(configPath);
-                using (JsonDocument doc = JsonDocument.Parse(jsonString))
-                {
-                    var root = doc.RootElement;
-                    if (root.TryGetProperty("ServerUrl", out var urlProp)) serverUrl = urlProp.GetString();
-                    if (root.TryGetProperty("ApiKey", out var keyProp)) apiKey = keyProp.GetString();
-                    if (root.TryGetProperty("CurrentUserId", out JsonElement userElement)) currentUserId = userElement.GetInt32();
-                }
+                using JsonDocument doc = JsonDocument.Parse(jsonString);
+                var root = doc.RootElement;
+                if (root.TryGetProperty("ServerUrl", out var urlProp)) serverUrl = urlProp.GetString();
+                if (root.TryGetProperty("ApiKey", out var keyProp)) apiKey = keyProp.GetString();
+                if (root.TryGetProperty("CurrentUserId", out JsonElement userElement)) currentUserId = userElement.GetInt32();
             }
             catch { }
         }
