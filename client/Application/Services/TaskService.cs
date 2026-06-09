@@ -40,6 +40,7 @@ public class TaskService : ITaskService
     }
 
     // Author: Nicolaj and Oliver
+    // Creates the base task, then applies fields unsupported by the create endpoint through update.
     public async Task<ProjectTask> CreateTaskAsync(ProjectTask task)
     {
         if (task.ProjectId == null)
@@ -79,6 +80,7 @@ public class TaskService : ITaskService
     }
 
     // Author: Nicolaj and Oliver
+    // Sends the complete editable task state and announces the successful mutation to other views.
     public async Task UpdateTaskAsync(ProjectTask task)
     {
         if (task.Id == null)
@@ -100,6 +102,7 @@ public class TaskService : ITaskService
     }
 
     // Author: Nicolaj and Oliver
+    // Produces the replacement instance expected by WPF collections and persists its progress.
     public async Task<ProjectTask> MoveTaskAsync(ProjectTask task, TaskProgress progress)
     {
         // Return a new instance so callers can replace bound collection items cleanly.
@@ -132,6 +135,7 @@ public class TaskService : ITaskService
     private void NotifyTasksChanged() => TasksChanged?.Invoke(this, EventArgs.Empty);
 
     // Author: Nicolaj and Oliver
+    // Maps API enum strings and user assignments into the client task model.
     private static ProjectTask ToProjectTask(ProjectTaskDto dto)
     {
         return new ProjectTask(

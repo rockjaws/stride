@@ -43,6 +43,7 @@ public class ProjectService : IProjectService
     }
 
     // Author: Nicolaj and Oliver
+    // Creates the API payload, persists the project, and maps the canonical response to the domain.
     public async Task<Project> CreateProjectAsync(Project project, int userId)
     {
         var response = await _httpclient.PostAsJsonAsync(
@@ -68,6 +69,7 @@ public class ProjectService : IProjectService
     }
 
     // Author: Oliver
+    // Saves editable project fields, then refetches the complete nested project representation.
     public async Task<Project> UpdateProjectAsync(Project project)
     {
         if (project.Id == null)
@@ -157,6 +159,7 @@ public class ProjectService : IProjectService
     }
 
     // Author: Nicolaj and Oliver
+    // Converts the nested project DTO graph into client models used by Projects, Chat, and Dashboard.
     private static Project ToProject(ProjectDto dto)
     {
         var members = dto

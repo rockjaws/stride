@@ -14,6 +14,10 @@ public class NotificationService : INotificationService
 {
     private readonly HttpClient _httpClient;
 
+    // The last successful poll is retained so unchanged responses do not refresh entire views.
+    private HashSet<int> _knownNotificationIds = [];
+    private bool _hasNotificationSnapshot;
+
     public event EventHandler? NotificationsChanged;
 
     // Author: Nicolaj and Oliver
@@ -23,22 +27,35 @@ public class NotificationService : INotificationService
     }
 
     // Author: Nicolaj and Oliver
+    // Notifies view models that feed data may need reloading after the polled set changes.
     private void NotifyNotificationsChanged() => NotificationsChanged?.Invoke(this, EventArgs.Empty);
 
     // Author: Nicolaj and Oliver
+    // Polls the active user's toast notifications and detects additions or removals by id.
     public async Task<List<Notification>> GetNotificationsAsync(int userId)
     {
         var notificationDtos =
           await _httpClient.GetFromJsonAsync<List<NotificationDto>>($"api/users/{userId}/notifications") ?? [];
 
         var notifications = notificationDtos.Select(ToNotification).ToList();
+        var currentNotificationIds = notifications.Select(notification => notification.Id).ToHashSet();
 
-        if (notifications.Count != 0) NotifyNotificationsChanged();
+        // The first response establishes a baseline and must not trigger a startup refresh.
+        bool notificationsChanged =
+            _hasNotificationSnapshot && !_knownNotificationIds.SetEquals(currentNotificationIds);
+
+        // Replace the snapshot only after a successful response has been mapped.
+        _knownNotificationIds = currentNotificationIds;
+        _hasNotificationSnapshot = true;
+
+        if (notificationsChanged)
+            NotifyNotificationsChanged();
 
         return notifications;
     }
 
     // Author: Nicolaj and Oliver
+    // Persists toast acknowledgement without changing the notification's identity.
     public async Task MarkAsReadAsync(int userId, int notificationId)
     {
         // Marking read is scoped by user so one user's toast state does not hide another user's notification.
@@ -52,6 +69,7 @@ public class NotificationService : INotificationService
 
 
     // Author: Nicolaj and Oliver
+    // Converts the transport shape into the immutable notification model used by the UI.
     private static Notification ToNotification(NotificationDto dto)
     {
         // The client does not need the full related task yet, only the optional task id.
@@ -66,6 +84,7 @@ public class NotificationService : INotificationService
     }
 
     // Author: Nicolaj and Oliver
+    // Loads the recent activity feed spanning every project associated with the user.
     public async Task<List<Notification>> GetDashboardFeedAsync(int userId)
     {
         var dtos = await _httpClient.GetFromJsonAsync<List<NotificationDto>>($"api/users/{userId}/project-feeds") ?? [];
@@ -73,6 +92,7 @@ public class NotificationService : INotificationService
     }
 
     // Author: Nicolaj and Oliver
+    // Loads activity for one project while keeping entries scoped to the active user.
     public async Task<List<Notification>> GetProjectFeedAsync(int projectId, int userId)
     {
         var dtos = await _httpClient.GetFromJsonAsync<List<NotificationDto>>($"api/projects/{projectId}/notifications?userId={userId}") ?? [];

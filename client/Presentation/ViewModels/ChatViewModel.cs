@@ -96,6 +96,7 @@ public class ChatViewModel : ObservableObject, IDisposable
     }
 
     // Author: Nicolaj and Oliver
+    // Loads projects, chooses the initial selection, and starts polling when a channel is available.
     private async Task LoadDataAsync()
     {
         try
@@ -147,6 +148,7 @@ public class ChatViewModel : ObservableObject, IDisposable
     }
 
     // Author: Nicolaj and Oliver
+    // Rebuilds the channel list from the selected project's already-loaded channel data.
     private async Task LoadChannelsForSelectedProjectAsync()
     {
         ChatChannels.Clear();
@@ -181,6 +183,7 @@ public class ChatViewModel : ObservableObject, IDisposable
     }
 
     // Author: Nicolaj and Oliver
+    // Replaces the visible conversation whenever the selected channel changes.
     public async Task LoadMessagesForSelectedChannelAsync()
     {
         if (SelectedChannel == null)
@@ -208,6 +211,7 @@ public class ChatViewModel : ObservableObject, IDisposable
     }
 
     // Author: Nicolaj and Oliver
+    // Persists the current input and appends the API's canonical message response.
     public async Task SendMessageAsync()
     {
         _logger.Log(
@@ -239,6 +243,7 @@ public class ChatViewModel : ObservableObject, IDisposable
     }
 
     // Author: Nicolaj and Oliver
+    // Polls the selected channel without allowing stale responses to overwrite a newer selection.
     private async Task PollLatestMessageAsync()
     {
         if (SelectedChannel == null)

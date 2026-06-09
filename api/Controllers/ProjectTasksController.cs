@@ -75,6 +75,7 @@ public class ProjectTasksController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    // Replaces task details and assignments, then records direct and project-wide notifications.
     public async Task<IActionResult> UpdateTask(int id, ProjectTaskUpdateDto dto)
     {
         var projectTask = await _repository.GetTaskByIdAsync(id);
@@ -153,6 +154,7 @@ public class ProjectTasksController : ControllerBase
         return NoContent();
     }
 
+    // Creates pre-read feed entries for every project member without generating duplicate toasts.
     private async Task LogProjectActivityAsync(int projectId, string text, int? taskId)
     {
         var project = await _projectRepository.GetProjectByIdAsync(projectId);

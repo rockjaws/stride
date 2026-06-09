@@ -65,6 +65,7 @@ public class ProjectController : ControllerBase
     }
 
     [HttpPost]
+    // Creates the project aggregate, initial membership, default channel, and feed entries.
     public async Task<ActionResult> CreateProject(ProjectCreateDto dto)
     {
         var project = new Project
@@ -100,6 +101,7 @@ public class ProjectController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    // Replaces editable project details and the complete membership relationship.
     public async Task<ActionResult> UpdateProject(int id, ProjectUpdateDto dto)
     {
         var project = await _repository.GetProjectByIdAsync(id);
@@ -207,6 +209,7 @@ public class ProjectController : ControllerBase
         return Ok(notifications.Select(n => n.ToDto()));
     }
 
+    // Fans one project activity entry out to each member's personal feed.
     private async Task LogProjectActivityAsync(int projectId, string text)
     {
         var project = await _repository.GetProjectByIdAsync(projectId);
