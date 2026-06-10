@@ -139,6 +139,29 @@ public class ProjectController : ControllerBase
         var project = await _repository.GetProjectByIdAsync(id);
         if (project == null) return NotFound();
 
+        // 1. Fetch any notifications tied to this project ID using your notification repository
+        var notifications = await _notificationRepository.GetNotificationsByProjectIdAsync(id);
+
+        // 2. Clear out the assigned users loop from every task.
+        // This removes rows from the hidden join table ("ProjectTaskUser") cleanly.
+        if (project.Tasks != null)
+        {
+            foreach (var task in project.Tasks)
+            {
+                task.Users.Clear();
+
+                // 3. Unlink notifications from tasks being deleted to prevent the TaskId constraint block
+                if (notifications != null)
+                {
+                    foreach (var notification in notifications.Where(n => n.TaskId == task.Id))
+                    {
+                        notification.TaskId = null;
+                    }
+                }
+            }
+        }
+
+        // 4. Delete the parent project structure
         await _repository.DeleteProjectAsync(project);
         await _repository.SaveChangesAsync();
 
