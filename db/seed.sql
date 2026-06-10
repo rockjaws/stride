@@ -7,7 +7,14 @@ INSERT INTO Users (FirstName, LastName, WorkMail) VALUES
 ('Alice', 'Hansen', 'alice.hansen@stride.dev'),
 ('Bob', 'Nielsen', 'bob.nielsen@stride.dev'),
 ('Clara', 'Jensen', 'clara.jensen@stride.dev'),
-('Oliver', 'Andersen', 'oliver.andersen@stride.dev');
+('Oliver', 'Andersen', 'oliver.andersen@stride.dev'),
+
+-- User tests data --
+
+('Martin', 'Efternavn1', '@dania.dk'),
+('Camilla', 'Efternavn2', '@dania.dk'),
+('Casper', 'Efternavn3', '@dania.dk'),
+('Daniel', 'Efternavn4', '@dania.dk');
 
 -- 2. Projects (Showcasing Active vs. Archived States)
 INSERT INTO Projects (

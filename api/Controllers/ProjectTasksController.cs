@@ -117,7 +117,8 @@ public class ProjectTasksController : ControllerBase
                 IsRead = false,
                 Time = DateTime.Now,
                 UserId = user.Id,
-                TaskId = projectTask.Id
+                TaskId = projectTask.Id,
+                ProjectId = projectTask.ProjectId
             });
         }
 
