@@ -11,11 +11,12 @@ using client.Presentation.Common;
 
 namespace client.Presentation.ViewModels;
 
-public class ArchiveViewModel : ObservableObject
+public class ArchiveViewModel : ObservableObject, IDisposable
 {
     private readonly ILogger _logger;
     private readonly IProjectService _projectService;
     private readonly IUserService _userService;
+    private readonly INotificationService _notificationService;
     private Project? _selectedProject;
 
     public ObservableCollection<Project> ArchivedProjects { get; }
@@ -32,13 +33,17 @@ public class ArchiveViewModel : ObservableObject
     public ArchiveViewModel(
         ILogger logger,
         IProjectService projectService,
-        IUserService userService
+        IUserService userService,
+        INotificationService notificationService
     )
     {
         _logger = logger;
         _projectService = projectService;
         _userService = userService;
-        _projectService.ProjectsChanged += (s, e) => _ = GetProjectsAsync();
+        _notificationService = notificationService;
+        _projectService.ProjectsChanged += OnProjectsChanged;
+        // Remote project changes arrive through the notification poller, not ProjectsChanged.
+        _notificationService.NotificationsChanged += OnProjectsChanged;
         ArchivedProjects = [];
         RestoreProjectCommand = new RestoreProjectCommand(
             logger,
@@ -50,6 +55,11 @@ public class ArchiveViewModel : ObservableObject
             () => SelectedProject!,
             DeleteProjectAsync
         );
+        _ = GetProjectsAsync();
+    }
+
+    private void OnProjectsChanged(object? sender, EventArgs e)
+    {
         _ = GetProjectsAsync();
     }
 
@@ -113,5 +123,12 @@ public class ArchiveViewModel : ObservableObject
         {
             _logger.Log(LogLevel.ERROR, $"Failed To Load Projects: {ex.Message}");
         }
+    }
+
+    public void Dispose()
+    {
+        _projectService.ProjectsChanged -= OnProjectsChanged;
+        _notificationService.NotificationsChanged -= OnProjectsChanged;
+        GC.SuppressFinalize(this);
     }
 }

@@ -121,15 +121,8 @@ public class UsersController : ControllerBase
             return NotFound();
         }
 
-        // Notifications are scoped by route user id so each client only polls its own feed.
-        var dtos = notifications.Select(n => new NotificationDto
-        {
-            Id = n.Id,
-            Text = n.Text,
-            IsRead = n.IsRead,
-            Time = n.Time,
-            TaskId = n.TaskId,
-        });
+        // Use the shared mapper so project activity retains ProjectId for client synchronization.
+        var dtos = notifications.Select(n => n.ToDto());
         return Ok(dtos);
     }
 
