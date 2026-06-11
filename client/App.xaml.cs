@@ -90,7 +90,12 @@ public partial class App : System.Windows.Application
 
         var chatViewModel = new ChatViewModel(logger, projectService, messageService, userService);
 
-        var archiveViewModel = new ArchiveViewModel(logger, projectService, userService);
+        var archiveViewModel = new ArchiveViewModel(
+            logger,
+            projectService,
+            userService,
+            notificationService
+        );
 
         // Main viewmodel
         var viewModel = new MainViewModel(

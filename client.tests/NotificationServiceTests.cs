@@ -26,7 +26,13 @@ public class NotificationServiceTests
             """
             [
               { "id": 1, "text": "Existing", "isRead": true, "time": "2026-06-09T08:00:00" },
-              { "id": 2, "text": "New", "isRead": false, "time": "2026-06-09T08:01:00" }
+              {
+                "id": 2,
+                "text": "Project archived",
+                "isRead": true,
+                "time": "2026-06-09T08:01:00",
+                "projectId": 7
+              }
             ]
             """
         );
